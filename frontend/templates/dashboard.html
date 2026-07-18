@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VC Brain | Investor Dashboard</title>
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --border: #1e1e2e;
+            --text: #e4e4ef;
+            --muted: #8888a0;
+            --accent: #6366f1;
+            --green: #22c55e;
+            --red: #ef4444;
+            --yellow: #eab308;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+            background: var(--bg); color: var(--text);
+            line-height: 1.6;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 0; border-bottom: 1px solid var(--border); margin-bottom: 32px;
+        }
+        header h1 { font-size: 20px; font-weight: 600; }
+        header h1 span { color: var(--accent); }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+        .card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; padding: 24px;
+        }
+        .card h2 { font-size: 14px; color: var(--muted); text-transform: uppercase;
+                    letter-spacing: 0.05em; margin-bottom: 16px; }
+
+        /* Application form */
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%; padding: 8px 12px; background: var(--bg); border: 1px solid var(--border);
+            border-radius: 6px; color: var(--text); font-size: 14px;
+        }
+        .form-group textarea { resize: vertical; min-height: 60px; }
+        button {
+            padding: 8px 20px; background: var(--accent); color: white; border: none;
+            border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;
+        }
+        button:hover { opacity: 0.9; }
+        button.secondary { background: var(--border); }
+
+        /* Pipeline */
+        .pipeline { display: flex; gap: 8px; margin-bottom: 16px; }
+        .pipeline .stage {
+            flex: 1; text-align: center; padding: 8px; border-radius: 6px;
+            background: var(--bg); font-size: 12px; color: var(--muted);
+        }
+        .pipeline .stage.active { background: var(--accent); color: white; }
+
+        /* Founders list */
+        .founder-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid var(--border);
+        }
+        .founder-row:last-child { border-bottom: none; }
+        .founder-name { font-weight: 500; }
+        .founder-score {
+            display: inline-block; padding: 2px 8px; border-radius: 4px;
+            font-size: 13px; font-weight: 600;
+        }
+        .score-high { background: rgba(34,197,94,0.15); color: var(--green); }
+        .score-mid { background: rgba(234,179,8,0.15); color: var(--yellow); }
+        .score-low { background: rgba(239,68,68,0.15); color: var(--red); }
+
+        /* Search */
+        .search-bar {
+            display: flex; gap: 8px; margin-bottom: 16px;
+        }
+        .search-bar input { flex: 1; }
+
+        /* Results panel */
+        #results { margin-top: 16px; font-size: 14px; white-space: pre-wrap; }
+
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 4px;
+                 font-size: 11px; background: var(--border); margin-right: 4px; }
+
+        .full-width { grid-column: 1 / -1; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><span>VC</span> Brain</h1>
+            <div style="color: var(--muted); font-size: 13px;">Maschmeyer Group x Hack-Nation</div>
+        </header>
+
+        <!-- Pipeline Status -->
+        <div class="pipeline">
+            <div class="stage">Sourcing</div>
+            <div class="stage">Screening</div>
+            <div class="stage">Diligence</div>
+            <div class="stage">Decision</div>
+        </div>
+
+        <div class="grid">
+            <!-- Inbound Application -->
+            <div class="card">
+                <h2>Submit Application</h2>
+                <form id="appForm">
+                    <div class="form-group">
+                        <label>Company Name *</label>
+                        <input name="company_name" required placeholder="Acme AI">
+                    </div>
+                    <div class="form-group">
+                        <label>Founder Name</label>
+                        <input name="founder_name" placeholder="Jane Smith">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input name="founder_email" type="email" placeholder="jane@acme.ai">
+                    </div>
+                    <div class="form-group">
+                        <label>Sector</label>
+                        <input name="sector" placeholder="AI Infrastructure">
+                    </div>
+                    <div class="form-group">
+                        <label>Stage</label>
+                        <select name="stage">
+                            <option value="pre-seed">Pre-Seed</option>
+                            <option value="seed">Seed</option>
+                            <option value="series-a">Series A</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Geography</label>
+                        <input name="geography" placeholder="Berlin, Germany">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" placeholder="What are you building?"></textarea>
+                    </div>
+                    <button type="submit">Submit Application</button>
+                </form>
+                <div id="appResult" style="margin-top: 12px; font-size: 13px; color: var(--green);"></div>
+            </div>
+
+            <!-- Applications Pipeline -->
+            <div class="card">
+                <h2>Applications Pipeline</h2>
+                <div id="appList" style="font-size: 14px;"><em style="color: var(--muted);">No applications yet</em></div>
+                <div style="margin-top: 16px; display: flex; gap: 8px;">
+                    <button class="secondary" onclick="refreshApps()">Refresh</button>
+                </div>
+            </div>
+
+            <!-- Multi-Attribute Search -->
+            <div class="card full-width">
+                <h2>Intelligent Search</h2>
+                <div class="search-bar">
+                    <input id="searchInput" placeholder='e.g. "technical founder, Berlin, AI infra, enterprise traction"'>
+                    <button onclick="runSearch()">Search</button>
+                </div>
+                <div id="searchResults"></div>
+            </div>
+
+            <!-- Outbound Sourcing -->
+            <div class="card">
+                <h2>Outbound Sourcing</h2>
+                <p style="font-size: 13px; color: var(--muted); margin-bottom: 12px;">
+                    Scan external sources for promising founders
+                </p>
+                <div style="display: flex; gap: 8px;">
+                    <button onclick="scanGitHub()">Scan GitHub</button>
+                    <button onclick="scanHN()">Scan Hacker News</button>
+                </div>
+                <div id="sourcingResult" style="margin-top: 12px; font-size: 13px;"></div>
+            </div>
+
+            <!-- Founder Leaderboard -->
+            <div class="card">
+                <h2>Founders</h2>
+                <div id="founderList"><em style="color: var(--muted);">No founders yet</em></div>
+                <button class="secondary" style="margin-top: 12px;" onclick="refreshFounders()">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Detail Panel -->
+        <div class="card" id="detailPanel" style="display: none;">
+            <h2>Detail</h2>
+            <pre id="results"></pre>
+        </div>
+    </div>
+
+    <script>
+        const API = '';
+
+        // Submit application
+        document.getElementById('appForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fd = new FormData(e.target);
+            const data = Object.fromEntries(fd);
+            const res = await fetch(`${API}/api/applications`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data),
+            });
+            const json = await res.json();
+            document.getElementById('appResult').textContent =
+                `Application ${json.application_id} submitted. Thesis fit: ${json.thesis_fit}`;
+            refreshApps();
+        });
+
+        // List applications
+        async function refreshApps() {
+            const res = await fetch(`${API}/api/applications`);
+            const apps = await res.json();
+            const el = document.getElementById('appList');
+            if (!apps.length) { el.innerHTML = '<em style="color: var(--muted);">No applications</em>'; return; }
+            el.innerHTML = apps.map(a => `
+                <div class="founder-row">
+                    <div>
+                        <strong>${a.company_id.slice(0,8)}</strong>
+                        <span class="badge">${a.status}</span>
+                        <span class="badge">${a.source}</span>
+                    </div>
+                    <div style="display:flex; gap:4px;">
+                        <button onclick="screenApp('${a.id}')" style="padding:4px 8px; font-size:12px;">Screen</button>
+                        <button onclick="diligenceApp('${a.id}')" style="padding:4px 8px; font-size:12px;">Diligence</button>
+                        <button onclick="memoApp('${a.id}')" style="padding:4px 8px; font-size:12px;">Memo</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function screenApp(id) {
+            showResult('Running 3-axis screening...');
+            const res = await fetch(`${API}/api/applications/${id}/screen`, {method: 'POST'});
+            showResult(await res.json());
+        }
+
+        async function diligenceApp(id) {
+            showResult('Running diligence...');
+            const res = await fetch(`${API}/api/applications/${id}/diligence`, {method: 'POST'});
+            showResult(await res.json());
+        }
+
+        async function memoApp(id) {
+            showResult('Generating investment memo...');
+            const res = await fetch(`${API}/api/applications/${id}/memo`, {method: 'POST'});
+            showResult(await res.json());
+        }
+
+        // Search
+        async function runSearch() {
+            const query = document.getElementById('searchInput').value;
+            if (!query) return;
+            const res = await fetch(`${API}/api/search`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({query, limit: 10}),
+            });
+            const results = await res.json();
+            const el = document.getElementById('searchResults');
+            if (!results.length) { el.innerHTML = '<em style="color: var(--muted);">No results</em>'; return; }
+            el.innerHTML = results.map(r => `
+                <div class="founder-row">
+                    <span>${r.name || r.id}</span>
+                    <span class="founder-score score-mid">${r.relevance}</span>
+                </div>
+            `).join('');
+        }
+
+        // Sourcing
+        async function scanGitHub() {
+            document.getElementById('sourcingResult').textContent = 'Scanning GitHub...';
+            const res = await fetch(`${API}/api/sourcing/github`, {method: 'POST'});
+            const json = await res.json();
+            document.getElementById('sourcingResult').textContent =
+                `Found ${json.candidates_found} candidates, ingested ${json.founders_ingested}`;
+            refreshFounders();
+        }
+
+        async function scanHN() {
+            document.getElementById('sourcingResult').textContent = 'Scanning Hacker News...';
+            const res = await fetch(`${API}/api/sourcing/hackernews`, {method: 'POST'});
+            const json = await res.json();
+            document.getElementById('sourcingResult').textContent =
+                `Found ${json.launches_found} launches, ingested ${json.founders_ingested}`;
+            refreshFounders();
+        }
+
+        // Founders
+        async function refreshFounders() {
+            const res = await fetch(`${API}/api/founders`);
+            const founders = await res.json();
+            const el = document.getElementById('founderList');
+            if (!founders.length) { el.innerHTML = '<em style="color: var(--muted);">No founders</em>'; return; }
+            el.innerHTML = founders.map(f => {
+                const cls = f.score >= 60 ? 'score-high' : f.score >= 30 ? 'score-mid' : 'score-low';
+                return `
+                    <div class="founder-row">
+                        <div>
+                            <span class="founder-name">${f.name}</span>
+                            <span style="color: var(--muted); font-size: 12px; margin-left: 8px;">${f.location}</span>
+                        </div>
+                        <span class="founder-score ${cls}">${f.score}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function showResult(data) {
+            const panel = document.getElementById('detailPanel');
+            panel.style.display = 'block';
+            document.getElementById('results').textContent =
+                typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+            panel.scrollIntoView({behavior: 'smooth'});
+        }
+
+        // Initial load
+        refreshApps();
+        refreshFounders();
+    </script>
+</body>
+</html>
