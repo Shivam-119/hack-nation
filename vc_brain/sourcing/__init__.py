@@ -3,3 +3,9 @@ from vc_brain.sourcing.github_evaluator import evaluate, BuilderEvaluation
 from vc_brain.sourcing.hackernews_scanner import HackerNewsScanner
 from vc_brain.sourcing.reputation import ReputationScanner
 from vc_brain.sourcing.socials.scanner import SocialsScanner
+from vc_brain.sourcing.enrich import (
+    DeckEnrichment,
+    FounderEnrichment,
+    FounderInput,
+    enrich_from_deck,
+)
