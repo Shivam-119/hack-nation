@@ -353,6 +353,23 @@ async def scan_hackernews(limit: int = 20) -> dict[str, Any]:
     }
 
 
+@app.post("/api/sourcing/arxiv")
+async def scan_arxiv(limit_per_query: int = 10) -> dict[str, Any]:
+    """Scan arXiv for recent AI/ML papers and ingest primary authors as candidates."""
+    from vc_brain.sourcing.arxiv_scanner import ArXivScanner
+    scanner = ArXivScanner(pipeline)
+    papers = await scanner.scan_papers(max_per_query=limit_per_query)
+    founders = await scanner.ingest_researchers(papers)
+    return {
+        "papers_found": len(papers),
+        "researchers_ingested": len(founders),
+        "founders": [
+            {"id": f.id, "name": f.name, "bio": f.bio[:100]}
+            for f in founders
+        ],
+    }
+
+
 @app.post("/api/sourcing/techpress")
 async def scan_techpress(limit_per_feed: int = 15) -> dict[str, Any]:
     """Scan TechCrunch and other tech RSS feeds for startup launch articles."""

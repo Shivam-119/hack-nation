@@ -6,7 +6,7 @@ Work through these in order. Mark [x] when done. Commit after each.
 - [x] Add Product Hunt scanner
 - [x] Add TechCrunch/RSS launch scanner
 - [x] LinkedIn profile enrichment (when URL provided)
-- [ ] arXiv paper scanner for AI researchers
+- [x] arXiv paper scanner for AI researchers
 - [ ] Improve GitHub evaluator — fetch README content for quality scoring
 
 ## Intelligence
