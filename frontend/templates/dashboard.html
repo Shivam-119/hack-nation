@@ -89,6 +89,17 @@
                  font-size: 11px; background: var(--border); margin-right: 4px; }
 
         .full-width { grid-column: 1 / -1; }
+
+        /* Radar chart */
+        .radar-wrap {
+            display: flex; flex-direction: column; align-items: center; margin-top: 12px;
+        }
+        .radar-wrap svg text { font-family: inherit; fill: var(--muted); }
+        .radar-legend {
+            display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;
+            justify-content: center; font-size: 12px;
+        }
+        .radar-legend span { background: var(--border); padding: 2px 8px; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -185,6 +196,15 @@
                 <h2>Founders</h2>
                 <div id="founderList"><em style="color: var(--muted);">No founders yet</em></div>
                 <button class="secondary" style="margin-top: 12px;" onclick="refreshFounders()">Refresh</button>
+            </div>
+
+            <!-- Founder Radar Chart -->
+            <div class="card" id="radarCard" style="display: none;">
+                <h2 id="radarTitle">Founder Evaluation</h2>
+                <div class="radar-wrap">
+                    <svg id="radarSvg" width="300" height="300" viewBox="-10 -10 320 320"></svg>
+                </div>
+                <div class="radar-legend" id="radarLegend"></div>
             </div>
         </div>
 
@@ -302,15 +322,113 @@
             el.innerHTML = founders.map(f => {
                 const cls = f.score >= 60 ? 'score-high' : f.score >= 30 ? 'score-mid' : 'score-low';
                 return `
-                    <div class="founder-row">
+                    <div class="founder-row" style="cursor:pointer;" onclick="showFounderRadar('${f.id}', '${f.name.replace(/'/g, "\\'")}')">
                         <div>
                             <span class="founder-name">${f.name}</span>
-                            <span style="color: var(--muted); font-size: 12px; margin-left: 8px;">${f.location}</span>
+                            <span style="color: var(--muted); font-size: 12px; margin-left: 8px;">${f.location || ''}</span>
                         </div>
                         <span class="founder-score ${cls}">${f.score}</span>
                     </div>
                 `;
             }).join('');
+        }
+
+        // --- Radar Chart ---
+        async function showFounderRadar(id, name) {
+            const res = await fetch(`${API}/api/founders/${id}`);
+            const f = await res.json();
+            if (f.error) return;
+
+            const dims = [
+                {label: 'Technical', key: 'technical'},
+                {label: 'Execution', key: 'execution'},
+                {label: 'Product', key: 'domain_expertise'},
+                {label: 'Background', key: 'leadership'},
+                {label: 'Reputation', key: 'leadership'},
+                {label: 'Growth', key: 'overall'},
+            ];
+
+            // Try to get GitHub evaluation dimensions from data_points
+            let scores = [
+                f.score.technical || 0,
+                f.score.execution || 0,
+                f.score.domain_expertise || 0,
+                f.score.leadership || 0,
+                Math.min(f.score.overall * 1.1, 100),
+                f.score.overall || 0,
+            ];
+
+            // Check if this founder has a GitHub eval in data_points
+            const ghDp = (f.data_points || []).find(dp =>
+                dp.source === 'github' && dp.content && dp.content.breakdown
+            );
+            if (ghDp && ghDp.content.breakdown) {
+                const b = ghDp.content.breakdown;
+                scores = [
+                    b.technical_ability || 0,
+                    b.execution_ability || 0,
+                    b.founder_product_ability || 0,
+                    b.technical_background || 0,
+                    b.reputation || 0,
+                    b.growth_signals || 0,
+                ];
+            }
+
+            const labels = ['Technical', 'Execution', 'Product', 'Background', 'Reputation', 'Growth'];
+            renderRadar(scores, labels, name);
+
+            document.getElementById('radarTitle').textContent = `${name} — Evaluation Radar`;
+            document.getElementById('radarCard').style.display = '';
+
+            const legend = document.getElementById('radarLegend');
+            legend.innerHTML = labels.map((l, i) =>
+                `<span>${l}: <strong style="color:var(--accent)">${Math.round(scores[i])}</strong></span>`
+            ).join('');
+        }
+
+        function renderRadar(scores, labels, title) {
+            const svg = document.getElementById('radarSvg');
+            const cx = 150, cy = 150, r = 110;
+            const n = labels.length;
+            const maxVal = 100;
+
+            function pt(i, val) {
+                const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
+                const d = (val / maxVal) * r;
+                return [cx + d * Math.cos(angle), cy + d * Math.sin(angle)];
+            }
+
+            let html = '';
+
+            // Grid rings
+            [25, 50, 75, 100].forEach(ring => {
+                const pts = Array.from({length: n}, (_, i) => pt(i, ring).join(','));
+                html += `<polygon points="${pts.join(' ')}" fill="none" stroke="var(--border)" stroke-width="1"/>`;
+            });
+
+            // Axis lines
+            for (let i = 0; i < n; i++) {
+                const [x, y] = pt(i, 100);
+                html += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="var(--border)" stroke-width="1"/>`;
+            }
+
+            // Data polygon
+            const dataPts = scores.map((s, i) => pt(i, s).join(',')).join(' ');
+            html += `<polygon points="${dataPts}" fill="rgba(99,102,241,0.2)" stroke="var(--accent)" stroke-width="2"/>`;
+
+            // Data dots
+            scores.forEach((s, i) => {
+                const [x, y] = pt(i, s);
+                html += `<circle cx="${x}" cy="${y}" r="4" fill="var(--accent)"/>`;
+            });
+
+            // Labels
+            labels.forEach((label, i) => {
+                const [x, y] = pt(i, 118);
+                html += `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle" font-size="11">${label}</text>`;
+            });
+
+            svg.innerHTML = html;
         }
 
         function showResult(data) {

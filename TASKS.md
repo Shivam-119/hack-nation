@@ -26,7 +26,7 @@ Work through these in order. Mark [x] when done. Commit after each.
 - [x] WebSocket for real-time pipeline status
 
 ## Frontend
-- [ ] Show 6-dimension radar chart for founder evaluation
+- [x] Show 6-dimension radar chart for founder evaluation
 - [ ] Add thesis configuration form
 - [ ] Show `not_measurable` gaps in founder detail view
 - [ ] Pipeline progress indicator (sourcing → screening → diligence → decision)
