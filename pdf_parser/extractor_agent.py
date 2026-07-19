@@ -6,7 +6,7 @@ from pathlib import Path
 from openai import OpenAI
 from pydantic import ValidationError
 
-from schema import MarketExtraction
+from .schema import MarketExtraction
 
 MODEL = "gpt-4o"
 MAX_TOKENS = 4096

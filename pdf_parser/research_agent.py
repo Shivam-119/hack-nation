@@ -8,8 +8,8 @@ from typing import Any
 from openai import OpenAI
 from pydantic import ValidationError
 
-from schema import MarketExtraction, MarketResearch
-from tavily_client import search as tavily_search
+from .schema import MarketExtraction, MarketResearch
+from .tavily_client import search as tavily_search
 
 MODEL = "gpt-4.1"
 MAX_TOKENS = 4096
@@ -100,7 +100,7 @@ def _parse_and_validate(content: str, agent1_output: MarketExtraction, search_lo
 
 
 def _input_reference_from(agent1_output: MarketExtraction):
-    from schema import InputReference
+    from .schema import InputReference
 
     return InputReference(
         company_name=agent1_output.company_name,

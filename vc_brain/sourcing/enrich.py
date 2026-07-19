@@ -228,6 +228,83 @@ async def enrich_from_deck(
     return result
 
 
+# -------------------------------------------------------------- display ----
+
+def _trim_findings(rep: dict | None, n: int) -> dict | None:
+    if not rep:
+        return None
+    return {
+        "articles_reviewed": rep.get("articles_reviewed"),
+        "by_category": rep.get("by_category"),
+        "findings": [
+            {
+                "summary": f.get("summary", ""),
+                "category": f.get("category", ""),
+                "polarity": f.get("polarity", ""),
+                "relevance": f.get("relevance"),
+                "source": (f.get("sources") or [{}])[0].get("source", ""),
+                "url": (f.get("sources") or [{}])[0].get("url", ""),
+            }
+            for f in (rep.get("findings") or [])[:n]
+        ],
+    }
+
+
+def display_shape(d: dict[str, Any]) -> dict[str, Any]:
+    """Compact a full DeckEnrichment dump down to what a UI renders.
+
+    One shape for both live results and the seeded fixture, so the frontend
+    has a single thing to render.
+    """
+    founders = []
+    for f in d.get("founders", []):
+        gh = f.get("github") or {}
+        so = f.get("socials") or {}
+        pa = (so.get("post_analysis") or {}) if so else {}
+        founders.append({
+            "name": f.get("name", ""),
+            "handles": f.get("handles", {}),
+            "github": {
+                "username": gh.get("username"), "score": gh.get("score"),
+                "grade": gh.get("grade"), "is_builder": gh.get("is_builder"),
+                "dimensions": {k: gh.get(k) for k in (
+                    "technical_ability", "execution_ability", "founder_product_ability",
+                    "technical_background", "reputation", "growth_signals")},
+                "signals": (gh.get("signals") or [])[:5],
+                "red_flags": gh.get("red_flags") or [],
+            } if gh else None,
+            "socials": {
+                "profiles": {k: {"handle": v.get("handle"), "followers": v.get("followers")}
+                             for k, v in (so.get("profiles") or {}).items()},
+                "post_count": len(so.get("posts") or []),
+                "comment_count": len(so.get("comments") or []),
+                "sample_posts": [
+                    {"network": p.get("network"), "text": p.get("text"), "likes": p.get("likes", 0)}
+                    for p in (so.get("posts") or [])[:5]
+                ],
+                "analysis": {
+                    "topics": pa.get("topics", []),
+                    "expertise_areas": pa.get("expertise_areas", []),
+                    "sentiment": pa.get("sentiment", ""),
+                    "tone": pa.get("tone", ""),
+                    "credibility_signals": pa.get("credibility_signals", []),
+                    "red_flags": pa.get("red_flags", []),
+                },
+                "sources": so.get("sources", []),
+            } if so else None,
+            "reputation": _trim_findings(f.get("reputation"), 8),
+            "errors": f.get("errors", []),
+        })
+    return {
+        "company_name": d.get("company_name", ""),
+        "industry": d.get("industry", ""),
+        "one_liner": d.get("one_liner", ""),
+        "company_reputation": _trim_findings(d.get("company_reputation"), 8),
+        "founders": founders,
+        "errors": d.get("errors", []),
+    }
+
+
 # ------------------------------------------------------------------ CLI -----
 
 def _parse_founder(spec: str) -> FounderInput:

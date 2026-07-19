@@ -8,5 +8,8 @@ dist/
 .ruff_cache/
 .pytest_cache/
 node_modules/
-
-\sample_decks
+sample_decks/
+uploads/
+.DS_Store
+*.zip
+"VC Brain feature requirements/"

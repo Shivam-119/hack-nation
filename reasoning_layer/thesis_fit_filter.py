@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from schemas import ThesisFitResult
-from thesis_config import ThesisConfig
+from .schemas import ThesisFitResult
+from .thesis_config import ThesisConfig
 
 _WILDCARD_GEOGRAPHIES = {"global", "remote", "worldwide", "any"}
 

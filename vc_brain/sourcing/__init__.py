@@ -7,5 +7,6 @@ from vc_brain.sourcing.enrich import (
     DeckEnrichment,
     FounderEnrichment,
     FounderInput,
+    display_shape,
     enrich_from_deck,
 )

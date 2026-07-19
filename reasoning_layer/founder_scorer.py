@@ -8,9 +8,9 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from llm_client import LLMCallFailedError, call_structured_json
-from memory_client import MemoryReadError, MockMemoryClient
-from schemas import FounderAxisScore
+from .llm_client import LLMCallFailedError, call_structured_json
+from .memory_client import MemoryReadError, MockMemoryClient
+from .schemas import FounderAxisScore
 
 THIS_DIR = Path(__file__).parent
 MODEL = "gpt-4.1"

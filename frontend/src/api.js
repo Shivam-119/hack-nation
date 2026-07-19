@@ -11,5 +11,7 @@ export const api = {
   applications: () => request('/api/applications'),
   application: (id) => request(`/api/applications/${id}`),
   submit: (data) => request('/api/applications', { method: 'POST', body: data }),
+  evaluation: (id) => request(`/api/applications/${id}/evaluation`),
+  queueEvaluation: (id) => request(`/api/applications/${id}/evaluation`, { method: 'POST' }),
   deckUrl: (id) => `/api/applications/${id}/deck`,
 };
