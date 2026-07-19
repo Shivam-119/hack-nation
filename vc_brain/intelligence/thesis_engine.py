@@ -13,10 +13,10 @@ class FundThesis(BaseModel):
     check_size_min: int
     check_size_max: int
     target_ownership_pct: float
-    risk_appetite: str  # conservative | moderate | aggressive
-    min_founder_score: float
-    preferred_signals: list[str]
-    anti_signals: list[str]
+    risk_appetite: str = "moderate"  # conservative | moderate | aggressive
+    min_founder_score: float = 30.0
+    preferred_signals: list[str] = []
+    anti_signals: list[str] = []
 
 
 class ThesisEngine:

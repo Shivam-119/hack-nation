@@ -16,6 +16,7 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 from prompts import load_system
+from vc_brain.intelligence.thesis_engine import FundThesis
 from vc_brain.llm import complete_json
 from vc_brain.memory.models import Application, Company, Founder, Trend
 
@@ -54,29 +55,51 @@ class Screener:
         company: Company,
         founders: list[Founder],
         thesis_context: str = "",
+        thesis: FundThesis | None = None,
     ) -> ScreeningResult:
-        """Run multi-axis screening. Uses LLM for market and idea analysis."""
+        """Run multi-axis screening. Uses LLM for market and idea analysis.
 
+        When a FundThesis is provided its constraints are applied to scoring:
+        - min_founder_score enforced as a hard floor on the founder axis
+        - preferred_signals boost founder scores; anti_signals are rejection flags
+        - Thesis alignment is surfaced in rejection_reasons
+        """
         # Founder axis: computed from Founder Score + data points
-        founder_axis = self._score_founder_axis(founders)
+        founder_axis = self._score_founder_axis(founders, thesis)
 
         # Market and Idea axes: LLM-assisted
-        market_axis, idea_axis = await self._llm_screen(application, company, founders, thesis_context)
+        thesis_prompt = self._build_thesis_context(thesis) if thesis else thesis_context
+        market_axis, idea_axis = await self._llm_screen(application, company, founders, thesis_prompt)
 
-        # Pass/fail: all axes must be above threshold
+        # Pass/fail: enforce thesis min_founder_score if thesis provided
+        min_founder = thesis.min_founder_score if thesis else 25.0
         passes = (
-            founder_axis.score >= 25
+            founder_axis.score >= min_founder
             and market_axis.score >= 25
             and idea_axis.score >= 20
         )
 
         reasons = []
-        if founder_axis.score < 25:
-            reasons.append(f"Founder axis too low ({founder_axis.score})")
+        if founder_axis.score < min_founder:
+            reasons.append(
+                f"Founder axis {founder_axis.score} below "
+                f"{'thesis minimum' if thesis else 'threshold'} ({min_founder})"
+            )
         if market_axis.score < 25:
             reasons.append(f"Market axis too low ({market_axis.score})")
         if idea_axis.score < 20:
             reasons.append(f"Idea vs Market axis too low ({idea_axis.score})")
+
+        # Thesis anti-signal rejection
+        if thesis:
+            for anti in thesis.anti_signals:
+                founder_text = " ".join(
+                    f.bio + " ".join(f.skills) for f in founders
+                ).lower()
+                company_text = (company.description + company.sector).lower()
+                if anti.lower() in founder_text or anti.lower() in company_text:
+                    reasons.append(f"Anti-signal detected: '{anti}'")
+                    passes = False
 
         return ScreeningResult(
             founder_axis=founder_axis,
@@ -86,7 +109,23 @@ class Screener:
             rejection_reasons=reasons,
         )
 
-    def _score_founder_axis(self, founders: list[Founder]) -> AxisScore:
+    def _build_thesis_context(self, thesis: FundThesis) -> str:
+        """Convert structured thesis into a context string for LLM prompts."""
+        parts = [
+            f"Fund: {thesis.name}",
+            f"Target sectors: {', '.join(thesis.sectors)}",
+            f"Target stages: {', '.join(thesis.stages)}",
+            f"Target geographies: {', '.join(thesis.geographies)}",
+            f"Check size: ${thesis.check_size_min:,}–${thesis.check_size_max:,}",
+            f"Risk appetite: {thesis.risk_appetite}",
+        ]
+        if thesis.preferred_signals:
+            parts.append(f"Preferred signals: {', '.join(thesis.preferred_signals)}")
+        if thesis.anti_signals:
+            parts.append(f"Anti-signals (auto-reject if found): {', '.join(thesis.anti_signals)}")
+        return "\n".join(parts)
+
+    def _score_founder_axis(self, founders: list[Founder], thesis: FundThesis | None = None) -> AxisScore:
         if not founders:
             return AxisScore(
                 score=10, sentiment="bear",
@@ -95,20 +134,34 @@ class Screener:
             )
 
         best = max(founders, key=lambda f: f.score.overall)
+        score = best.score.overall
         evidence = [
-            f"Best founder score: {best.score.overall}/100",
+            f"Best founder score: {score}/100",
             f"Technical: {best.score.technical}, Execution: {best.score.execution}",
             f"Skills: {', '.join(best.skills[:5]) or 'None listed'}",
         ]
-        if best.score.overall >= 60:
+
+        # Apply thesis preferred/anti signals if provided
+        if thesis:
+            founder_text = (best.bio + " ".join(best.skills)).lower()
+            for sig in thesis.preferred_signals:
+                if sig.lower() in founder_text:
+                    score = min(100, score + 5)
+                    evidence.append(f"Preferred signal matched: '{sig}'")
+            for sig in thesis.anti_signals:
+                if sig.lower() in founder_text:
+                    score = max(0, score - 10)
+                    evidence.append(f"Anti-signal in founder profile: '{sig}'")
+
+        if score >= 60:
             sentiment = "bullish"
-        elif best.score.overall >= 30:
+        elif score >= 30:
             sentiment = "neutral"
         else:
             sentiment = "bear"
 
         return AxisScore(
-            score=best.score.overall,
+            score=round(score, 1),
             sentiment=sentiment,
             trend=best.score.trend,
             evidence=evidence,

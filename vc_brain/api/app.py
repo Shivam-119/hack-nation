@@ -60,7 +60,10 @@ class ThesisUpdate(BaseModel):
     check_size_min: int
     check_size_max: int
     target_ownership_pct: float
-    risk_appetite: str
+    risk_appetite: str = "moderate"
+    min_founder_score: float = 30.0
+    preferred_signals: list[str] = []
+    anti_signals: list[str] = []
 
 
 class SearchQuery(BaseModel):
@@ -155,7 +158,7 @@ async def screen_application(app_id: str) -> dict[str, Any]:
 
     result = await screener.screen(
         application, company, founders,
-        thesis_context=f"Sectors: {thesis.sectors}, Stages: {thesis.stages}",
+        thesis=thesis,
     )
 
     application.screening_result = result.model_dump(mode="json")
