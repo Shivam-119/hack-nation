@@ -34,5 +34,5 @@ Work through these in order. Mark [x] when done. Commit after each.
 ## Quality
 - [x] Add tests for github_evaluator
 - [x] Add tests for github_agent
-- [ ] Add tests for screener
+- [x] Add tests for screener
 - [ ] Error handling for GitHub rate limits
