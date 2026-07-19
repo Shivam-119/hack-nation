@@ -34,10 +34,15 @@ class EntityRepository:
 
     # -- Founders -----------------------------------------------------------
     def upsert_founder(self, founder: Founder) -> Founder:
-        """Insert a founder, or merge into an existing one matched by email/github_url."""
+        """Insert a founder, or merge into an existing one matched by any identity.
+
+        Matches on email/github_url AND twitter_url/linkedin_url — socials-discovered
+        founders often have only a twitter/linkedin handle, so leaving those out
+        would duplicate them on every re-ingest."""
         existing_data = db.find_row(
             self._engine, db.founders_table,
             email=founder.email, github_url=founder.github_url,
+            twitter_url=founder.twitter_url, linkedin_url=founder.linkedin_url,
         )
         if existing_data:
             founder = _merge_founder(Founder(**existing_data), founder)

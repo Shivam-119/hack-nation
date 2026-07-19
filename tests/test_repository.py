@@ -35,6 +35,17 @@ def test_founder_dedup_case_insensitive(tmp_path):
     assert len(repo.all_founders()) == 1
 
 
+def test_socials_founder_dedups_on_twitter_handle(tmp_path):
+    # A socials-discovered founder has only a twitter handle (no email/github);
+    # re-ingesting must match the existing one, not create a duplicate.
+    repo = _repo(tmp_path)
+    f1 = repo.upsert_founder(Founder(name="Jane", twitter_url="https://x.com/jane"))
+    f2 = repo.upsert_founder(Founder(name="Jane Doe", twitter_url="https://X.com/jane"))
+    assert f1.id == f2.id
+    assert len(repo.all_founders()) == 1
+    assert repo.find_founder(linkedin_url="") is None  # empty identity never matches
+
+
 def test_reingest_does_not_inflate_data_points(tmp_path):
     repo = _repo(tmp_path)
     repo.upsert_founder(_github_snapshot())
