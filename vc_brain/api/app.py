@@ -326,6 +326,27 @@ async def scan_hackernews(limit: int = 20) -> dict[str, Any]:
     }
 
 
+@app.post("/api/sourcing/techpress")
+async def scan_techpress(limit_per_feed: int = 15) -> dict[str, Any]:
+    """Scan TechCrunch and other tech RSS feeds for startup launch articles."""
+    from vc_brain.sourcing.rss_scanner import TechRSSScanner
+    scanner = TechRSSScanner(pipeline)
+    launches = await scanner.scan_feeds(limit_per_feed)
+    founders = await scanner.ingest_launches(launches)
+    return {
+        "articles_found": len(launches),
+        "founders_ingested": len(founders),
+        "by_source": {
+            src: sum(1 for l in launches if l.source == src)
+            for src in {l.source for l in launches}
+        },
+        "founders": [
+            {"id": f.id, "name": f.name, "bio": f.bio[:100]}
+            for f in founders
+        ],
+    }
+
+
 @app.post("/api/sourcing/producthunt")
 async def scan_producthunt(limit: int = 20) -> dict[str, Any]:
     """Trigger a Product Hunt scan for recent launches and their makers."""

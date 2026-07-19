@@ -2,3 +2,4 @@ from vc_brain.sourcing.github_agent import GitHubSourcingAgent, InvestorCriteria
 from vc_brain.sourcing.github_evaluator import evaluate, BuilderEvaluation
 from vc_brain.sourcing.hackernews_scanner import HackerNewsScanner
 from vc_brain.sourcing.producthunt_scanner import ProductHuntScanner
+from vc_brain.sourcing.rss_scanner import TechRSSScanner
