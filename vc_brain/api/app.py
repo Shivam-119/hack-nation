@@ -4,7 +4,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import FastAPI
+import os
+import tempfile
+
+from fastapi import FastAPI, File, Form, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
@@ -208,6 +211,40 @@ async def check_cold_start(app_id: str) -> dict[str, Any]:
     from vc_brain.intelligence.cold_start import detect_cold_start
     report = detect_cold_start(founders, application, company)
     return report.model_dump()
+
+
+@app.post("/api/applications/{app_id}/deck")
+async def upload_deck(app_id: str, file: UploadFile = File(...)) -> dict[str, Any]:
+    """Upload a PDF pitch deck and attach it to an existing application."""
+    if not file.filename or not file.filename.lower().endswith(".pdf"):
+        return {"error": "Only PDF files are accepted"}
+
+    application = store.get_application(app_id)
+    if not application:
+        return {"error": "Application not found"}
+
+    # Write to a temp file so pypdf can read it
+    suffix = ".pdf"
+    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+        contents = await file.read()
+        tmp.write(contents)
+        tmp_path = tmp.name
+
+    try:
+        deck_text = pipeline._extract_deck_text(tmp_path)
+    finally:
+        os.unlink(tmp_path)
+
+    application.deck_path = file.filename
+    application.deck_text = deck_text
+    store.add_application(application)
+
+    return {
+        "application_id": application.id,
+        "filename": file.filename,
+        "pages_extracted": deck_text.count("---") + 1 if deck_text else 0,
+        "text_length": len(deck_text),
+    }
 
 
 @app.post("/api/applications/{app_id}/validate")
