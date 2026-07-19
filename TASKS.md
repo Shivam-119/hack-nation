@@ -7,7 +7,7 @@ Work through these in order. Mark [x] when done. Commit after each.
 - [x] Add TechCrunch/RSS launch scanner
 - [x] LinkedIn profile enrichment (when URL provided)
 - [x] arXiv paper scanner for AI researchers
-- [ ] Improve GitHub evaluator — fetch README content for quality scoring
+- [x] Improve GitHub evaluator — fetch README content for quality scoring
 
 ## Intelligence
 - [ ] Load prompts from `prompts/system/*.txt` instead of inline strings

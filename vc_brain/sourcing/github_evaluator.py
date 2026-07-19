@@ -20,6 +20,17 @@ import httpx
 
 from vc_brain.config import config
 
+README_QUALITY_SIGNALS = {
+    "ci": ["github/workflows", "travis-ci", "circleci", "github actions", ".github/workflows"],
+    "badges": ["![", "badge", "shield"],
+    "installation": ["## install", "## getting started", "## setup", "## quickstart", "## usage"],
+    "code_example": ["```python", "```js", "```bash", "```typescript", "```go", "```rust"],
+    "demo": ["demo", "screenshot", "gif", "live demo", "try it"],
+    "license": ["## license", "mit license", "apache license", "licensed under"],
+    "contributing": ["## contributing", "pull request", "contribution"],
+    "docs": ["docs/", "documentation", "api reference", "## api"],
+}
+
 TUTORIAL_KEYWORDS = {
     "todo", "tutorial", "course", "homework", "assignment", "exercise",
     "bootcamp", "learning", "practice", "hello-world", "test", "demo",
@@ -47,6 +58,43 @@ class BuilderEvaluation:
     not_measurable: list[str] = field(default_factory=list)
 
 
+async def _fetch_readme(client: httpx.AsyncClient, repo_full_name: str) -> str:
+    """Fetch the raw README text for a repository (first 8 KB)."""
+    for branch in ("main", "master"):
+        url = f"https://raw.githubusercontent.com/{repo_full_name}/{branch}/README.md"
+        try:
+            resp = await client.get(url, timeout=10)
+            if resp.status_code == 200:
+                return resp.text[:8000]
+        except Exception:
+            pass
+    return ""
+
+
+def _score_readme(readme: str) -> tuple[float, list[str]]:
+    """Score a README for quality signals. Returns (0–100, matched signal labels)."""
+    if not readme:
+        return 0.0, []
+
+    text = readme.lower()
+    score = 0.0
+    found: list[str] = []
+
+    for signal_name, keywords in README_QUALITY_SIGNALS.items():
+        if any(kw.lower() in text for kw in keywords):
+            score += 12.5  # 8 signals × 12.5 = 100 max
+            found.append(signal_name)
+
+    # Length bonus: longer READMEs indicate more thorough documentation
+    word_count = len(readme.split())
+    if word_count >= 500:
+        score = min(100, score + 10)
+    elif word_count >= 200:
+        score = min(100, score + 5)
+
+    return min(100.0, score), found
+
+
 async def evaluate(username: str) -> BuilderEvaluation:
     headers = {"Accept": "application/vnd.github+json"}
     if config.github_token:
@@ -64,6 +112,23 @@ async def evaluate(username: str) -> BuilderEvaluation:
             params={"per_page": 100},
         )
         events = events_resp.json() if events_resp.status_code == 200 else []
+
+        # Fetch READMEs for top repos (by stars) for quality scoring
+        top_repos = sorted(repos, key=lambda r: r.get("stargazers_count", 0), reverse=True)
+        readme_scores: list[float] = []
+        readme_signals_found: list[str] = []
+        for repo in top_repos[:3]:
+            if repo.get("fork"):
+                continue
+            full_name = repo.get("full_name", "")
+            if not full_name:
+                continue
+            readme_text = await _fetch_readme(client, full_name)
+            rscore, rsignals = _score_readme(readme_text)
+            if rscore > 0:
+                readme_scores.append(rscore)
+                readme_signals_found.extend(rsignals)
+        avg_readme_score = (sum(readme_scores) / len(readme_scores)) if readme_scores else 0.0
 
     signals = []
     red_flags = []
@@ -123,6 +188,16 @@ async def evaluate(username: str) -> BuilderEvaluation:
         tech += 15
         signals.append("Reviews others' code")
 
+    # README quality — documentation depth signals engineering discipline
+    if avg_readme_score >= 75:
+        tech += 15
+        signals.append(f"High-quality READMEs (docs, CI, examples detected)")
+    elif avg_readme_score >= 40:
+        tech += 8
+        signals.append("Documented projects")
+    elif readme_scores and avg_readme_score < 20:
+        red_flags.append("Minimal or missing README documentation")
+
     not_measurable.append("System design experience — needs interview or technical writeup")
 
     tech = max(0, min(100, tech))
@@ -173,6 +248,12 @@ async def evaluate(username: str) -> BuilderEvaluation:
     if hard_projects:
         exe += 15
         signals.append(f"{len(hard_projects)} non-trivial projects with external validation")
+
+    # README reveals product thinking — demos, installation, usage examples = ships to users
+    readme_unique_signals = list(dict.fromkeys(readme_signals_found))  # deduplicate
+    if "demo" in readme_unique_signals or "installation" in readme_unique_signals:
+        exe += 10
+        signals.append("READMEs show user-facing product thinking (demo/install docs)")
 
     exe = max(0, min(100, exe))
 
