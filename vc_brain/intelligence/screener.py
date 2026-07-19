@@ -31,6 +31,10 @@ class AxisScore(BaseModel):
     trend: Trend = Trend.STABLE
     evidence: list[str] = Field(default_factory=list)
     confidence: float = 0.5
+    strengths: list[dict[str, str]] = Field(default_factory=list)
+    weaknesses: list[dict[str, str]] = Field(default_factory=list)
+    opportunities: list[dict[str, str]] = Field(default_factory=list)
+    threats: list[dict[str, str]] = Field(default_factory=list)
 
 
 class ScreeningResult(BaseModel):
@@ -116,6 +120,7 @@ class Screener:
             trend=best.score.trend,
             evidence=evidence,
             confidence=min(0.3 + len(best.data_points) * 0.1, 0.95),
+            strengths=[{"text": item} for item in evidence[:2]],
         )
 
     async def _llm_screen(
@@ -148,12 +153,14 @@ class Screener:
                 sentiment=result.get("market_sentiment", "neutral"),
                 evidence=result.get("market_evidence", []),
                 confidence=0.5,
+                strengths=[{"text": item} for item in result.get("market_evidence", [])],
             )
             idea_axis = AxisScore(
                 score=float(result.get("idea_score", 50)),
                 sentiment=result.get("idea_sentiment", "neutral"),
                 evidence=result.get("idea_evidence", []),
                 confidence=0.5,
+                strengths=[{"text": item} for item in result.get("idea_evidence", [])],
             )
         except Exception:
             # Fallback if LLM fails

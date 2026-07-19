@@ -137,3 +137,16 @@ class Application(BaseModel):
     screening_result: dict[str, Any] | None = None
     diligence_result: dict[str, Any] | None = None
     decision: dict[str, Any] | None = None
+    # Inbound form fields are kept with the application so the inbox can render
+    # the original context without reverse-engineering it from data points.
+    one_liner: str = ""
+    website: str = ""
+    product_url: str = ""
+    raising: str = ""
+    why_now: str = ""
+    accelerator: str = ""
+    prior_companies: str = ""
+    deck_filename: str = ""
+    deck_content_type: str = ""
+    deck_size_bytes: int = 0
+    applicability: dict[str, Any] | None = None

@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel
+import re
+
+from pydantic import BaseModel, Field
 
 
 class FundThesis(BaseModel):
@@ -14,9 +16,9 @@ class FundThesis(BaseModel):
     check_size_max: int
     target_ownership_pct: float
     risk_appetite: str  # conservative | moderate | aggressive
-    min_founder_score: float
-    preferred_signals: list[str]
-    anti_signals: list[str]
+    min_founder_score: float = 0.0
+    preferred_signals: list[str] = Field(default_factory=list)
+    anti_signals: list[str] = Field(default_factory=list)
 
 
 class ThesisEngine:
@@ -27,7 +29,7 @@ class ThesisEngine:
         reasons = []
         passes = True
 
-        if sector and not any(s.lower() in sector.lower() for s in self.thesis.sectors):
+        if sector and not any(_matches_tag(s, sector) for s in self.thesis.sectors):
             reasons.append(f"Sector '{sector}' outside thesis: {self.thesis.sectors}")
             passes = False
 
@@ -50,7 +52,7 @@ class ThesisEngine:
 
         if self.thesis.sectors:
             checks += 1
-            if any(s.lower() in sector.lower() for s in self.thesis.sectors):
+            if any(_matches_tag(s, sector) for s in self.thesis.sectors):
                 score += 1
 
         if self.thesis.stages:
@@ -64,3 +66,8 @@ class ThesisEngine:
                 score += 1
 
         return score / max(checks, 1)
+
+
+def _matches_tag(tag: str, value: str) -> bool:
+    """Match whole, normalised words; ``AI`` must not match ``retail``."""
+    return bool(re.search(rf"(?<!\w){re.escape(tag.strip())}(?!\w)", value, re.I))
