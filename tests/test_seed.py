@@ -38,9 +38,13 @@ def test_enrich_screening_fills_all_swot_quadrants():
     for axis_key in ("founder_axis", "market_axis", "idea_vs_market_axis"):
         axis = out[axis_key]
         for quadrant in ("strengths", "weaknesses", "opportunities", "threats"):
+            # flat shape (AxisCard / API _axis_payload): items are {text, ...}
             assert axis[quadrant], f"{axis_key}.{quadrant} is empty"
-            # frontend Evidence renders item.text -> items must be objects
             assert all(isinstance(i, dict) and "text" in i for i in axis[quadrant])
+            # nested shape (SourceAxis, the inbox detail view): axis.swot.<q> = {text, src}
+            nested = axis["swot"][quadrant]
+            assert len(nested) == len(axis[quadrant])
+            assert all("text" in i and "src" in i for i in nested)
 
 
 def test_enrich_screening_handles_none():
