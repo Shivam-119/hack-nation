@@ -16,6 +16,7 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 from prompts import load_system
+from vc_brain.intelligence.cold_start import ColdStartReport, detect_cold_start, cold_start_founder_score
 from vc_brain.intelligence.thesis_engine import FundThesis
 from vc_brain.llm import complete_json
 from vc_brain.memory.models import Application, Company, Founder, Trend
@@ -42,6 +43,8 @@ class ScreeningResult(BaseModel):
     idea_vs_market_axis: AxisScore = Field(default_factory=AxisScore)
     passes_screen: bool = False
     rejection_reasons: list[str] = Field(default_factory=list)
+    cold_start: bool = False
+    cold_start_data_requests: list[str] = Field(default_factory=list)
 
 
 class Screener:
@@ -63,9 +66,15 @@ class Screener:
         - min_founder_score enforced as a hard floor on the founder axis
         - preferred_signals boost founder scores; anti_signals are rejection flags
         - Thesis alignment is surfaced in rejection_reasons
+
+        Cold-start founders (zero/minimal history) get an explicit data-request path
+        rather than an automatic rejection.
         """
+        # Detect cold-start before scoring so we can adjust the path
+        cold = detect_cold_start(founders, application, company)
+
         # Founder axis: computed from Founder Score + data points
-        founder_axis = self._score_founder_axis(founders, thesis)
+        founder_axis = self._score_founder_axis(founders, thesis, cold)
 
         # Market and Idea axes: LLM-assisted
         thesis_prompt = self._build_thesis_context(thesis) if thesis else thesis_context
@@ -101,12 +110,18 @@ class Screener:
                     reasons.append(f"Anti-signal detected: '{anti}'")
                     passes = False
 
+        # Cold-start: defer decision rather than reject when data is absent
+        if cold.is_cold_start and passes is False and not reasons:
+            reasons.append("Insufficient founder data — data requests emitted")
+
         return ScreeningResult(
             founder_axis=founder_axis,
             market_axis=market_axis,
             idea_vs_market_axis=idea_axis,
             passes_screen=passes,
             rejection_reasons=reasons,
+            cold_start=cold.is_cold_start,
+            cold_start_data_requests=cold.data_requests,
         )
 
     def _build_thesis_context(self, thesis: FundThesis) -> str:
@@ -125,16 +140,23 @@ class Screener:
             parts.append(f"Anti-signals (auto-reject if found): {', '.join(thesis.anti_signals)}")
         return "\n".join(parts)
 
-    def _score_founder_axis(self, founders: list[Founder], thesis: FundThesis | None = None) -> AxisScore:
+    def _score_founder_axis(
+        self,
+        founders: list[Founder],
+        thesis: FundThesis | None = None,
+        cold: ColdStartReport | None = None,
+    ) -> AxisScore:
         if not founders:
             return AxisScore(
-                score=10, sentiment="bear",
-                evidence=["No founder information available — cold-start case"],
-                confidence=0.2,
+                score=cold.score_floor if cold else 10.0,
+                sentiment="neutral" if cold and cold.is_cold_start else "bear",
+                evidence=["No founder information — data requests emitted" if cold else "No founder information"],
+                confidence=cold.confidence if cold else 0.2,
             )
 
         best = max(founders, key=lambda f: f.score.overall)
-        score = best.score.overall
+        # Use cold-start adjusted score to avoid penalizing absent data
+        score = cold_start_founder_score(best) if (cold and cold.is_cold_start) else best.score.overall
         evidence = [
             f"Best founder score: {score}/100",
             f"Technical: {best.score.technical}, Execution: {best.score.execution}",

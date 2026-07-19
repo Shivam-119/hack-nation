@@ -191,6 +191,25 @@ async def run_diligence(app_id: str) -> dict[str, Any]:
     return report.model_dump(mode="json")
 
 
+@app.get("/api/applications/{app_id}/cold-start")
+async def check_cold_start(app_id: str) -> dict[str, Any]:
+    """Check if an application is a cold-start case and return what data is needed."""
+    application = store.get_application(app_id)
+    if not application:
+        return {"error": "Application not found"}
+
+    company = store.get_company(application.company_id)
+    if not company:
+        return {"error": "Company not found"}
+
+    founders = [store.get_founder(fid) for fid in application.founder_ids]
+    founders = [f for f in founders if f]
+
+    from vc_brain.intelligence.cold_start import detect_cold_start
+    report = detect_cold_start(founders, application, company)
+    return report.model_dump()
+
+
 @app.post("/api/applications/{app_id}/validate")
 async def validate_claims(app_id: str) -> dict[str, Any]:
     """Run the validator agent to cross-reference claims against external signals."""
