@@ -24,14 +24,15 @@
 <div class="container">
     <div class="page-head">
         <h1>Inbox</h1>
-        <p>Every application, inbound and sourced. The flag says whether it is worth your
-           attention — and if not, which check it failed.</p>
+        <p>Every application, inbound and sourced. Fit is how closely it matches your criteria;
+           anything that isn't a venture-scale company is flagged separately, because those are
+           two different reasons to pass.</p>
     </div>
 
     <div class="toolbar">
         <button class="filter" data-filter="all" aria-pressed="true">All</button>
-        <button class="filter" data-filter="in_scope" aria-pressed="false">In scope</button>
-        <button class="filter" data-filter="out_of_scope" aria-pressed="false">Out of scope</button>
+        <button class="filter" data-filter="strong" aria-pressed="false">70%+ fit</button>
+        <button class="filter" data-filter="weak" aria-pressed="false">Below 70%</button>
         <button class="filter" data-filter="not_viable" aria-pressed="false">Not viable</button>
         <span class="toolbar__spacer"></span>
         <span id="count" class="mono" style="font-size:13px;color:var(--faint);"></span>
@@ -45,12 +46,31 @@
 </div>
 
 <script type="module">
-import { listApplications, VERDICT, TREND, scoreClass, fmtDate, esc, USE_MOCK } from '/static/api.js';
+import { listApplications, getThesis, fitPill, TREND, scoreClass, fmtDate, esc, USE_MOCK }
+    from '/static/api.js';
 
 if (USE_MOCK) document.getElementById('mockFlag').hidden = false;
 
+// Criteria come first: scoring candidates against defaults the VC has never
+// seen is worse than making them spend ten seconds confirming them.
+try {
+    const thesis = await getThesis();
+    if (!thesis.configured) {
+        location.replace('/investor?first=1');
+    }
+} catch { /* criteria unavailable — show the inbox rather than trapping the user */ }
+
 let apps = [];
 let filter = 'all';
+
+const matchesFilter = (a) => {
+    const { fit_score: fit, sanity } = a.applicability;
+    if (filter === 'all') return true;
+    if (filter === 'not_viable') return sanity.passed === false;
+    if (filter === 'strong') return sanity.passed !== false && fit >= 70;
+    if (filter === 'weak') return sanity.passed !== false && fit < 70;
+    return true;
+};
 
 function axisChips(s) {
     if (!s) return '<span class="table__sub">Not screened</span>';
@@ -62,7 +82,7 @@ function axisChips(s) {
 }
 
 function render() {
-    const rows = apps.filter(a => filter === 'all' || a.applicability.verdict === filter);
+    const rows = apps.filter(matchesFilter);
     const el = document.getElementById('body');
 
     document.getElementById('count').textContent =
@@ -80,13 +100,13 @@ function render() {
         <thead><tr>
             <th>Company</th>
             <th class="table__hide-sm">Sector · Stage</th>
-            <th>Applicability</th>
+            <th>Fit</th>
             <th>Screening</th>
             <th class="table__hide-sm">Submitted</th>
             <th></th>
         </tr></thead>
         <tbody>${rows.map(a => {
-            const v = VERDICT[a.applicability.verdict] || VERDICT.out_of_scope;
+            const p = fitPill(a.applicability);
             return `<tr>
                 <td>
                     <div class="table__co">${esc(a.company_name)}</div>
@@ -96,7 +116,7 @@ function render() {
                     <div>${esc(a.sector || '—')}</div>
                     <div class="table__sub mono">${esc(a.stage || '')}</div>
                 </td>
-                <td><span class="pill ${v.cls}">${v.label}</span></td>
+                <td><span class="pill ${p.cls}">${p.label}</span></td>
                 <td>${axisChips(a.screening)}</td>
                 <td class="table__hide-sm mono table__sub">${fmtDate(a.submitted_at)}</td>
                 <td style="text-align:right;"><a class="btn btn--ghost btn--sm" href="/inbox/${esc(a.id)}">Open</a></td>

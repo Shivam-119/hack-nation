@@ -211,9 +211,36 @@ textarea { resize: vertical; min-height: 76px; line-height: 1.5; }
 .pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 .pill--in    { background: rgba(34,197,94,0.12);  color: var(--green);  border-color: rgba(34,197,94,0.25); }
 .pill--out   { background: rgba(234,179,8,0.12);  color: var(--yellow); border-color: rgba(234,179,8,0.25); }
+.pill--low   { background: var(--surface-2); color: var(--faint); border-color: var(--border-bright); }
 .pill--dead  { background: rgba(239,68,68,0.12);  color: var(--red);    border-color: rgba(239,68,68,0.25); }
 .pill--plain { background: var(--surface-2); color: var(--muted); border-color: var(--border); }
 .pill--plain::before { display: none; }
+
+/* ------------------------------------------------------------- fit meter */
+/* Segments are sized by each criterion's weight and filled by what it
+   actually earned, so the bar shows what was available as well as what was
+   scored -- a 25% that lost sector reads differently from one that lost
+   everything evenly. */
+
+.fit__head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+.fit__score {
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 34px; font-weight: 600; letter-spacing: -0.03em; line-height: 1;
+}
+.fit__score span { font-size: 14px; color: var(--faint); font-weight: 400; }
+.fit__note { font-size: 13px; color: var(--muted); }
+
+.fit__bar { display: flex; gap: 3px; height: 8px; margin-bottom: 18px; }
+.fit__seg { background: var(--bg); border-radius: 2px; overflow: hidden; }
+.fit__seg i { display: block; height: 100%; background: var(--accent); }
+.fit__seg--hi i { background: var(--green); }
+.fit__seg--none { opacity: 0.5; }
+
+.fit__rows { display: grid; grid-template-columns: auto auto 1fr; gap: 8px 14px; font-size: 13px; align-items: baseline; }
+.fit__label { color: var(--text); }
+.fit__pts { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--muted); white-space: nowrap; }
+.fit__pts--zero { color: var(--faint); }
+.fit__why { color: var(--faint); }
 
 .chip {
     display: inline-block; padding: 2px 7px; border-radius: var(--r-sm);

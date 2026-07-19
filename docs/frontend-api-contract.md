@@ -75,26 +75,41 @@ name the inbox can only show hex ids, and there is no `GET /api/companies` to jo
 Also needed: **`GET /api/applications/{id}`**, which does not exist. Only the list route and the
 POST action routes are available today, so the detail screen has nothing to call.
 
-### 4. Applicability — is this worth the partner's attention?
+### 4. Applicability — a fit score plus a viability flag
 
-Nothing models this. Deliberately **two independent judgements**, because a company can match the
-thesis perfectly and still be nonsense, and the partner needs to know which check failed:
+Nothing models this. Deliberately **two independent judgements**: `fit_score` answers *how well
+does this match what the fund said it wants*, `sanity` answers *is this a venture-scale company at
+all*. Keeping both is what stops an ice cream truck and an excellent off-sector fintech from
+looking identical at the bottom of the list.
 
 ```jsonc
 "applicability": {
-  "applicable": false,
-  "verdict": "not_viable",          // in_scope | out_of_scope | not_viable
-  "reasons": ["'ice cream retail' is an operating business, not a venture-scale company"],
-  "thesis_fit": false,              // sector / stage / geography match
-  "sanity": { "passed": false, "note": "Local catering operation. Venture funding is the wrong instrument." }
+  "fit_score": 25,                    // 0-100
+  "sanity": { "passed": true, "note": "Real company, live app, credible team." },
+  "breakdown": [
+    { "label": "Sector",    "weight": 40, "awarded": 0,  "note": "'consumer marketplace' matches no thesis tag" },
+    { "label": "Stage",     "weight": 25, "awarded": 25, "note": "seed is in mandate" },
+    { "label": "Geography", "weight": 20, "awarded": 0,  "note": "Paris is outside the Germany/DACH focus" },
+    { "label": "Desires",   "weight": 15, "awarded": 0,  "note": "Adjacent to the stated 'not consumer social'" }
+  ]
 }
 ```
 
-- `out_of_scope` — a real startup that simply is not this fund's mandate
-- `not_viable` — fails the sanity check regardless of thesis (the ice-cream-truck case)
+**`breakdown` must sum to `fit_score`.** The UI renders it as a segmented bar plus a per-criterion
+table, so the number is explainable rather than oracular — the same reason axis scores carry
+evidence. Weights are the mock's choice (sector 40 · stage 25 · geography 20 · desires 15); the
+real scorer should earn them rather than inherit them.
 
-`thesis_fit` can be computed from `ThesisEngine.fits_thesis`. The sanity check is a judgement call
-and belongs in an LLM step; the mock uses a keyword list only to demonstrate the shape.
+A failed viability check **zeroes everything** and is displayed as a state, not a number: "6% fit"
+invites comparison with a 25% that is merely off-sector, when the two mean completely different
+things. `fit_score` is computable from `ThesisEngine.fits_thesis`; the viability check is a
+judgement call that belongs in an LLM step, and the mock uses a keyword list only to show the shape.
+
+### 5. A deck endpoint
+
+`GET /api/applications/{id}/deck` returns the uploaded file as `application/pdf`. The mock keeps
+uploaded bytes in memory and serves them back verbatim; fixture applications have no bytes, so it
+generates a placeholder naming the company rather than serving a dead link.
 
 ## A real bug this exercise surfaced
 
@@ -124,6 +139,16 @@ sets, or `re.search(rf"\b{re.escape(tag)}\b", sector, re.I)`.
 
 `vc_brain/api/mock_routes.py` reproduces the current behaviour faithfully, false positives
 included, so the mock does not paper over it.
+
+## Diligence
+
+The diligence step is **removed from the UI** — the pipeline label, the button and its handler are
+gone from the dashboard. What replaced it is the fit score above: a cheap, explainable check in
+front of screening rather than a separate stage after it.
+
+`vc_brain/intelligence/diligence.py` and `POST /api/applications/{id}/diligence` are **left
+intact**. Deleting a module that `app.py` still imports is outside a frontend change, and the
+claim-verification model behind it is worth keeping even if this UI no longer calls it.
 
 ## Three pre-existing bugs the real routes must resolve
 

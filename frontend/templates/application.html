@@ -26,7 +26,8 @@
 </div>
 
 <script type="module">
-import { getApplication, VERDICT, TREND, scoreClass, fmtDate, esc, USE_MOCK } from '/static/api.js';
+import { getApplication, deckUrl, TREND, scoreClass, fmtDate, esc, USE_MOCK }
+    from '/static/api.js';
 
 if (USE_MOCK) document.getElementById('mockFlag').hidden = false;
 
@@ -102,22 +103,43 @@ function screeningSection(s) {
 }
 
 function applicabilityCard(a) {
-    const v = VERDICT[a.verdict] || VERDICT.out_of_scope;
+    const failed = a.sanity.passed === false;
+    const total = a.breakdown.reduce((n, b) => n + b.weight, 0) || 100;
+
+    const bar = a.breakdown.map(b => `
+        <div class="fit__seg ${b.awarded ? 'fit__seg--hi' : 'fit__seg--none'}"
+             style="flex:${b.weight} 0 0"
+             title="${esc(b.label)}: ${b.awarded} of ${b.weight}">
+            <i style="width:${b.weight ? (b.awarded / b.weight) * 100 : 0}%"></i>
+        </div>`).join('');
+
+    const rows = a.breakdown.map(b => `
+        <div class="fit__label">${esc(b.label)}</div>
+        <div class="fit__pts ${b.awarded ? '' : 'fit__pts--zero'}">${b.awarded} / ${b.weight}</div>
+        <div class="fit__why">${esc(b.note)}</div>`).join('');
+
     return `<div class="card">
-        <div class="card__title">Applicability</div>
-        <div class="card__hint">Two independent checks: does it match the fund's criteria, and is it
-            a real venture-scale company at all.</div>
+        <div class="card__title">Fit with your criteria</div>
+        <div class="card__hint">How well this matches what you said you're looking for — and,
+            separately, whether it's a venture-scale company at all.</div>
 
-        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px;">
-            <span class="pill ${v.cls}">${v.label}</span>
-            <span class="pill pill--plain">Criteria match: ${a.thesis_fit === null ? 'unknown' : a.thesis_fit ? 'yes' : 'no'}</span>
-            <span class="pill pill--plain">Sanity check: ${a.sanity.passed ? 'passed' : 'failed'}</span>
-        </div>
-
-        <div class="notice"><strong>${esc(a.sanity.note)}</strong></div>
-        ${a.reasons && a.reasons.length
-            ? `<ul class="reasons">${a.reasons.map(r => `<li>${esc(r)}</li>`).join('')}</ul>`
-            : ''}
+        ${failed ? `
+            <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;">
+                <span class="pill pill--dead">Not viable</span>
+            </div>
+            <div class="notice"><strong>${esc(a.sanity.note)}</strong></div>
+            <div class="fit__hint field__why" style="margin-top:14px;">
+                Criteria were not scored: a company that fails this check would not become a fit
+                by being in the right sector.
+            </div>
+        ` : `
+            <div class="fit__head">
+                <div class="fit__score">${a.fit_score}<span>% of ${total}</span></div>
+                <div class="fit__note">${esc(a.sanity.note)}</div>
+            </div>
+            <div class="fit__bar">${bar}</div>
+            <div class="fit__rows">${rows}</div>
+        `}
     </div>`;
 }
 
@@ -167,7 +189,10 @@ function render(a) {
                 <div class="card__title">Application</div>
                 <div class="card__hint">What the founder told us.</div>
                 <dl class="kv">
-                    <dt>Deck</dt><dd class="mono">${esc(a.deck?.filename || 'none')}${a.deck?.pages ? ` · ${a.deck.pages}pp` : ''}</dd>
+                    <dt>Deck</dt>
+                    <dd>${a.deck?.filename
+                        ? `<a class="mono" href="${deckUrl(a.id)}" target="_blank" rel="noopener">${esc(a.deck.filename)}</a>${a.deck.pages ? ` <span class="table__sub">· ${a.deck.pages}pp</span>` : ''}`
+                        : '<span class="table__sub">No deck uploaded</span>'}</dd>
                     <dt>Website</dt><dd>${a.website ? `<a href="${esc(a.website)}">${esc(a.website)}</a>` : '—'}</dd>
                     <dt>Product</dt><dd>${a.product_url ? `<a href="${esc(a.product_url)}">${esc(a.product_url)}</a>` : '—'}</dd>
                     <dt>Accelerator</dt><dd>${esc(a.accelerator || '—')}</dd>

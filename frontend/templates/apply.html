@@ -143,7 +143,37 @@
 </div>
 
 <script type="module">
-import { submitApplication, VERDICT, esc, USE_MOCK } from '/static/api.js';
+import { submitApplication, esc, USE_MOCK } from '/static/api.js';
+
+/* The founder sees an outcome, not our internal number. A raw "25% fit" is
+   cold and tells them nothing they can act on; which criterion missed does. */
+function outcome(a) {
+    if (a.sanity && a.sanity.passed === false) {
+        return {
+            cls: 'pill--dead',
+            label: 'Not a fit',
+            body: 'This fund backs venture-scale software companies. That is a comment on the '
+                + 'match, not on the business.',
+            detail: a.sanity.note,
+        };
+    }
+    if (a.fit_score < 40) {
+        const missed = (a.breakdown || []).filter(b => !b.awarded).map(b => b.label.toLowerCase());
+        return {
+            cls: 'pill--out',
+            label: 'Outside our current focus',
+            body: 'We will still read it, but it sits outside what this fund is looking for'
+                + (missed.length ? ` on ${missed.slice(0, 2).join(' and ')}.` : '.'),
+            detail: '',
+        };
+    }
+    return {
+        cls: 'pill--in',
+        label: 'In review',
+        body: "Your application is in. You'll hear back within 24 hours.",
+        detail: '',
+    };
+}
 
 if (USE_MOCK) document.getElementById('mockFlag').hidden = false;
 
@@ -246,20 +276,18 @@ document.getElementById('form').addEventListener('submit', async (e) => {
     status.textContent = 'Submitting…';
     try {
         const res = await submitApplication(fd);
-        const v = VERDICT[res.applicability.verdict] || VERDICT.out_of_scope;
+        const o = outcome(res.applicability);
         document.getElementById('form').hidden = true;
         const done = document.getElementById('done');
         done.hidden = false;
         done.innerHTML = `<div class="card">
             <div class="card__title">Received</div>
-            <p style="margin:10px 0 16px;">Your application is in. You'll hear back within 24 hours.</p>
+            <p style="margin:10px 0 16px;">${esc(o.body)}</p>
             <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
                 <span class="pill pill--plain mono">${esc(res.application_id)}</span>
-                <span class="pill ${v.cls}">${v.label}</span>
+                <span class="pill ${o.cls}">${esc(o.label)}</span>
             </div>
-            ${res.applicability.reasons?.length
-                ? `<ul class="reasons">${res.applicability.reasons.map(r => `<li>${esc(r)}</li>`).join('')}</ul>`
-                : ''}
+            ${o.detail ? `<div class="notice" style="margin-top:14px;">${esc(o.detail)}</div>` : ''}
             <div style="margin-top:18px;"><a class="btn btn--ghost btn--sm" href="/inbox">See it in the inbox</a></div>
         </div>`;
     } catch (err) {

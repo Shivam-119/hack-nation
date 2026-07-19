@@ -23,9 +23,9 @@
 
 <div class="container container--narrow">
     <div class="page-head">
-        <h1>What you're looking for</h1>
-        <p>Set this once, before sourcing starts. Every candidate is filtered and scored
-           through it. Takes about a minute.</p>
+        <h1 id="heading">What you're looking for</h1>
+        <p id="subhead">Set this once, before sourcing starts. Every candidate is filtered and
+           scored through it. Takes about a minute.</p>
     </div>
 
     <form id="form">
@@ -83,7 +83,7 @@
         </div>
 
         <div style="display:flex;gap:12px;align-items:center;margin-top:20px;">
-            <button class="btn" type="submit">Save criteria</button>
+            <button class="btn" type="submit" id="save">Save criteria</button>
             <span id="status" style="font-size:13px;color:var(--muted);"></span>
         </div>
     </form>
@@ -93,6 +93,17 @@
 import { getThesis, saveThesis, esc, USE_MOCK } from '/static/api.js';
 
 if (USE_MOCK) document.getElementById('mockFlag').hidden = false;
+
+// Arriving here because the inbox had no criteria yet. Defaults are already
+// filled in, so this is one click — but the VC sees what they are accepting.
+const firstRun = new URLSearchParams(location.search).get('first') === '1';
+if (firstRun) {
+    document.getElementById('heading').textContent = 'First, what are you looking for?';
+    document.getElementById('subhead').textContent =
+        'Everything below is pre-filled with sensible defaults. Change what you disagree with, '
+        + 'then continue — every candidate is scored against this.';
+    document.getElementById('save').textContent = 'Save and continue';
+}
 
 const SECTOR_PRESETS = ['AI','fintech','SaaS','devtools','health','bio','climate','energy',
                         'marketplace','consumer','security','robotics','space','crypto'];
@@ -200,6 +211,11 @@ document.getElementById('form').addEventListener('submit', async (e) => {
             risk_appetite: document.querySelector('[name="risk"]:checked')?.value || 'moderate',
             desires: state.desires.map(d => d.trim()).filter(Boolean),
         });
+        if (firstRun) {
+            status.textContent = 'Saved. Taking you to the inbox…';
+            location.assign('/inbox');
+            return;
+        }
         status.textContent = `Saved — ${saved.sectors.length} sectors, ${saved.stages.length} stages, ${saved.desires.length} desires.`;
     } catch (err) {
         status.textContent = `Could not save: ${err.message}`;

@@ -17,6 +17,7 @@ const MOCKED = new Set([
     'PUT /api/thesis',
     'GET /api/applications',
     'GET /api/applications/{id}',
+    'GET /api/applications/{id}/deck',
     'POST /api/applications',
 ]);
 
@@ -50,13 +51,19 @@ async function request(method, route, actual, body) {
 
 /**
  * The fund's criteria — filled in before any candidate is sourced.
+ *
+ * `configured` is false until the VC has saved once. The inbox uses it to
+ * decide whether to send a first-time user to the criteria form, so defaults
+ * are seen and accepted rather than applied invisibly.
+ *
  * @returns {Promise<{
  *   name: string,
  *   sectors: string[],      // broad tags: "AI", not "AI Infrastructure"
  *   stages: string[],       // exactly "pre-seed" | "seed"
  *   geographies: string[],
  *   risk_appetite: string,  // "conservative" | "moderate" | "aggressive"
- *   desires: string[]       // wants AND won't-touches, plain language
+ *   desires: string[],      // wants AND won't-touches, plain language
+ *   configured: boolean
  * }>}
  */
 export const getThesis = () => request('GET', '/api/thesis', '/api/thesis');
@@ -140,15 +147,18 @@ export const submitApplication = (formData) =>
  * Is this worth the partner's attention?
  *
  * NOTE FOR BACKEND — nothing models this today. Deliberately TWO independent
- * judgements: a company can match the thesis perfectly and still be nonsense,
- * and the partner needs to see which check failed.
+ * judgements: `fit_score` answers "how well does this match what I said I
+ * want", `sanity` answers "is this a venture-scale company at all". Keeping
+ * both is what stops an ice cream truck and an excellent off-sector fintech
+ * from looking identical at the bottom of the list.
+ *
+ * `breakdown` must sum to `fit_score`, so the number is explainable on screen
+ * rather than arriving as an oracle. A failed sanity check zeroes everything.
  *
  * @typedef {Object} Applicability
- * @property {boolean} applicable
- * @property {'in_scope'|'out_of_scope'|'not_viable'} verdict
- * @property {string[]} reasons
- * @property {boolean|null} thesis_fit                    // sector/stage/geography match
- * @property {{passed: boolean, note: string}} sanity     // "is this a real company at all"
+ * @property {number} fit_score                           // 0-100
+ * @property {{passed: boolean, note: string}} sanity
+ * @property {Array<{label: string, weight: number, awarded: number, note: string}>} breakdown
  */
 
 /**
@@ -186,11 +196,25 @@ export const submitApplication = (formData) =>
 
 export const scoreClass = (n) => (n >= 60 ? 'hi' : n >= 35 ? 'mid' : 'lo');
 
-export const VERDICT = {
-    in_scope:     { label: 'In scope',     cls: 'pill--in' },
-    out_of_scope: { label: 'Out of scope', cls: 'pill--out' },
-    not_viable:   { label: 'Not viable',   cls: 'pill--dead' },
-};
+/** The deck a founder uploaded, or a generated placeholder for fixtures. */
+export const deckUrl = (id) =>
+    path('GET', '/api/applications/{id}/deck', `/api/applications/${id}/deck`);
+
+/**
+ * How to show applicability in one control.
+ *
+ * A failed sanity check is shown as a state, not a number: "6% fit" invites
+ * comparison with a 24% that is merely off-sector, when the two mean entirely
+ * different things.
+ */
+export const fitPill = (a) => (
+    a.sanity && a.sanity.passed === false
+        ? { label: 'Not viable', cls: 'pill--dead' }
+        : {
+            label: `${a.fit_score}% fit`,
+            cls: a.fit_score >= 70 ? 'pill--in' : a.fit_score >= 40 ? 'pill--out' : 'pill--low',
+        }
+);
 
 export const TREND = { improving: '↑', stable: '→', declining: '↓' };
 
