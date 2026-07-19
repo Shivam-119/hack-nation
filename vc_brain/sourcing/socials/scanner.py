@@ -18,8 +18,8 @@ from datetime import datetime
 from vc_brain.config import config
 from vc_brain.memory.ingestion import IngestionPipeline
 from vc_brain.memory.models import DataPoint, Founder, SourceType
-from vc_brain.sourcing.socials.graph import build_network_graph, score_network
-from vc_brain.sourcing.socials.identity import aggregate_identity_score, get_identity_checker
+from vc_brain.sourcing.socials.graph import build_network_graph
+from vc_brain.sourcing.socials.identity import get_identity_checker
 from vc_brain.sourcing.socials.models import (
     Connection,
     IdentityResult,
@@ -73,7 +73,6 @@ class SocialsScanner:
             all_connections,
             [p for p in all_posts if p.network == seed_network],
         )
-        network_score = score_network(graph)
 
         seed_profile = profiles.get(seed_network) or (
             next(iter(profiles.values())) if profiles else None
@@ -84,10 +83,8 @@ class SocialsScanner:
         founder_identity, engagers = await self._run_identity(
             founder_name, seed_handle, all_comments
         )
-        identity_score = aggregate_identity_score(engagers)
 
-        confidence = round(0.5 * analysis.confidence + (0.4 if graph.notable_hits else 0.15), 2)
-
+        # No scoring here — this tool only accumulates data for the downstream stage.
         return SocialsResult(
             name=founder_name,
             handles=handles,
@@ -96,11 +93,8 @@ class SocialsScanner:
             comments=all_comments,
             post_analysis=analysis,
             graph=graph,
-            network_score=network_score,
             founder_identity=founder_identity,
             engager_identities=engagers,
-            identity_score=identity_score,
-            confidence=confidence,
             sources=sources,
         )
 
@@ -171,8 +165,7 @@ class SocialsScanner:
                 "posts_fetched": sum(1 for p in result.posts if p.network == network),
             }
             content["comments_fetched"] = sum(1 for c in result.comments if c.network == network)
-            if network == "twitter":  # the network that carries the graph
-                content["network_score"] = result.network_score
+            if network == "twitter":  # the network that carries the (mock) graph structure
                 content["notable_connections"] = [h.model_dump() for h in result.graph.notable_hits]
                 content["graph_metrics"] = {
                     "nodes": result.graph.node_count,
@@ -184,7 +177,6 @@ class SocialsScanner:
                     source=_SOURCE_BY_NETWORK.get(network, SourceType.MANUAL),
                     source_url=profile.url,
                     content=content,
-                    confidence=result.confidence,
                 )
             )
 
@@ -197,11 +189,10 @@ class SocialsScanner:
                 source=SourceType.TWITTER if "twitter" in result.profiles else SourceType.LINKEDIN,
                 source_url=seed_url,
                 content={"type": "post_analysis", **result.post_analysis.model_dump()},
-                confidence=result.post_analysis.confidence,
             )
         )
 
-        # Identity check — founder + notable engagers, as its own citable point.
+        # Identity data — founder + notable engagers (who they are), no scores.
         notable_engagers = [e.model_dump() for e in result.engager_identities if e.is_notable]
         points.append(
             DataPoint(
@@ -209,14 +200,12 @@ class SocialsScanner:
                 source_url=seed_url,
                 content={
                     "type": "identity_network",
-                    "identity_score": result.identity_score,
                     "founder_identity": result.founder_identity.model_dump()
                     if result.founder_identity
                     else None,
                     "notable_engagers": notable_engagers,
                     "engagers_checked": len(result.engager_identities),
                 },
-                confidence=result.founder_identity.confidence if result.founder_identity else 0.3,
             )
         )
         return points

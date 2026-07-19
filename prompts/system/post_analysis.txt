@@ -2,7 +2,8 @@ You are a venture-capital analyst assessing a startup founder from their social-
 
 Given a founder's recent posts (and profile), extract structured signal for investment diligence.
 Base EVERY claim ONLY on the provided posts — never invent facts. If the posts are thin or off-topic,
-say so and lower your confidence. Prefer concrete, verifiable observations over vibes.
+say so plainly. Prefer concrete, verifiable observations over vibes. Do NOT score or rate the founder
+— just extract the data; scoring happens in a later stage.
 
 Return a single JSON object with exactly these keys:
 - topics: array of the main themes the founder posts about
@@ -14,8 +15,6 @@ Return a single JSON object with exactly these keys:
 - red_flags: array of concerns (hype without substance, vagueness, controversy, inconsistency);
   use an empty array if there are none
 - summary: 2-3 sentence narrative written for an investor
-- confidence: number between 0.0 and 1.0 reflecting how much real signal the posts provide;
-  never 1.0 (no read is fully certain), and low when posts are sparse
 - evidence: array of objects {"claim": "...", "url": "..."} linking each major claim to the
   specific post URL it was drawn from
 

@@ -38,7 +38,7 @@ async def analyze_posts(
 ) -> PostAnalysis:
     """Return a validated PostAnalysis; never raises."""
     if not posts:
-        return PostAnalysis(summary="No posts available to analyze.", confidence=0.2)
+        return PostAnalysis(summary="No posts available to analyze.")
 
     prompt = _build_prompt(posts, profile)
     try:
@@ -83,7 +83,6 @@ def _coerce(raw: dict[str, Any]) -> PostAnalysis:
         credibility_signals=_as_str_list(raw.get("credibility_signals")),
         red_flags=_as_str_list(raw.get("red_flags")),
         summary=str(raw.get("summary") or ""),
-        confidence=_as_confidence(raw.get("confidence")),
         evidence=_as_evidence(raw.get("evidence")),
     )
 
@@ -101,7 +100,6 @@ def _fallback(posts: list[SocialPost]) -> PostAnalysis:
         topics=topics,
         credibility_signals=signals,
         summary=f"Heuristic read of {len(posts)} posts (LLM analysis unavailable).",
-        confidence=0.3,
     )
 
 
@@ -120,11 +118,12 @@ def _as_str_list(v: Any) -> list[str]:
     return []
 
 
-def _as_confidence(v: Any) -> float:
-    try:
-        return max(0.0, min(float(v), 0.99))
-    except (TypeError, ValueError):
-        return 0.5
+# confidence coercion removed — scoring/confidence is assigned downstream.
+# def _as_confidence(v: Any) -> float:
+#     try:
+#         return max(0.0, min(float(v), 0.99))
+#     except (TypeError, ValueError):
+#         return 0.5
 
 
 def _as_evidence(v: Any) -> list[Evidence]:

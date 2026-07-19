@@ -11,16 +11,13 @@ from vc_brain.memory.ingestion import IngestionPipeline
 from vc_brain.memory.store import MemoryStore
 from vc_brain.sourcing.socials import (
     SocialsScanner,
-    aggregate_identity_score,
     build_network_graph,
     get_graph_provider,
     get_identity_checker,
     get_provider,
-    score_network,
-    score_prominence,
 )
 from vc_brain.sourcing.socials.identity import MockIdentityChecker
-from vc_brain.sourcing.socials.models import Connection, IdentityResult, SocialPost
+from vc_brain.sourcing.socials.models import Connection, SocialPost
 from vc_brain.sourcing.socials.providers.mock import MockProvider
 import vc_brain.sourcing.socials.post_analyzer as post_analyzer
 
@@ -44,9 +41,9 @@ def test_mock_provider_unknown_handle_uses_default_fixture():
 
 
 # ---------------------------------------------------------------------------
-# Deterministic graph + score
+# Graph structure + notable tags (DATA; scoring lives downstream)
 # ---------------------------------------------------------------------------
-def test_graph_detects_notable_and_scores():
+def test_graph_detects_notable_as_data():
     conns = [
         Connection(network="twitter", source_handle="jane", target_handle="sama",
                    source_url="https://twitter.com/jane/following"),
@@ -58,17 +55,17 @@ def test_graph_detects_notable_and_scores():
     hit_handles = {h.handle for h in g.notable_hits}
     assert "sama" in hit_handles and "paulg" in hit_handles
     assert "nobody_random" not in hit_handles
-    assert 0 < score_network(g) <= 100
-    # every notable hit is traceable to a source url
+    assert g.node_count == 4 and g.edge_count == 3
+    # every notable hit is traceable to a source url (no score attached)
     assert all(h.source_url for h in g.notable_hits)
 
 
-def test_score_increases_with_more_notable_connections():
+def test_more_notable_connections_yields_more_hits():
     base = [Connection(network="twitter", source_handle="j", target_handle="sama")]
     more = base + [Connection(network="twitter", source_handle="j", target_handle="pmarca")]
-    s1 = score_network(build_network_graph("j", "twitter", base, []))
-    s2 = score_network(build_network_graph("j", "twitter", more, []))
-    assert s2 >= s1
+    g1 = build_network_graph("j", "twitter", base, [])
+    g2 = build_network_graph("j", "twitter", more, [])
+    assert len(g2.notable_hits) >= len(g1.notable_hits)
 
 
 def test_mention_edges_built_from_posts():
@@ -79,10 +76,10 @@ def test_mention_edges_built_from_posts():
     assert any(h.handle == "sama" for h in g.notable_hits)
 
 
-def test_empty_graph_scores_zero():
+def test_empty_graph_has_only_seed():
     g = build_network_graph("solo", "twitter", [], [])
     assert g.node_count == 1 and g.edge_count == 0
-    assert score_network(g) == 0.0
+    assert g.notable_hits == []
 
 
 # ---------------------------------------------------------------------------
@@ -107,7 +104,7 @@ def test_graph_provider_always_mock():
 
 
 # ---------------------------------------------------------------------------
-# Identity check + deterministic prominence
+# Identity resolution (DATA — who a person is; no prominence score)
 # ---------------------------------------------------------------------------
 def test_identity_mock_resolves_notable_and_unknown(monkeypatch):
     from vc_brain import config as config_module
@@ -121,27 +118,11 @@ def test_identity_mock_resolves_notable_and_unknown(monkeypatch):
     ic = get_identity_checker()
     assert isinstance(ic, MockIdentityChecker)
     notable = asyncio.run(ic.identify("Pieter Levels", "levelsio"))
-    assert notable.is_notable and notable.prominence_score >= 60
+    assert notable.is_notable and notable.resolved_name == "Pieter Levels"
     unknown = asyncio.run(ic.identify("Alex Rando", "randobuilder22"))
-    assert not unknown.is_notable and unknown.prominence_score < 30
-
-
-def test_prominence_scoring_is_deterministic_and_bounded():
-    high = score_prominence(is_notable=True, roles=["Founder"], affiliations=["Stripe"])
-    low = score_prominence(is_notable=False, roles=["Engineer"], affiliations=["SomeCo"])
-    assert high >= low
-    assert 0 <= low <= 100 and 0 <= high <= 100
-    assert high >= 60  # notable floor
-
-
-def test_aggregate_identity_score_counts_only_notable():
-    engagers = [
-        IdentityResult(query_name="A", is_notable=True, prominence_score=60),
-        IdentityResult(query_name="B", is_notable=True, prominence_score=60),
-        IdentityResult(query_name="C", is_notable=False, prominence_score=15),
-    ]
-    assert aggregate_identity_score(engagers) == 60.0  # 2 * 60 * 0.5
-    assert aggregate_identity_score([]) == 0.0
+    assert not unknown.is_notable
+    # scores are gone — no prominence attribute is emitted
+    assert not hasattr(notable, "prominence_score")
 
 
 # ---------------------------------------------------------------------------
@@ -173,8 +154,8 @@ def test_post_analyzer_fallback_when_llm_unavailable(monkeypatch):
     monkeypatch.setattr(post_analyzer, "complete_json", boom)
     posts = asyncio.run(MockProvider("twitter").get_posts("janedoe", 30))
     a = asyncio.run(post_analyzer.analyze_posts(posts))
-    assert a.confidence <= 0.3
     assert "unavailable" in a.summary.lower()
+    assert not hasattr(a, "confidence")  # scoring/confidence moved downstream
 
 
 def test_post_analyzer_coerces_and_clamps_llm_output(monkeypatch):
@@ -182,7 +163,6 @@ def test_post_analyzer_coerces_and_clamps_llm_output(monkeypatch):
         return {
             "topics": ["ai infra"],
             "sentiment": "positive",
-            "confidence": 2.0,  # out of range -> clamp to 0.99
             "evidence": [{"claim": "shipped", "url": "https://x/1"}],
         }
 
@@ -191,7 +171,6 @@ def test_post_analyzer_coerces_and_clamps_llm_output(monkeypatch):
     a = asyncio.run(post_analyzer.analyze_posts(posts))
     assert a.topics == ["ai infra"]
     assert a.sentiment == "positive"
-    assert a.confidence == 0.99
     assert len(a.evidence) == 1
 
 
@@ -203,18 +182,23 @@ def test_scanner_analyze_ingest_and_enrich(monkeypatch, tmp_path):
         raise RuntimeError("no key")  # force deterministic analyzer path
 
     monkeypatch.setattr(post_analyzer, "complete_json", boom)
+    # Pin every provider to mock so this stays offline even when .env selects live
+    # providers (apify/tavily) with a token present.
+    for attr in ("socials_twitter_provider", "socials_linkedin_provider",
+                 "socials_identity_provider"):
+        monkeypatch.setattr(config, attr, "mock", raising=False)
+
     store = MemoryStore(path=str(tmp_path / "socials.json"))
     scanner = SocialsScanner(IngestionPipeline(store))
 
     result = asyncio.run(scanner.analyze({"twitter": "janedoe", "linkedin": "janedoe"}, name="Jane Doe"))
-    assert result.network_score > 0
-    assert result.graph.notable_hits
+    # data accumulated (no scores emitted)
+    assert not hasattr(result, "network_score") and not hasattr(result, "identity_score")
+    assert result.graph.notable_hits  # structure + notable tags kept as data
     assert result.profiles.get("twitter") and result.profiles.get("linkedin")
-    # comments scraped + identity of engagers computed
     assert len(result.comments) >= 3
     assert result.founder_identity is not None
     assert any(e.is_notable for e in result.engager_identities)
-    assert result.identity_score > 0
 
     f1 = scanner.ingest(result)
     n1 = len(f1.data_points)

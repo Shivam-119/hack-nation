@@ -24,7 +24,7 @@
 <body>
   <div id="hud">
     <h1 id="title">Connection graph</h1>
-    <div class="meta"><span class="score" id="score"></span> network score
+    <div class="meta"><span class="score" id="score"></span> notable connections
       &nbsp;·&nbsp; <span id="counts"></span></div>
   </div>
   <div id="legend">
@@ -39,9 +39,9 @@
     const META = __META__;
 
     document.getElementById("title").textContent = META.name || "Connection graph";
-    document.getElementById("score").textContent = (META.network_score ?? 0) + "/100";
+    document.getElementById("score").textContent = (META.notable_count ?? 0);
     document.getElementById("counts").textContent =
-      `${DATA.nodes.length} people · ${DATA.links.length} connections · ${META.notable_count || 0} notable`;
+      `${DATA.nodes.length} people · ${DATA.links.length} connections`;
 
     const el = document.getElementById("graph");
     const Graph = ForceGraph()(el)

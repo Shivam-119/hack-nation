@@ -56,27 +56,28 @@ class IdentityChecker(Protocol):
 
 
 # ---------------------------------------------------------------------------
-# Deterministic prominence score (non-LLM)
+# DISABLED: scoring moved to the downstream consolidation stage. This tool only
+# accumulates identity DATA (who a person is); it no longer assigns a prominence
+# score. Preserved (commented) so the downstream agent can lift it later.
 # ---------------------------------------------------------------------------
-def score_prominence(
-    *,
-    is_notable: bool,
-    roles: list[str],
-    affiliations: list[str],
-    source_hits: int = 0,
-    roster_weight: float = 0.0,
-) -> float:
-    score = min(roster_weight * 5.0, 50.0)
-    score += min(sum(_ROLE_PTS.get(r.strip().lower(), 4) for r in roles), 24.0)
-    score += min(len(_notable_affiliations(affiliations)) * 10.0, 20.0)
-    score += min(source_hits * 2.0, 10.0)
-    if is_notable:
-        score = max(score, 60.0)
-    return round(min(score, 100.0), 1)
-
-
-def _notable_affiliations(affs: list[str]) -> list[str]:
-    return [a for a in affs if any(p in a.lower() for p in _PRESTIGE)]
+# def score_prominence(
+#     *,
+#     is_notable: bool,
+#     roles: list[str],
+#     affiliations: list[str],
+#     source_hits: int = 0,
+#     roster_weight: float = 0.0,
+# ) -> float:
+#     score = min(roster_weight * 5.0, 50.0)
+#     score += min(sum(_ROLE_PTS.get(r.strip().lower(), 4) for r in roles), 24.0)
+#     score += min(len(_notable_affiliations(affiliations)) * 10.0, 20.0)
+#     score += min(source_hits * 2.0, 10.0)
+#     if is_notable:
+#         score = max(score, 60.0)
+#     return round(min(score, 100.0), 1)
+#
+# def _notable_affiliations(affs: list[str]) -> list[str]:
+#     return [a for a in affs if any(p in a.lower() for p in _PRESTIGE)]
 
 
 # ---------------------------------------------------------------------------
@@ -102,10 +103,6 @@ class MockIdentityChecker:
                 description=f"{entry.category.replace('_', ' ')} (matched notable roster)",
                 roles=[role],
                 is_notable=True,
-                prominence_score=score_prominence(
-                    is_notable=True, roles=[role], affiliations=[], roster_weight=entry.weight
-                ),
-                confidence=0.6,
                 evidence=[Evidence(
                     claim=f"Matched notable roster as {entry.name}",
                     url=f"https://twitter.com/{matched_handle}" if matched_handle else "",
@@ -117,8 +114,6 @@ class MockIdentityChecker:
             handle=matched_handle,
             resolved_name=name,
             description="No notable public profile matched.",
-            prominence_score=15.0,
-            confidence=0.3,
             source="mock",
         )
 
@@ -174,13 +169,6 @@ class TavilyIdentityChecker:
             roles=roles,
             affiliations=affiliations,
             is_notable=is_notable,
-            prominence_score=score_prominence(
-                is_notable=is_notable,
-                roles=roles,
-                affiliations=affiliations,
-                source_hits=len(results),
-            ),
-            confidence=_as_confidence(raw.get("confidence")),
             evidence=[
                 Evidence(claim=str(r.get("title", "")), url=str(r.get("url", "")))
                 for r in results[:3]
@@ -196,10 +184,12 @@ def get_identity_checker() -> IdentityChecker:
     return MockIdentityChecker()
 
 
-def aggregate_identity_score(engagers: list[IdentityResult]) -> float:
-    """0-100 signal from WHO engages: notable engagers' prominence, half-weighted."""
-    notable = [e for e in engagers if e.is_notable]
-    return round(min(sum(e.prominence_score for e in notable) * 0.5, 100.0), 1)
+# DISABLED: scoring moved to the downstream consolidation stage. Preserved
+# (commented) so the downstream agent can lift it later.
+# def aggregate_identity_score(engagers: list[IdentityResult]) -> float:
+#     """0-100 signal from WHO engages: notable engagers' prominence, half-weighted."""
+#     notable = [e for e in engagers if e.is_notable]
+#     return round(min(sum(e.prominence_score for e in notable) * 0.5, 100.0), 1)
 
 
 # ---------------------------------------------------------------------------
@@ -243,8 +233,9 @@ def _as_list(v: Any) -> list[str]:
     return []
 
 
-def _as_confidence(v: Any) -> float:
-    try:
-        return max(0.0, min(float(v), 0.99))
-    except (TypeError, ValueError):
-        return 0.5
+# confidence coercion removed — scoring/confidence is assigned downstream.
+# def _as_confidence(v: Any) -> float:
+#     try:
+#         return max(0.0, min(float(v), 0.99))
+#     except (TypeError, ValueError):
+#         return 0.5

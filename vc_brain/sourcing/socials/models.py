@@ -84,7 +84,7 @@ class PostAnalysis(BaseModel):
     credibility_signals: list[str] = Field(default_factory=list)
     red_flags: list[str] = Field(default_factory=list)
     summary: str = ""
-    confidence: float = 0.5  # 0-1; never 1.0 — no claim is fully verified
+    # confidence: float = 0.5  # scoring moved to downstream consolidation stage
     evidence: list[Evidence] = Field(default_factory=list)
 
 
@@ -99,8 +99,9 @@ class IdentityResult(BaseModel):
     roles: list[str] = Field(default_factory=list)  # Founder, Investor, Engineer, ...
     affiliations: list[str] = Field(default_factory=list)  # orgs/companies
     is_notable: bool = False
-    prominence_score: float = 0.0  # 0-100, deterministic
-    confidence: float = 0.5
+    # scoring moved to downstream consolidation stage:
+    # prominence_score: float = 0.0
+    # confidence: float = 0.5
     evidence: list[Evidence] = Field(default_factory=list)
     source: str = "mock"  # which checker produced it
 
@@ -156,11 +157,12 @@ class SocialsResult(BaseModel):
     posts: list[SocialPost] = Field(default_factory=list)
     comments: list[SocialComment] = Field(default_factory=list)  # real, scraped
     post_analysis: PostAnalysis = Field(default_factory=PostAnalysis)
-    graph: NetworkGraph = Field(default_factory=NetworkGraph)  # MOCK edges for now
-    network_score: float = 0.0  # 0-100, deterministic (from the mock graph)
+    graph: NetworkGraph = Field(default_factory=NetworkGraph)  # MOCK edges; nodes/tags are data
     founder_identity: IdentityResult | None = None
     engager_identities: list[IdentityResult] = Field(default_factory=list)
-    identity_score: float = 0.0  # 0-100, deterministic (who actually engages)
-    confidence: float = 0.5
+    # scoring moved to downstream consolidation stage; this tool only accumulates data:
+    # network_score: float = 0.0
+    # identity_score: float = 0.0
+    # confidence: float = 0.5
     sources: list[str] = Field(default_factory=list)
     retrieved_at: datetime = Field(default_factory=datetime.utcnow)

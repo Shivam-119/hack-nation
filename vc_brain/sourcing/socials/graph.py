@@ -1,15 +1,12 @@
-"""Deterministic connection-graph builder + network scorer (no LLM).
+"""Deterministic connection-graph builder (no LLM).
 
 Takes the connections and posts a provider returned and produces a `NetworkGraph`
-(nodes/edges/metrics/notable-hits) plus a 0-100 `network_score`. Everything here
-is pure and reproducible — the score never comes from a model, only from the
-graph structure and the hardcoded notable roster. Exports for viz are provided
-too (`to_forcegraph_json`, `to_gexf`).
+(nodes/edges/metrics/notable-hits) — pure structural DATA. Scoring has moved to
+the downstream consolidation stage (see the disabled `score_network` below).
+Exports for viz are provided too (`to_forcegraph_json`, `to_gexf`).
 """
 
 from __future__ import annotations
-
-from collections import defaultdict
 
 import networkx as nx
 
@@ -24,11 +21,11 @@ from vc_brain.sourcing.socials.models import (
 )
 from vc_brain.sourcing.socials.notable import lookup_notable, normalize_handle
 
-# Scoring knobs (documented so the number is explainable).
-_PER_CATEGORY_CAP = 25.0  # a single category can contribute at most this much
-_NOTABLE_CAP = 70.0  # notable connections dominate but are capped here
-_REACH_CAP = 30.0  # breadth-of-network contribution cap
 _MENTION_WEIGHT = 0.5  # weight of a post-mention edge vs. an explicit follow (1.0)
+# Scoring knobs (used only by the disabled score_network below; kept for reuse).
+_PER_CATEGORY_CAP = 25.0
+_NOTABLE_CAP = 70.0
+_REACH_CAP = 30.0
 
 
 def build_network_graph(
@@ -37,7 +34,7 @@ def build_network_graph(
     connections: list[Connection],
     posts: list[SocialPost] | None = None,
 ) -> NetworkGraph:
-    """Build the connection graph for one seed handle and score it."""
+    """Build the connection graph (structure + notable tags) for one seed handle."""
     posts = posts or []
     seed = normalize_handle(seed_handle)
     g: nx.DiGraph = nx.DiGraph()
@@ -167,20 +164,20 @@ def _category_for(node: str, hits: list[NotableHit]) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Deterministic network score
+# DISABLED: scoring moved to the downstream consolidation stage. This tool emits
+# the graph structure + notable_hits as DATA and no longer scores the network.
+# Preserved (commented) so the downstream agent can lift it later.
 # ---------------------------------------------------------------------------
-def score_network(graph: NetworkGraph) -> float:
-    """0-100 score from notable-connection weights (capped per category) + reach."""
-    by_cat: dict[str, float] = defaultdict(float)
-    for hit in graph.notable_hits:
-        by_cat[hit.category] += hit.weight
-    notable_score = sum(min(v, _PER_CATEGORY_CAP) for v in by_cat.values())
-    notable_score = min(notable_score, _NOTABLE_CAP)
-
-    # Breadth of network (diminishing returns on edge count).
-    reach = min((graph.edge_count ** 0.5) * 4.0, _REACH_CAP)
-
-    return round(min(notable_score + reach, 100.0), 1)
+# def score_network(graph: NetworkGraph) -> float:
+#     """0-100 score from notable-connection weights (capped per category) + reach."""
+#     by_cat: dict[str, float] = defaultdict(float)
+#     for hit in graph.notable_hits:
+#         by_cat[hit.category] += hit.weight
+#     notable_score = sum(min(v, _PER_CATEGORY_CAP) for v in by_cat.values())
+#     notable_score = min(notable_score, _NOTABLE_CAP)
+#     # Breadth of network (diminishing returns on edge count).
+#     reach = min((graph.edge_count ** 0.5) * 4.0, _REACH_CAP)
+#     return round(min(notable_score + reach, 100.0), 1)
 
 
 # ---------------------------------------------------------------------------

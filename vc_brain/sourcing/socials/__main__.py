@@ -57,7 +57,6 @@ def _write_html(r: SocialsResult, out: str) -> None:
     """Render the connection graph into a self-contained interactive HTML page."""
     meta = {
         "name": r.name,
-        "network_score": r.network_score,
         "notable_count": len(r.graph.notable_hits),
     }
     html = (
@@ -74,26 +73,23 @@ def _print_summary(r: SocialsResult) -> None:
     for net, p in r.profiles.items():
         print(f"  [{net}] {p.name} — {p.followers} followers — {p.url}")
     print(f"\nposts analyzed: {len(r.posts)}   comments scraped: {len(r.comments)}")
-    print(f"network_score: {r.network_score}/100   (mock graph)   "
-          f"identity_score: {r.identity_score}/100   (confidence {r.confidence})")
+    print("(data-only — scoring happens downstream)")
     g = r.graph
     print(f"graph [MOCK]: {g.node_count} nodes / {g.edge_count} edges (density {g.density})")
     if g.notable_hits:
         print("notable connections (mock roster):")
         for h in g.notable_hits:
-            print(f"  - {h.name or h.handle} [{h.category}, w={h.weight}] — {h.reason}")
+            print(f"  - {h.name or h.handle} [{h.category}] — {h.reason}")
 
     if r.founder_identity:
         fi = r.founder_identity
-        print(f"\nfounder identity [{fi.source}]: {fi.resolved_name} — "
-              f"prominence {fi.prominence_score}/100 — {fi.description}")
+        print(f"\nfounder identity [{fi.source}]: {fi.resolved_name} — {fi.description}")
     notable_engagers = [e for e in r.engager_identities if e.is_notable]
     if r.engager_identities:
         print(f"engagers identity-checked: {len(r.engager_identities)} "
               f"({len(notable_engagers)} notable)")
         for e in notable_engagers:
-            print(f"  ★ {e.resolved_name} (@{e.handle}) — {', '.join(e.roles) or '—'} "
-                  f"— prominence {e.prominence_score}/100")
+            print(f"  ★ {e.resolved_name} (@{e.handle}) — {', '.join(e.roles) or '—'}")
     a = r.post_analysis
     print("\npost analysis:")
     print(f"  sentiment: {a.sentiment}   tone: {a.tone}")
