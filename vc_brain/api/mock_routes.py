@@ -136,16 +136,119 @@ async def submit_application(
         },
         "founders": team,
         "applicability": _applicability(sector, stage, geography),
-        # Screening has not run: the inbox renders this as "not screened yet"
-        # rather than inventing zeros.
         "screening": None,
     }
+
+    # Screening runs on submission, not on a button press. Applicability is the
+    # first-pass filter the brief describes, so anything it rejects is never
+    # screened -- that is the point of having a cheap gate in front of an
+    # expensive one.
+    if app["applicability"]["verdict"] == "in_scope":
+        app["screening"] = _screen(app)
+        app["status"] = "screening"
+
     _applications.append(app)
 
     return {
         "application_id": app["id"],
         "status": app["status"],
         "applicability": app["applicability"],
+        "screening": app["screening"],
+    }
+
+
+# -------------------------------------------------------------- screening --
+
+def _axis(score: float, strengths: list[str], weaknesses: list[str],
+          evidence: list[str], confidence: float) -> dict[str, Any]:
+    score = max(0.0, min(100.0, score))
+    return {
+        "score": round(score, 1),
+        "sentiment": "bullish" if score >= 60 else "bear" if score < 35 else "neutral",
+        # A first submission has no history, so there is no trend to report.
+        # Saying "stable" is already a small lie; saying "improving" would be a
+        # bigger one.
+        "trend": "stable",
+        "confidence": confidence,
+        "strengths": strengths,
+        "weaknesses": weaknesses,
+        "evidence": evidence,
+    }
+
+
+def _screen(app: dict[str, Any]) -> dict[str, Any]:
+    """Stand-in for the real screener.
+
+    Deliberately derived from what the applicant supplied rather than random:
+    a team that gave GitHub handles scores differently from one that gave
+    nothing. That is what makes the extra form fields worth asking for, and it
+    keeps the demo coherent -- the numbers move when the input moves.
+    """
+    founders = app.get("founders") or []
+    handles = [f for f in founders if f.get("github") or f.get("twitter") or f.get("linkedin")]
+
+    # -- Founder ------------------------------------------------------------
+    f_score, f_up, f_down, f_ev = 45.0, [], [], []
+    if handles:
+        f_score += 14
+        f_up.append(f"{len(handles)} founder(s) supplied public profiles we can verify directly")
+        f_ev += [f"{f.get('name') or 'founder'} — github/{f['github']}" for f in founders if f.get("github")]
+    else:
+        f_down.append("No public profiles supplied — nothing to verify the team against")
+    if len(founders) > 1:
+        f_score += 9
+        f_up.append(f"{len(founders)} co-founders, so the work is split")
+    elif founders:
+        f_down.append("Solo founder")
+    if app.get("prior_companies"):
+        f_score += 11
+        f_up.append("Has built something before")
+        f_ev.append(f"Application answer: {app['prior_companies'][:90]}")
+    if app.get("accelerator"):
+        f_score += 8
+        f_up.append(f"Accelerator: {app['accelerator']}")
+    if not founders:
+        f_down.append("No founders named on the application")
+
+    # -- Market -------------------------------------------------------------
+    # Honestly the weakest of the three from a form alone: sizing needs the
+    # deck and outside research, neither of which this stand-in reads.
+    m_score, m_up, m_down = 50.0, [], []
+    if app.get("sector"):
+        m_up.append(f"Operates in {app['sector']}, which is inside the fund's mandate")
+    m_down.append("Market size not assessed — needs the deck and external research")
+    if not app.get("product_url"):
+        m_down.append("No live product to gauge demand from")
+
+    # -- Idea vs market -----------------------------------------------------
+    i_score, i_up, i_down, i_ev = 45.0, [], [], []
+    why = (app.get("why_now") or "").strip()
+    if len(why) > 80:
+        i_score += 16
+        i_up.append("Gives a specific reason this is buildable now rather than a general tailwind")
+        i_ev.append(f"Application answer, why now: {why[:120]}")
+    elif why:
+        i_score += 5
+        i_down.append("Why-now is stated but thin")
+    else:
+        i_down.append("No why-now given — the central pre-seed question is unanswered")
+    if app.get("product_url"):
+        i_score += 9
+        i_up.append("Something is already shipped and inspectable")
+        i_ev.append(f"Product: {app['product_url']}")
+    else:
+        i_down.append("Nothing shipped to look at yet")
+    if app.get("one_liner"):
+        i_score += 6
+    else:
+        i_down.append("No plain-language description of what it does")
+
+    return {
+        "founder_axis": _axis(f_score, f_up, f_down, f_ev, 0.55 if handles else 0.3),
+        "market_axis": _axis(m_score, m_up, m_down, [], 0.25),
+        "idea_vs_market_axis": _axis(i_score, i_up, i_down, i_ev, 0.45),
+        "passes_screen": True,
+        "rejection_reasons": [],
     }
 
 

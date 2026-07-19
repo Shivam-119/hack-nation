@@ -116,7 +116,20 @@ export const getApplication = (id) =>
  * product_url, raising, founders (JSON string — array of
  * {name, email, github, twitter, linkedin}).
  *
- * @returns {Promise<{application_id: string, status: string, applicability: Applicability}>}
+ * Screening runs on submission, not on a button press — applicability is the
+ * cheap first-pass filter, so anything it rejects is never screened.
+ * `screening` is therefore null for out_of_scope and not_viable.
+ *
+ * The response carries `screening` for the VC-side views. The founder-facing
+ * page must NOT render it: applicability is a fast answer they are owed, the
+ * axis scores are internal.
+ *
+ * @returns {Promise<{
+ *   application_id: string,
+ *   status: string,
+ *   applicability: Applicability,
+ *   screening: ScreeningResult|null
+ * }>}
  */
 export const submitApplication = (formData) =>
     request('POST', '/api/applications', '/api/applications', formData);
