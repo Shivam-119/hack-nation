@@ -6,12 +6,13 @@ import json
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import BackgroundTasks, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+from vc_brain.api import evaluation_pipeline
 from vc_brain.intelligence.diligence import DiligenceEngine
 from vc_brain.intelligence.memo_generator import MemoGenerator
 from vc_brain.intelligence.reasoning import ReasoningEngine
@@ -180,6 +181,7 @@ async def update_thesis(update: ThesisUpdate) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 @app.post("/api/applications")
 async def submit_application(
+    background_tasks: BackgroundTasks,
     company_name: str = Form(...), deck: UploadFile = File(...), website: str = Form(""),
     one_liner: str = Form(""), sector: str = Form(""), stage: str = Form(""), geography: str = Form(""),
     why_now: str = Form(""), accelerator: str = Form(""), prior_companies: str = Form(""),
@@ -211,6 +213,12 @@ async def submit_application(
     application.one_liner, application.why_now = one_liner, why_now
     application.accelerator, application.prior_companies = accelerator, prior_companies
     company = store.get_company(application.company_id)
+    primary_founder = store.get_founder(application.founder_ids[0]) if application.founder_ids else None
+    if primary_founder:
+        primary_founder.github_url = primary.get("github", "") or primary_founder.github_url
+        primary_founder.twitter_url = primary.get("twitter", "") or primary_founder.twitter_url
+        primary_founder.linkedin_url = primary.get("linkedin", "") or primary_founder.linkedin_url
+        store.upsert_founder(primary_founder)
     for founder_data in submitted_founders[1:]:
         founder = store.upsert_founder(Founder(name=founder_data.get("name") or "Unknown", email=founder_data.get("email", ""), github_url=founder_data.get("github", ""), twitter_url=founder_data.get("twitter", ""), linkedin_url=founder_data.get("linkedin", "")))
         application.founder_ids.append(founder.id)
@@ -221,9 +229,12 @@ async def submit_application(
         store.upsert_company(company)
 
     # Submission records the source material. The independent reasoning layer
-    # later writes the authoritative evaluation through the endpoint below.
+    # (Agent 1/2 deck parsing + GitHub/socials scanners + the 3-axis scorers)
+    # runs in the background and writes the authoritative evaluation via
+    # evaluation_pipeline.run_evaluation, using whatever thesis is live right now.
     application.applicability = _applicability(sector, stage, geography, [str(item) for item in submitted_founders])
     store.add_application(application)
+    background_tasks.add_task(evaluation_pipeline.run_evaluation, store, application.id, thesis)
 
     return {
         "application_id": application.id,

@@ -8,5 +8,6 @@ dist/
 .ruff_cache/
 .pytest_cache/
 node_modules/
+uploads/
 
 \sample_decks
