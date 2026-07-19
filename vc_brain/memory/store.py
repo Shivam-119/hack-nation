@@ -14,6 +14,7 @@ from typing import Any
 
 from vc_brain.config import config
 from vc_brain.memory import db
+from vc_brain.memory.founder_score import compute_founder_score
 from vc_brain.memory.models import (
     Application,
     Company,
@@ -48,9 +49,11 @@ class MemoryStore:
                     setattr(existing, field, new_val)
             existing.skills = list(set(existing.skills + founder.skills))
             existing.updated_at = datetime.utcnow()
+            existing.score = compute_founder_score(existing)
             self.founders[existing.id] = existing
             self._persist_founder(existing)
             return existing
+        founder.score = compute_founder_score(founder)
         self.founders[founder.id] = founder
         self._persist_founder(founder)
         return founder

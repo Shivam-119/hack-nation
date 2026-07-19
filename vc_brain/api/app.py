@@ -17,8 +17,8 @@ from vc_brain.intelligence.memo_generator import MemoGenerator
 from vc_brain.intelligence.reasoning import ReasoningEngine
 from vc_brain.intelligence.screener import Screener
 from vc_brain.intelligence.thesis_engine import FundThesis, ThesisEngine
-from vc_brain.memory.founder_score import compute_founder_score
 from vc_brain.memory.ingestion import IngestionPipeline
+from vc_brain.memory.models import DataPoint, Founder, SourceType
 from vc_brain.memory.store import MemoryStore
 
 # ---------------------------------------------------------------------------
@@ -112,13 +112,6 @@ async def submit_application(req: ApplicationRequest) -> dict[str, Any]:
             "description": req.description,
         },
     )
-
-    # Update founder scores
-    for fid in application.founder_ids:
-        founder = store.get_founder(fid)
-        if founder:
-            founder.score = compute_founder_score(founder)
-            store.upsert_founder(founder)
 
     # Thesis fit check
     fits, reasons = None, ["No thesis configured"]
@@ -288,6 +281,36 @@ async def scan_github(req: GitHubSearchRequest | None = None) -> dict[str, Any]:
     )
     agent = GitHubSourcingAgent(criteria)
     candidates = await agent.run(max_candidates=req.max_candidates)
+
+    # Persist each evaluated candidate into memory
+    for c in candidates:
+        founder = Founder(
+            name=c.name or c.username,
+            github_url=c.profile_url,
+            location=c.location or "",
+            data_points=[
+                DataPoint(
+                    source=SourceType.GITHUB,
+                    source_url=c.profile_url,
+                    content={
+                        "type": "github_evaluation",
+                        "username": c.username,
+                        "score": c.evaluation.score,
+                        "grade": c.evaluation.grade,
+                        "technical_ability": c.evaluation.technical_ability,
+                        "execution_ability": c.evaluation.execution_ability,
+                        "founder_product_ability": c.evaluation.founder_product_ability,
+                        "technical_background": c.evaluation.technical_background,
+                        "reputation": c.evaluation.reputation,
+                        "growth_signals": c.evaluation.growth_signals,
+                        "signals": c.evaluation.signals,
+                        "red_flags": c.evaluation.red_flags,
+                    },
+                    confidence=0.7,
+                )
+            ],
+        )
+        store.upsert_founder(founder)
 
     return {
         "total_evaluated": len(candidates),
