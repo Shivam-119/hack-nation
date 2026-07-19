@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from prompts import load_system
 from vc_brain.llm import complete_json
 from vc_brain.memory.models import Founder
 from vc_brain.memory.store import MemoryStore
@@ -16,11 +17,7 @@ from vc_brain.memory.store import MemoryStore
 class ReasoningEngine:
     """Natural-language query engine over the founder/company knowledge base."""
 
-    SYSTEM = (
-        "You are a search engine for a venture capital database. Given a natural-language "
-        "query and a list of founder/company profiles, return the IDs of matching results "
-        "ranked by relevance. Consider all attributes mentioned in the query. Return valid JSON."
-    )
+    SYSTEM = load_system("reasoning")
 
     def __init__(self, store: MemoryStore):
         self.store = store

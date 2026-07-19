@@ -15,6 +15,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
+from prompts import load_system
 from vc_brain.llm import complete_json
 from vc_brain.memory.models import Application, Company, Founder, Trend
 
@@ -45,11 +46,7 @@ class ScreeningResult(BaseModel):
 class Screener:
     """Run the 3-axis screening on an application."""
 
-    SYSTEM = (
-        "You are an expert VC analyst. Score each axis independently on 0-100. "
-        "Be transparent about confidence and evidence gaps. "
-        "Return valid JSON only."
-    )
+    SYSTEM = load_system("screener")
 
     async def screen(
         self,

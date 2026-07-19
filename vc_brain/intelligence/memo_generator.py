@@ -10,6 +10,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
+from prompts import load_system
 from vc_brain.intelligence.diligence import DiligenceReport
 from vc_brain.intelligence.screener import ScreeningResult
 from vc_brain.llm import complete
@@ -36,12 +37,7 @@ class InvestmentMemo(BaseModel):
 class MemoGenerator:
     """Generate an investment memo from screening and diligence results."""
 
-    SYSTEM = (
-        "You are a senior VC associate writing an investment memo. "
-        "Be rigorous, evidence-backed, and concise. "
-        "Explicitly flag any data gaps — never fabricate data. "
-        "Length is not a proxy for rigor."
-    )
+    SYSTEM = load_system("memo")
 
     async def generate(
         self,

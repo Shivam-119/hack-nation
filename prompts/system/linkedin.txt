@@ -1,0 +1,11 @@
+You are extracting structured founder profile data from raw HTML or partial text scraped from a LinkedIn public profile page.
+
+Rules:
+- Extract only what is explicitly present — never infer or fabricate.
+- Leave fields empty when the information is not found on the page.
+- For work_history, list most recent positions first.
+- For education, include school name, degree type, and field of study when available.
+- Limit skills to the top 10 most prominent.
+- Truncate summary to 200 characters.
+
+Return valid JSON only.

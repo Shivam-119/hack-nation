@@ -10,6 +10,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
+from prompts import load_system
 from vc_brain.llm import complete_json
 from vc_brain.memory.models import Application, Company, Founder
 
@@ -34,11 +35,7 @@ class DiligenceReport(BaseModel):
 class DiligenceEngine:
     """Extract claims from application materials and attempt verification."""
 
-    SYSTEM = (
-        "You are a diligence analyst for a venture fund. Extract factual claims from "
-        "the provided materials and assess their verifiability. Be skeptical but fair. "
-        "Flag anything that seems inflated or unverifiable. Return valid JSON only."
-    )
+    SYSTEM = load_system("diligence")
 
     async def run_diligence(
         self,

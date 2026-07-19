@@ -10,7 +10,7 @@ Work through these in order. Mark [x] when done. Commit after each.
 - [x] Improve GitHub evaluator — fetch README content for quality scoring
 
 ## Intelligence
-- [ ] Load prompts from `prompts/system/*.txt` instead of inline strings
+- [x] Load prompts from `prompts/system/*.txt` instead of inline strings
 - [ ] Screener should use thesis engine constraints in scoring
 - [ ] Add validator agent — cross-references claims against external data
 - [ ] Cold-start founder handling — explicit path for zero-history applicants

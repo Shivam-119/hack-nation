@@ -7,13 +7,12 @@ import re
 import httpx
 from pydantic import BaseModel, Field
 
+from prompts import load_system
 from vc_brain.llm import complete_json
 from vc_brain.memory.models import DataPoint, Founder, SourceType
 
 
-SYSTEM = """You are extracting structured founder profile data from raw HTML or partial text
-from a LinkedIn public profile page. Extract what you can; leave fields empty when not found.
-Return only valid JSON matching the requested schema."""
+SYSTEM = load_system("linkedin")
 
 
 class LinkedInProfile(BaseModel):
