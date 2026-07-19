@@ -110,11 +110,15 @@
         </header>
 
         <!-- Pipeline Status -->
+        <div style="margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center;">
+            <span id="pipelineLabel" style="font-size: 12px; color: var(--muted);"></span>
+            <span id="pipelineWsStatus" style="font-size: 11px; color: var(--muted);"></span>
+        </div>
         <div class="pipeline">
-            <div class="stage">Sourcing</div>
-            <div class="stage">Screening</div>
-            <div class="stage">Diligence</div>
-            <div class="stage">Decision</div>
+            <div class="stage" id="stage-sourcing">Sourcing</div>
+            <div class="stage" id="stage-screening">Screening</div>
+            <div class="stage" id="stage-diligence">Diligence</div>
+            <div class="stage" id="stage-decision">Decision</div>
         </div>
 
         <div class="grid">
@@ -307,13 +311,13 @@
             const el = document.getElementById('appList');
             if (!apps.length) { el.innerHTML = '<em style="color: var(--muted);">No applications</em>'; return; }
             el.innerHTML = apps.map(a => `
-                <div class="founder-row">
+                <div class="founder-row" style="cursor:pointer;" onclick="selectApp('${a.id}', '${a.company_id.replace(/'/g, "\\'")}', '${a.status}')">
                     <div>
                         <strong>${a.company_id.slice(0,8)}</strong>
                         <span class="badge">${a.status}</span>
                         <span class="badge">${a.source}</span>
                     </div>
-                    <div style="display:flex; gap:4px;">
+                    <div style="display:flex; gap:4px;" onclick="event.stopPropagation()">
                         <button onclick="screenApp('${a.id}')" style="padding:4px 8px; font-size:12px;">Screen</button>
                         <button onclick="diligenceApp('${a.id}')" style="padding:4px 8px; font-size:12px;">Diligence</button>
                         <button onclick="memoApp('${a.id}')" style="padding:4px 8px; font-size:12px;">Memo</button>
@@ -322,19 +326,68 @@
             `).join('');
         }
 
+        // Pipeline indicator
+        let _pipelineWs = null;
+
+        const STATUS_TO_STAGE = {
+            received: 'sourcing', screening: 'screening',
+            diligence: 'diligence', decision: 'decision',
+            funded: 'decision', passed: 'decision',
+        };
+        const STAGE_ORDER = ['sourcing', 'screening', 'diligence', 'decision'];
+
+        function updatePipeline(status, label) {
+            const active = STATUS_TO_STAGE[status] || 'sourcing';
+            const activeIdx = STAGE_ORDER.indexOf(active);
+            STAGE_ORDER.forEach((s, i) => {
+                const el = document.getElementById(`stage-${s}`);
+                if (i <= activeIdx) el.classList.add('active');
+                else el.classList.remove('active');
+            });
+            if (label) document.getElementById('pipelineLabel').textContent = label;
+        }
+
+        function selectApp(id, companyId, status) {
+            updatePipeline(status, `App: ${companyId.slice(0, 8)} — ${status}`);
+            // Open WebSocket for live updates
+            if (_pipelineWs) _pipelineWs.close();
+            const wsProto = location.protocol === 'https:' ? 'wss' : 'ws';
+            const wsHost = location.host || 'localhost:8000';
+            _pipelineWs = new WebSocket(`${wsProto}://${wsHost}/ws/pipeline/${id}`);
+            _pipelineWs.onmessage = (e) => {
+                try {
+                    const msg = JSON.parse(e.data);
+                    if (msg.status) updatePipeline(msg.status, `App: ${companyId.slice(0,8)} — ${msg.status}`);
+                    document.getElementById('pipelineWsStatus').textContent = `Live: ${msg.stage || msg.status}`;
+                } catch {}
+            };
+            _pipelineWs.onclose = () => {
+                document.getElementById('pipelineWsStatus').textContent = '';
+            };
+        }
+
         async function screenApp(id) {
+            updatePipeline('screening');
             showResult('Running 3-axis screening...');
             const res = await fetch(`${API}/api/applications/${id}/screen`, {method: 'POST'});
-            showResult(await res.json());
+            const data = await res.json();
+            updatePipeline('screening');
+            showResult(data);
+            refreshApps();
         }
 
         async function diligenceApp(id) {
+            updatePipeline('diligence');
             showResult('Running diligence...');
             const res = await fetch(`${API}/api/applications/${id}/diligence`, {method: 'POST'});
-            showResult(await res.json());
+            const data = await res.json();
+            updatePipeline('diligence');
+            showResult(data);
+            refreshApps();
         }
 
         async function memoApp(id) {
+            updatePipeline('decision');
             showResult('Generating investment memo...');
             const res = await fetch(`${API}/api/applications/${id}/memo`, {method: 'POST'});
             showResult(await res.json());

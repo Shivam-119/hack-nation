@@ -29,7 +29,7 @@ Work through these in order. Mark [x] when done. Commit after each.
 - [x] Show 6-dimension radar chart for founder evaluation
 - [x] Add thesis configuration form
 - [x] Show `not_measurable` gaps in founder detail view
-- [ ] Pipeline progress indicator (sourcing → screening → diligence → decision)
+- [x] Pipeline progress indicator (sourcing → screening → diligence → decision)
 
 ## Quality
 - [ ] Add tests for github_evaluator
