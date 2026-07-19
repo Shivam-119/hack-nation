@@ -4,10 +4,13 @@ from __future__ import annotations
 
 from typing import Any
 
+import asyncio
+import json
 import os
 import tempfile
+from typing import TYPE_CHECKING
 
-from fastapi import FastAPI, File, Form, UploadFile
+from fastapi import FastAPI, File, Form, UploadFile, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
@@ -20,6 +23,40 @@ from vc_brain.intelligence.thesis_engine import FundThesis, ThesisEngine
 from vc_brain.memory.founder_score import compute_founder_score
 from vc_brain.memory.ingestion import IngestionPipeline
 from vc_brain.memory.store import MemoryStore
+
+# ---------------------------------------------------------------------------
+# WebSocket connection manager
+# ---------------------------------------------------------------------------
+class _PipelineConnectionManager:
+    """Manages active WebSocket connections for pipeline status updates."""
+
+    def __init__(self) -> None:
+        # Map: app_id → list of active WebSocket connections
+        self._connections: dict[str, list[WebSocket]] = {}
+
+    async def connect(self, app_id: str, ws: WebSocket) -> None:
+        await ws.accept()
+        self._connections.setdefault(app_id, []).append(ws)
+
+    def disconnect(self, app_id: str, ws: WebSocket) -> None:
+        if app_id in self._connections:
+            self._connections[app_id].discard(ws) if hasattr(self._connections[app_id], 'discard') else None
+            try:
+                self._connections[app_id].remove(ws)
+            except ValueError:
+                pass
+
+    async def broadcast(self, app_id: str, message: dict) -> None:
+        """Send a status message to all listeners for an application."""
+        for ws in list(self._connections.get(app_id, [])):
+            try:
+                await ws.send_text(json.dumps(message))
+            except Exception:
+                self.disconnect(app_id, ws)
+
+
+ws_manager = _PipelineConnectionManager()
+
 
 # ---------------------------------------------------------------------------
 # Global state
@@ -168,6 +205,11 @@ async def screen_application(app_id: str) -> dict[str, Any]:
     application.status = application.status.__class__("screening")
     store.add_application(application)
 
+    await ws_manager.broadcast(app_id, {
+        "event": "stage_complete", "stage": "screening",
+        "status": "screening", "passes_screen": result.passes_screen,
+    })
+
     return result.model_dump(mode="json")
 
 
@@ -190,6 +232,11 @@ async def run_diligence(app_id: str) -> dict[str, Any]:
     application.diligence_result = report.model_dump(mode="json")
     application.status = application.status.__class__("diligence")
     store.add_application(application)
+
+    await ws_manager.broadcast(app_id, {
+        "event": "stage_complete", "stage": "diligence",
+        "status": "diligence", "overall_trust": report.overall_trust,
+    })
 
     return report.model_dump(mode="json")
 
@@ -541,6 +588,49 @@ async def scan_producthunt(limit: int = 20) -> dict[str, Any]:
             for f in founders
         ],
     }
+
+
+# ---------------------------------------------------------------------------
+# Routes: WebSocket — real-time pipeline status
+# ---------------------------------------------------------------------------
+@app.websocket("/ws/pipeline/{app_id}")
+async def pipeline_status_ws(websocket: WebSocket, app_id: str) -> None:
+    """WebSocket endpoint for real-time pipeline status updates.
+
+    Connect to receive JSON messages whenever the application's pipeline stage changes.
+    The client can also send a "ping" message to get the current status immediately.
+    """
+    await ws_manager.connect(app_id, websocket)
+    try:
+        # Send initial status on connect
+        application = store.get_application(app_id)
+        if application:
+            await websocket.send_text(json.dumps({
+                "event": "connected",
+                "app_id": app_id,
+                "status": application.status.value,
+                "has_screening": application.screening_result is not None,
+                "has_diligence": application.diligence_result is not None,
+                "has_decision": application.decision is not None,
+            }))
+        else:
+            await websocket.send_text(json.dumps({"event": "error", "message": "Application not found"}))
+
+        # Keep connection alive and handle pings
+        while True:
+            try:
+                data = await asyncio.wait_for(websocket.receive_text(), timeout=30)
+                if data == "ping":
+                    app_now = store.get_application(app_id)
+                    await websocket.send_text(json.dumps({
+                        "event": "pong",
+                        "status": app_now.status.value if app_now else "not_found",
+                    }))
+            except asyncio.TimeoutError:
+                # Send a keepalive heartbeat
+                await websocket.send_text(json.dumps({"event": "heartbeat"}))
+    except WebSocketDisconnect:
+        ws_manager.disconnect(app_id, websocket)
 
 
 # ---------------------------------------------------------------------------

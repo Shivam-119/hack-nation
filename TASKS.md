@@ -23,7 +23,7 @@ Work through these in order. Mark [x] when done. Commit after each.
 ## API
 - [x] Add `POST /api/sourcing/evaluate/{username}` endpoint for single GitHub eval
 - [x] Add deck upload endpoint (PDF ingestion)
-- [ ] WebSocket for real-time pipeline status
+- [x] WebSocket for real-time pipeline status
 
 ## Frontend
 - [ ] Show 6-dimension radar chart for founder evaluation
