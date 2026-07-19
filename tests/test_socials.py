@@ -106,15 +106,9 @@ def test_graph_provider_always_mock():
 # ---------------------------------------------------------------------------
 # Identity resolution (DATA — who a person is; no prominence score)
 # ---------------------------------------------------------------------------
-def test_identity_mock_resolves_notable_and_unknown(monkeypatch):
-    from vc_brain import config as config_module
-
-    # Pin the provider: config now loads .env, so a real
-    # SOCIALS_IDENTITY_PROVIDER there must not change what this test exercises.
-    monkeypatch.setattr(
-        config_module.config, "socials_identity_provider", "mock", raising=False
-    )
-
+def test_identity_mock_resolves_notable_and_unknown():
+    # conftest's autouse fixture already pins socials_identity_provider to mock
+    # (non-live is the suite default), so no per-test provider pinning is needed.
     ic = get_identity_checker()
     assert isinstance(ic, MockIdentityChecker)
     notable = asyncio.run(ic.identify("Pieter Levels", "levelsio"))
@@ -182,13 +176,9 @@ def test_scanner_analyze_ingest_and_enrich(monkeypatch, tmp_path):
         raise RuntimeError("no key")  # force deterministic analyzer path
 
     monkeypatch.setattr(post_analyzer, "complete_json", boom)
-    # Pin every provider to mock so this stays offline even when .env selects live
-    # providers (apify/tavily) with a token present.
-    for attr in ("socials_twitter_provider", "socials_linkedin_provider",
-                 "socials_identity_provider"):
-        monkeypatch.setattr(config, attr, "mock", raising=False)
-
-    store = MemoryStore(path=str(tmp_path / "socials.json"))
+    # Providers are pinned to mock by conftest (non-live is the suite default),
+    # so this scanner run stays offline.
+    store = MemoryStore(path=str(tmp_path / "socials.db"))
     scanner = SocialsScanner(IngestionPipeline(store))
 
     result = asyncio.run(scanner.analyze({"twitter": "janedoe", "linkedin": "janedoe"}, name="Jane Doe"))
