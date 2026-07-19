@@ -27,7 +27,7 @@ Work through these in order. Mark [x] when done. Commit after each.
 
 ## Frontend
 - [x] Show 6-dimension radar chart for founder evaluation
-- [ ] Add thesis configuration form
+- [x] Add thesis configuration form
 - [ ] Show `not_measurable` gaps in founder detail view
 - [ ] Pipeline progress indicator (sourcing → screening → diligence → decision)
 

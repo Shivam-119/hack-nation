@@ -206,6 +206,68 @@
                 </div>
                 <div class="radar-legend" id="radarLegend"></div>
             </div>
+
+            <!-- Thesis Configuration -->
+            <div class="card full-width">
+                <h2>Investment Thesis</h2>
+                <form id="thesisForm">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                        <div class="form-group">
+                            <label>Fund Name</label>
+                            <input id="tName" name="name" placeholder="Maschmeyer Fund I" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Sectors (comma-separated)</label>
+                            <input id="tSectors" name="sectors" placeholder="AI, SaaS, Deep Tech">
+                        </div>
+                        <div class="form-group">
+                            <label>Stages (comma-separated)</label>
+                            <input id="tStages" name="stages" placeholder="pre-seed, seed">
+                        </div>
+                        <div class="form-group">
+                            <label>Geographies (comma-separated)</label>
+                            <input id="tGeos" name="geographies" placeholder="Europe, US">
+                        </div>
+                        <div class="form-group">
+                            <label>Check Size Min ($)</label>
+                            <input id="tCheckMin" name="check_size_min" type="number" placeholder="250000">
+                        </div>
+                        <div class="form-group">
+                            <label>Check Size Max ($)</label>
+                            <input id="tCheckMax" name="check_size_max" type="number" placeholder="2000000">
+                        </div>
+                        <div class="form-group">
+                            <label>Target Ownership (%)</label>
+                            <input id="tOwnership" name="target_ownership_pct" type="number" step="0.1" placeholder="10.0">
+                        </div>
+                        <div class="form-group">
+                            <label>Risk Appetite</label>
+                            <select id="tRisk" name="risk_appetite">
+                                <option value="low">Low</option>
+                                <option value="moderate" selected>Moderate</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Min Founder Score (0–100)</label>
+                            <input id="tMinScore" name="min_founder_score" type="number" step="1" placeholder="30">
+                        </div>
+                        <div class="form-group">
+                            <label>Preferred Signals (comma-separated)</label>
+                            <input id="tPref" name="preferred_signals" placeholder="open source, technical founder">
+                        </div>
+                        <div class="form-group">
+                            <label>Anti-Signals (comma-separated)</label>
+                            <input id="tAnti" name="anti_signals" placeholder="no github, b2c only">
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px; margin-top: 8px;">
+                        <button type="submit">Save Thesis</button>
+                        <button type="button" class="secondary" onclick="loadThesis()">Reset</button>
+                    </div>
+                    <div id="thesisMsg" style="margin-top: 8px; font-size: 13px;"></div>
+                </form>
+            </div>
         </div>
 
         <!-- Detail Panel -->
@@ -439,9 +501,67 @@
             panel.scrollIntoView({behavior: 'smooth'});
         }
 
+        // Thesis configuration
+        function csvToList(str) {
+            return str.split(',').map(s => s.trim()).filter(Boolean);
+        }
+
+        function listToCsv(arr) {
+            return (arr || []).join(', ');
+        }
+
+        async function loadThesis() {
+            const res = await fetch(`${API}/api/thesis`);
+            const t = await res.json();
+            if (t.error) return;
+            document.getElementById('tName').value = t.name || '';
+            document.getElementById('tSectors').value = listToCsv(t.sectors);
+            document.getElementById('tStages').value = listToCsv(t.stages);
+            document.getElementById('tGeos').value = listToCsv(t.geographies);
+            document.getElementById('tCheckMin').value = t.check_size_min || '';
+            document.getElementById('tCheckMax').value = t.check_size_max || '';
+            document.getElementById('tOwnership').value = t.target_ownership_pct || '';
+            document.getElementById('tRisk').value = t.risk_appetite || 'moderate';
+            document.getElementById('tMinScore').value = t.min_founder_score || 30;
+            document.getElementById('tPref').value = listToCsv(t.preferred_signals);
+            document.getElementById('tAnti').value = listToCsv(t.anti_signals);
+        }
+
+        document.getElementById('thesisForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                name: document.getElementById('tName').value,
+                sectors: csvToList(document.getElementById('tSectors').value),
+                stages: csvToList(document.getElementById('tStages').value),
+                geographies: csvToList(document.getElementById('tGeos').value),
+                check_size_min: parseInt(document.getElementById('tCheckMin').value) || 0,
+                check_size_max: parseInt(document.getElementById('tCheckMax').value) || 0,
+                target_ownership_pct: parseFloat(document.getElementById('tOwnership').value) || 0,
+                risk_appetite: document.getElementById('tRisk').value,
+                min_founder_score: parseFloat(document.getElementById('tMinScore').value) || 30,
+                preferred_signals: csvToList(document.getElementById('tPref').value),
+                anti_signals: csvToList(document.getElementById('tAnti').value),
+            };
+            const res = await fetch(`${API}/api/thesis`, {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload),
+            });
+            const msg = document.getElementById('thesisMsg');
+            if (res.ok) {
+                msg.style.color = 'var(--green)';
+                msg.textContent = 'Thesis saved.';
+            } else {
+                msg.style.color = 'var(--red)';
+                msg.textContent = 'Failed to save thesis.';
+            }
+            setTimeout(() => { msg.textContent = ''; }, 3000);
+        });
+
         // Initial load
         refreshApps();
         refreshFounders();
+        loadThesis();
     </script>
 </body>
 </html>
