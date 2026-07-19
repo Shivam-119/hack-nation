@@ -10,7 +10,6 @@ from typing import Any
 from vc_brain.memory.models import (
     Application,
     Company,
-    DataPoint,
     Founder,
 )
 

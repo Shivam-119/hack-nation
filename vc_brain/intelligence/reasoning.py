@@ -9,7 +9,7 @@ from __future__ import annotations
 from typing import Any
 
 from vc_brain.llm import complete_json
-from vc_brain.memory.models import Founder, Company
+from vc_brain.memory.models import Founder
 from vc_brain.memory.store import MemoryStore
 
 
