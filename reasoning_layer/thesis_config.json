@@ -1,0 +1,8 @@
+{
+  "sectors": ["Healthcare", "Medical Devices", "B2B SaaS", "Climate Tech"],
+  "stage": ["pre-seed", "seed"],
+  "geography": ["United States", "Europe", "Remote"],
+  "check_size_usd": {"min": 50000, "max": 150000},
+  "ownership_target_pct": {"min": 5, "max": 15},
+  "risk_appetite": "high"
+}
