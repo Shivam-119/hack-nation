@@ -269,6 +269,22 @@ async def generate_memo(app_id: str) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 # Routes: Founders
 # ---------------------------------------------------------------------------
+@app.get("/api/founders/search")
+async def search_founders(q: str, limit: int = 20) -> list[dict[str, Any]]:
+    """Fast indexed text search across founder name, location, and skills."""
+    results = store.search_founders_by_text(q, limit=limit)
+    return [
+        {
+            "id": f.id,
+            "name": f.name,
+            "location": f.location,
+            "skills": f.skills[:5],
+            "score": f.score.overall,
+        }
+        for f in results
+    ]
+
+
 @app.get("/api/founders")
 async def list_founders() -> list[dict[str, Any]]:
     return [

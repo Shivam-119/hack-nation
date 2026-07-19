@@ -33,6 +33,9 @@ class _FounderRow(_Base):
     id = Column(String, primary_key=True)
     email = Column(String, index=True, default="")
     github_url = Column(String, index=True, default="")
+    name_lower = Column(String, index=True, default="")
+    location_lower = Column(String, index=True, default="")
+    skills_text = Column(Text, default="")  # space-joined skills for FTS
     data = Column(Text, nullable=False)
 
 
@@ -59,6 +62,7 @@ class MemoryStore:
         url = f"sqlite:///{db_path}"
         self._engine = create_engine(url, connect_args={"check_same_thread": False})
         _Base.metadata.create_all(self._engine)
+        self._migrate()
 
         # Warm in-memory cache from DB on startup
         self.founders: dict[str, Founder] = {}
@@ -147,19 +151,63 @@ class MemoryStore:
 
     # -- SQLite persistence -------------------------------------------------
 
+    def _migrate(self) -> None:
+        """Add new columns to existing tables without dropping data."""
+        migrations = [
+            ("founders", "name_lower", "TEXT DEFAULT ''"),
+            ("founders", "location_lower", "TEXT DEFAULT ''"),
+            ("founders", "skills_text", "TEXT DEFAULT ''"),
+        ]
+        with self._engine.connect() as conn:
+            for table, col, col_def in migrations:
+                try:
+                    conn.execute(text(f"ALTER TABLE {table} ADD COLUMN {col} {col_def}"))
+                    conn.commit()
+                except Exception:
+                    pass  # Column already exists
+
+    def search_founders_by_text(self, query: str, limit: int = 20) -> list[Founder]:
+        """Fast indexed text search across name, location, and skills."""
+        q = query.lower()
+        with Session(self._engine) as session:
+            rows = (
+                session.query(_FounderRow)
+                .filter(
+                    _FounderRow.name_lower.contains(q)
+                    | _FounderRow.location_lower.contains(q)
+                    | _FounderRow.skills_text.contains(q)
+                )
+                .limit(limit)
+                .all()
+            )
+        results = []
+        for row in rows:
+            try:
+                results.append(Founder.model_validate_json(row.data))
+            except Exception:
+                pass
+        return results
+
     def _save_founder(self, founder: Founder) -> None:
         blob = founder.model_dump_json()
+        skills_text = " ".join(s.lower() for s in founder.skills)
         with Session(self._engine) as session:
             row = session.get(_FounderRow, founder.id)
             if row:
                 row.data = blob
                 row.email = founder.email or ""
                 row.github_url = founder.github_url or ""
+                row.name_lower = founder.name.lower()
+                row.location_lower = (founder.location or "").lower()
+                row.skills_text = skills_text
             else:
                 session.add(_FounderRow(
                     id=founder.id,
                     email=founder.email or "",
                     github_url=founder.github_url or "",
+                    name_lower=founder.name.lower(),
+                    location_lower=(founder.location or "").lower(),
+                    skills_text=skills_text,
                     data=blob,
                 ))
             session.commit()

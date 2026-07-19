@@ -17,7 +17,7 @@ Work through these in order. Mark [x] when done. Commit after each.
 
 ## Memory
 - [x] Switch from JSON file to SQLite
-- [ ] Add search indexing for faster founder lookups
+- [x] Add search indexing for faster founder lookups
 - [ ] Track sourcing channel effectiveness (which sources produce best founders)
 
 ## API
