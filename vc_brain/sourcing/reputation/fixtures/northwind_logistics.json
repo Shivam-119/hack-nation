@@ -1,0 +1,54 @@
+{
+  "name": "Northwind Logistics",
+  "note": "Fictional sample COMPANY for offline tests and demos. Not a real company. Deliberately pre-seed shaped -- a launch, a small round, an accelerator, a couple of complaints -- and includes a reddit.com article so the dedicated forum sweep is exercised without a network.",
+  "articles": [
+    {
+      "title": "Show HN: Northwind Logistics – real-time freight tracking for small carriers",
+      "url": "https://news.ycombinator.com/item?id=38214477",
+      "snippet": "Launch post for Northwind Logistics, a freight tracking tool built by two former warehouse operations engineers. The thread discusses pricing and integrations with existing TMS software.",
+      "published": "2023-06-02"
+    },
+    {
+      "title": "Northwind Logistics raises $1.2M pre-seed led by Harding Ventures",
+      "url": "https://techcrunch.com/2023/07/11/northwind-logistics-pre-seed/",
+      "snippet": "Northwind Logistics has raised a $1.2M pre-seed round led by Harding Ventures, with participation from several angel investors in the freight sector.",
+      "published": "2023-07-11"
+    },
+    {
+      "title": "Y Combinator Summer 2023 batch companies",
+      "url": "https://www.ycombinator.com/companies?batch=S23",
+      "snippet": "Directory listing of the Summer 2023 batch, which includes Northwind Logistics, described as building freight visibility tooling for small carriers.",
+      "published": "2023-08-30"
+    },
+    {
+      "title": "Northwind Logistics – Product Hunt",
+      "url": "https://www.producthunt.com/products/northwind-logistics",
+      "snippet": "Northwind Logistics launched on Product Hunt with a freight tracking dashboard. Comments praise the onboarding but ask about carrier coverage outside North America.",
+      "published": "2023-06-14"
+    },
+    {
+      "title": "Meet the founders building freight tooling from a warehouse floor",
+      "url": "https://www.freightwaves.com/news/northwind-founders-profile",
+      "snippet": "A profile of the two founders of Northwind Logistics, both of whom previously ran operations at a regional carrier before starting the company in 2022.",
+      "published": "2023-09-05"
+    },
+    {
+      "title": "Anyone actually using Northwind Logistics? Tracking seems stale",
+      "url": "https://www.reddit.com/r/logistics/comments/17k2j8x/northwind_tracking_issues/",
+      "snippet": "Thread asking about people's experience with Northwind Logistics. Several posters claiming to be customers report the tracking dashboard showing stale data for days, and complain about unanswered support tickets. Others say it works fine for them. Unverified.",
+      "published": "2023-09-28"
+    },
+    {
+      "title": "Northwind Logistics open-sources its carrier API client",
+      "url": "https://github.com/northwind-logistics/carrier-client",
+      "snippet": "Northwind Logistics published an open source client library for its carrier integrations. The repository has 340 stars and active issues from outside contributors.",
+      "published": "2023-10-02"
+    },
+    {
+      "title": "Freight tech startups to watch",
+      "url": "https://www.crunchbase.com/lists/freight-tech-startups-to-watch",
+      "snippet": "A directory of early-stage freight technology startups, listing Northwind Logistics among more than sixty companies in the category.",
+      "published": "2023-01-30"
+    }
+  ]
+}

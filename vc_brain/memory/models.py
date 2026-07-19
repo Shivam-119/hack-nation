@@ -20,6 +20,7 @@ class SourceType(str, Enum):
     ARXIV = "arxiv"
     CRUNCHBASE = "crunchbase"
     ACCELERATOR = "accelerator"
+    WEB = "web"  # press, court/regulator filings, journals -- reputation scanner
     MANUAL = "manual"
     APPLICATION = "application"
 

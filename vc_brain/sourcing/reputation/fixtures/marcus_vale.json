@@ -1,0 +1,55 @@
+{
+  "name": "Marcus Vale",
+  "note": "Fictional sample data for offline tests and demos. Not a real person. Deliberately mixes strong positives with serious negatives so the scorer's positive/negative separation is visible.",
+  "articles": [
+    {
+      "title": "SEC Charges Northwind Logistics Founder With Misleading Investors",
+      "url": "https://www.sec.gov/litigation/litreleases/2023/lr25711.htm",
+      "snippet": "The Securities and Exchange Commission today charged Marcus Vale, founder of Northwind Logistics, with fraud, alleging he made material misrepresentations about revenue to investors during a 2022 fundraising round.",
+      "published": "2023-08-17",
+      "full_content": "The Securities and Exchange Commission today charged Marcus Vale, founder of Northwind Logistics, with fraud, alleging he made material misrepresentations about revenue to investors during a 2022 fundraising round. The complaint further alleges that Vale directed staff to record signed letters of intent as booked revenue, and that he personally approved investor decks stating annual recurring revenue of $12 million when internal records showed less than $3 million. Without admitting or denying the allegations, Vale consented to an officer-and-director bar of five years and a civil penalty of $450,000. The SEC's investigation was conducted by the San Francisco Regional Office."
+    },
+    {
+      "title": "Harding et al. v. Vale — Civil Docket",
+      "url": "https://www.courtlistener.com/docket/66421889/harding-v-vale/",
+      "snippet": "Civil action filed in the Northern District of California alleging breach of fiduciary duty and fraud against defendant Marcus Vale.",
+      "published": "2023-09-02"
+    },
+    {
+      "title": "Investors sue Northwind founder over alleged inflated revenue",
+      "url": "https://www.reuters.com/legal/investors-sue-northwind-founder-2023-09-05/",
+      "snippet": "A group of investors has sued Marcus Vale, alleging the logistics startup overstated annual recurring revenue by more than 300% in materials shared during its Series A.",
+      "published": "2023-09-05"
+    },
+    {
+      "title": "Northwind Logistics shuts down after failing to raise",
+      "url": "https://techcrunch.com/2023/11/20/northwind-shuts-down/",
+      "snippet": "Northwind Logistics has ceased operations, laying off its remaining 60 employees. Founder Marcus Vale told staff the company had been unable to close a bridge round.",
+      "published": "2023-11-20"
+    },
+    {
+      "title": "Northwind exec resigned months before collapse, citing concerns",
+      "url": "https://www.businessinsider.com/northwind-exec-resigned-2023-12",
+      "snippet": "A former vice president said they resigned after raising concerns internally about how Marcus Vale presented revenue figures to the board.",
+      "published": "2023-12-04"
+    },
+    {
+      "title": "Anyone else not get their final paycheck from Northwind?",
+      "url": "https://www.reddit.com/r/startups/comments/18h2k9x/northwind_final_paycheck/",
+      "snippet": "Thread where several accounts claiming to be former employees say final paychecks went unpaid after the shutdown. Unverified.",
+      "published": "2023-12-11"
+    },
+    {
+      "title": "Marcus Vale — Founder, Northwind Logistics",
+      "url": "https://www.crunchbase.com/person/marcus-vale",
+      "snippet": "Marcus Vale founded Northwind Logistics in 2019. Previously co-founded Palladin Freight, acquired by Kuehne+Nagel in 2018.",
+      "published": ""
+    },
+    {
+      "title": "Northwind Logistics Announces $18M Series A",
+      "url": "https://www.prnewswire.com/news-releases/northwind-logistics-series-a-301534.html",
+      "snippet": "Northwind Logistics today announced an $18M Series A. Founder Marcus Vale said the round would accelerate expansion across North America.",
+      "published": "2022-03-15"
+    }
+  ]
+}
