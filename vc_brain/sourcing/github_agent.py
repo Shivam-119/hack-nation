@@ -259,7 +259,7 @@ class GitHubSourcingAgent:
             matches.append("No red flags")
 
         # Stars threshold
-        if evaluation.validation >= 50:
+        if evaluation.reputation >= 50:
             fit += 10
             matches.append("Externally validated by community")
 
