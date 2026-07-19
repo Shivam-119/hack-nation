@@ -64,7 +64,8 @@ _FAKE_SWOT = {
 
 
 def _swot_items(items: list, source: str = "") -> list[dict]:
-    """Normalize a SWOT list (strings or dicts) to {text, url, source}."""
+    """Normalize a SWOT list (strings or dicts) to the FLAT {text, url, source}
+    shape (used by AxisCard and the API's _axis_payload)."""
     out: list[dict] = []
     for item in items or []:
         if isinstance(item, dict):
@@ -79,21 +80,34 @@ def _swot_items(items: list, source: str = "") -> list[dict]:
     return out
 
 
+def _to_src_shape(items: list[dict]) -> list[dict]:
+    """Convert flat {text, url, source} items to the NESTED {text, src:{url, label}}
+    shape the detail view's SourceAxis component reads (axis.swot.<quadrant>)."""
+    return [{"text": i["text"], "src": {"url": i.get("url", ""), "label": i.get("source", "")}}
+            for i in items]
+
+
 def _enrich_screening(screening: dict | None) -> dict | None:
-    """Give every axis full, object-shaped SWOT (fake opportunities/threats added)."""
+    """Give every axis full SWOT in BOTH shapes the frontend uses:
+    flat `axis.<quadrant>` (AxisCard) and nested `axis.swot.<quadrant>` (SourceAxis,
+    used by the inbox detail view). Fake opportunities/threats are added."""
     if not screening:
         return screening
     for axis_key in _AXES:
         axis = screening.get(axis_key)
         if not isinstance(axis, dict):
             continue
+        fake = _FAKE_SWOT.get(axis_key, {})
         axis["strengths"] = _swot_items(axis.get("strengths"), source="Screening")
         axis["weaknesses"] = _swot_items(axis.get("weaknesses"), source="Screening")
-        fake = _FAKE_SWOT.get(axis_key, {})
         axis["opportunities"] = _swot_items(
             axis.get("opportunities") or fake.get("opportunities"), source="Analyst view")
         axis["threats"] = _swot_items(
             axis.get("threats") or fake.get("threats"), source="Analyst view")
+        axis["swot"] = {
+            quadrant: _to_src_shape(axis[quadrant])
+            for quadrant in ("strengths", "weaknesses", "opportunities", "threats")
+        }
     return screening
 
 
