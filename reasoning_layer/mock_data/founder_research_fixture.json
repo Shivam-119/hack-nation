@@ -1,0 +1,57 @@
+{
+  "Ideaforge_Pitchdeck_PuffPoint": {
+    "founder_id": "founder_puffpoint_01",
+    "founder_score": null,
+    "founder_name": "Jordan Ellis",
+    "background_summary": "Solo technical founder, final-year CS student; built the PuffPoint prototype over one semester as a side project before applying.",
+    "track_record": [
+      "No prior startups founded",
+      "Teaching assistant for a systems programming course for 2 years"
+    ],
+    "technical_signals": [
+      "Active GitHub with 3 personal projects, largest has ~40 stars",
+      "Built the PuffPoint MVP solo in 6 weeks"
+    ],
+    "cold_start": true,
+    "source_citations": [
+      {"claim": "Active GitHub with 3 personal projects", "source_url": "https://github.com/example/jordanellis"},
+      {"claim": "Teaching assistant for 2 years", "source_url": "https://university.example.edu/cs/staff/jordan-ellis"}
+    ]
+  },
+  "demo-strong-founder": {
+    "founder_id": "founder_strong_01",
+    "founder_score": 88.0,
+    "founder_name": "Priya Nandakumar",
+    "background_summary": "Second-time founder; previously founded and sold a dev-tools startup to a mid-size cloud company. Ex-Stripe engineering lead.",
+    "track_record": [
+      "Founded DevSync (2019), acquired by CloudNova in 2023",
+      "Engineering lead at Stripe, 2016-2019, led the billing infrastructure team"
+    ],
+    "technical_signals": [
+      "GitHub: maintainer of an open-source project with 4,200 stars",
+      "Named inventor on one issued patent in distributed systems"
+    ],
+    "cold_start": false,
+    "source_citations": [
+      {"claim": "Founded DevSync, acquired by CloudNova in 2023", "source_url": "https://techcrunch.example.com/devsync-acquired"},
+      {"claim": "Engineering lead at Stripe 2016-2019", "source_url": "https://linkedin.example.com/in/priya-nandakumar"},
+      {"claim": "Maintainer of open-source project with 4,200 stars", "source_url": "https://github.com/example/project-x"}
+    ]
+  },
+  "demo-weak-founder": {
+    "founder_id": "founder_weak_01",
+    "founder_score": 31.0,
+    "founder_name": "Sam Whitfield",
+    "background_summary": "First-time founder with no disclosed technical background; public profile shows no evidence of domain expertise in the stated market.",
+    "track_record": [
+      "No prior professional experience listed",
+      "No prior startups"
+    ],
+    "technical_signals": [
+      "No GitHub profile found",
+      "No public technical work found"
+    ],
+    "cold_start": true,
+    "source_citations": []
+  }
+}
