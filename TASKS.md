@@ -5,7 +5,7 @@ Work through these in order. Mark [x] when done. Commit after each.
 ## Sourcing
 - [x] Add Product Hunt scanner
 - [x] Add TechCrunch/RSS launch scanner
-- [ ] LinkedIn profile enrichment (when URL provided)
+- [x] LinkedIn profile enrichment (when URL provided)
 - [ ] arXiv paper scanner for AI researchers
 - [ ] Improve GitHub evaluator — fetch README content for quality scoring
 

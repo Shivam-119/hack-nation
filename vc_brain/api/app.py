@@ -245,6 +245,33 @@ async def get_founder(founder_id: str) -> dict[str, Any]:
     return founder.model_dump(mode="json")
 
 
+class LinkedInEnrichRequest(BaseModel):
+    linkedin_url: str
+
+
+@app.post("/api/founders/{founder_id}/enrich/linkedin")
+async def enrich_linkedin(founder_id: str, req: LinkedInEnrichRequest) -> dict[str, Any]:
+    """Enrich a founder's profile using their LinkedIn URL."""
+    founder = store.get_founder(founder_id)
+    if not founder:
+        return {"error": "Founder not found"}
+
+    from vc_brain.sourcing.linkedin_enricher import LinkedInEnricher
+    enricher = LinkedInEnricher()
+    founder = await enricher.enrich(founder, req.linkedin_url)
+    store.upsert_founder(founder)
+
+    return {
+        "founder_id": founder.id,
+        "name": founder.name,
+        "linkedin_url": founder.linkedin_url,
+        "location": founder.location,
+        "bio": founder.bio,
+        "skills": founder.skills,
+        "data_points": len(founder.data_points),
+    }
+
+
 # ---------------------------------------------------------------------------
 # Routes: Search / Reasoning
 # ---------------------------------------------------------------------------
