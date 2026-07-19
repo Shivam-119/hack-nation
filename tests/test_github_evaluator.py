@@ -229,6 +229,34 @@ async def test_evaluate_not_measurable_populated(mock_github_responses):
 
 
 @pytest.mark.asyncio
+async def test_evaluate_rate_limit_returns_degraded(monkeypatch):
+    """A 403 rate-limit response from GitHub should return a zeroed BuilderEvaluation."""
+    import httpx
+
+    async def fake_get(self, url, **kwargs):
+        r = _MockResponse({"message": "API rate limit exceeded"}, status_code=403)
+        r.headers = {"X-RateLimit-Remaining": "0", "X-RateLimit-Reset": "9999999999"}
+        return r
+
+    class _RateResp:
+        status_code = 403
+        text = ""
+        headers = {"X-RateLimit-Remaining": "0", "X-RateLimit-Reset": "9999999999"}
+
+        def json(self):
+            return {"message": "API rate limit exceeded"}
+
+    async def rate_limited_get(self, url, **kwargs):
+        return _RateResp()
+
+    monkeypatch.setattr(httpx.AsyncClient, "get", rate_limited_get)
+    result = await evaluate("testuser")
+    assert result.score == 0.0
+    assert result.is_builder is False
+    assert any("rate limit" in nm.lower() for nm in result.not_measurable)
+
+
+@pytest.mark.asyncio
 async def test_evaluate_empty_repos(monkeypatch):
     """Evaluate a user with no repos — should not crash and give low scores."""
     import httpx

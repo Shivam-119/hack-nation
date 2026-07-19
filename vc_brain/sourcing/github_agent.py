@@ -16,7 +16,7 @@ from datetime import datetime, timedelta
 import httpx
 
 from vc_brain.config import config
-from vc_brain.sourcing.github_evaluator import BuilderEvaluation, evaluate
+from vc_brain.sourcing.github_evaluator import BuilderEvaluation, GitHubRateLimitError, _check_rate_limit, evaluate
 
 
 # ── Investor criteria ─────────────────────────────────────────────────
@@ -153,27 +153,31 @@ class GitHubSourcingAgent:
         seen = set()
         users = []
 
-        async with httpx.AsyncClient(headers=self._headers, timeout=20) as client:
-            for query in queries:
-                if len(users) >= limit:
-                    break
+        try:
+            async with httpx.AsyncClient(headers=self._headers, timeout=20) as client:
+                for query in queries:
+                    if len(users) >= limit:
+                        break
 
-                search_type = query["type"]
-                if search_type == "repositories":
-                    results = await self._search_repos(client, query, limit - len(users))
-                else:
-                    results = await self._search_users(client, query, limit - len(users))
+                    search_type = query["type"]
+                    if search_type == "repositories":
+                        results = await self._search_repos(client, query, limit - len(users))
+                    else:
+                        results = await self._search_users(client, query, limit - len(users))
 
-                for user in results:
-                    username = user.get("login", "")
-                    if username and username not in seen:
-                        seen.add(username)
-                        # Fetch full profile if we only have partial data
-                        if "public_repos" not in user:
-                            full = await client.get(f"https://api.github.com/users/{username}")
-                            if full.status_code == 200:
-                                user = full.json()
-                        users.append(user)
+                    for user in results:
+                        username = user.get("login", "")
+                        if username and username not in seen:
+                            seen.add(username)
+                            # Fetch full profile if we only have partial data
+                            if "public_repos" not in user:
+                                full = await client.get(f"https://api.github.com/users/{username}")
+                                _check_rate_limit(full)
+                                if full.status_code == 200:
+                                    user = full.json()
+                            users.append(user)
+        except GitHubRateLimitError:
+            pass  # Return whatever we collected before hitting the limit
 
         return users[:limit]
 
@@ -183,6 +187,7 @@ class GitHubSourcingAgent:
             "https://api.github.com/search/repositories",
             params={"q": query["q"], "sort": query["sort"], "per_page": min(limit * 2, 30)},
         )
+        _check_rate_limit(resp)
         if resp.status_code != 200:
             return []
         owners = []
@@ -201,6 +206,7 @@ class GitHubSourcingAgent:
             "https://api.github.com/search/users",
             params={"q": query["q"], "sort": query["sort"], "per_page": min(limit, 20)},
         )
+        _check_rate_limit(resp)
         if resp.status_code != 200:
             return []
         return resp.json().get("items", [])

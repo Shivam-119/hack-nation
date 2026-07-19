@@ -20,6 +20,21 @@ import httpx
 
 from vc_brain.config import config
 
+
+class GitHubRateLimitError(Exception):
+    """Raised when the GitHub API returns a rate-limit response (403/429)."""
+
+
+def _check_rate_limit(resp: httpx.Response) -> None:
+    """Raise GitHubRateLimitError if the response signals a rate limit."""
+    if resp.status_code in (403, 429):
+        remaining = resp.headers.get("X-RateLimit-Remaining", "")
+        if remaining == "0" or resp.status_code == 429:
+            reset = resp.headers.get("X-RateLimit-Reset", "unknown")
+            raise GitHubRateLimitError(
+                f"GitHub rate limit exceeded. Resets at epoch {reset}."
+            )
+
 README_QUALITY_SIGNALS = {
     "ci": ["github/workflows", "travis-ci", "circleci", "github actions", ".github/workflows"],
     "badges": ["![", "badge", "shield"],
@@ -100,35 +115,59 @@ async def evaluate(username: str) -> BuilderEvaluation:
     if config.github_token:
         headers["Authorization"] = f"Bearer {config.github_token}"
 
-    async with httpx.AsyncClient(headers=headers, timeout=20) as client:
-        user = (await client.get(f"https://api.github.com/users/{username}")).json()
-        repos_resp = await client.get(
-            f"https://api.github.com/users/{username}/repos",
-            params={"per_page": 100, "sort": "pushed", "type": "owner"},
-        )
-        repos = repos_resp.json() if repos_resp.status_code == 200 else []
-        events_resp = await client.get(
-            f"https://api.github.com/users/{username}/events/public",
-            params={"per_page": 100},
-        )
-        events = events_resp.json() if events_resp.status_code == 200 else []
+    try:
+        async with httpx.AsyncClient(headers=headers, timeout=20) as client:
+            user_resp = await client.get(f"https://api.github.com/users/{username}")
+            _check_rate_limit(user_resp)
+            user = user_resp.json() if user_resp.status_code == 200 else {}
 
-        # Fetch READMEs for top repos (by stars) for quality scoring
-        top_repos = sorted(repos, key=lambda r: r.get("stargazers_count", 0), reverse=True)
-        readme_scores: list[float] = []
-        readme_signals_found: list[str] = []
-        for repo in top_repos[:3]:
-            if repo.get("fork"):
-                continue
-            full_name = repo.get("full_name", "")
-            if not full_name:
-                continue
-            readme_text = await _fetch_readme(client, full_name)
-            rscore, rsignals = _score_readme(readme_text)
-            if rscore > 0:
-                readme_scores.append(rscore)
-                readme_signals_found.extend(rsignals)
-        avg_readme_score = (sum(readme_scores) / len(readme_scores)) if readme_scores else 0.0
+            repos_resp = await client.get(
+                f"https://api.github.com/users/{username}/repos",
+                params={"per_page": 100, "sort": "pushed", "type": "owner"},
+            )
+            _check_rate_limit(repos_resp)
+            repos = repos_resp.json() if repos_resp.status_code == 200 else []
+
+            events_resp = await client.get(
+                f"https://api.github.com/users/{username}/events/public",
+                params={"per_page": 100},
+            )
+            _check_rate_limit(events_resp)
+            events = events_resp.json() if events_resp.status_code == 200 else []
+
+            # Fetch READMEs for top repos (by stars) for quality scoring
+            top_repos = sorted(repos, key=lambda r: r.get("stargazers_count", 0), reverse=True)
+            readme_scores: list[float] = []
+            readme_signals_found: list[str] = []
+            for repo in top_repos[:3]:
+                if repo.get("fork"):
+                    continue
+                full_name = repo.get("full_name", "")
+                if not full_name:
+                    continue
+                readme_text = await _fetch_readme(client, full_name)
+                rscore, rsignals = _score_readme(readme_text)
+                if rscore > 0:
+                    readme_scores.append(rscore)
+                    readme_signals_found.extend(rsignals)
+            avg_readme_score = (sum(readme_scores) / len(readme_scores)) if readme_scores else 0.0
+
+    except GitHubRateLimitError:
+        return BuilderEvaluation(
+            username=username,
+            is_builder=False,
+            grade="F",
+            score=0.0,
+            technical_ability=0.0,
+            execution_ability=0.0,
+            founder_product_ability=0.0,
+            technical_background=0.0,
+            reputation=0.0,
+            growth_signals=0.0,
+            signals=[],
+            red_flags=[],
+            not_measurable=["GitHub rate limit exceeded — evaluation unavailable, retry later"],
+        )
 
     signals = []
     red_flags = []
