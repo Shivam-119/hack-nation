@@ -191,6 +191,31 @@ async def run_diligence(app_id: str) -> dict[str, Any]:
     return report.model_dump(mode="json")
 
 
+@app.post("/api/applications/{app_id}/validate")
+async def validate_claims(app_id: str) -> dict[str, Any]:
+    """Run the validator agent to cross-reference claims against external signals."""
+    application = store.get_application(app_id)
+    if not application:
+        return {"error": "Application not found"}
+    if not application.diligence_result:
+        return {"error": "Run /diligence first — validator needs claims to cross-reference"}
+
+    company = store.get_company(application.company_id)
+    if not company:
+        return {"error": "Company not found"}
+
+    founders = [store.get_founder(fid) for fid in application.founder_ids]
+    founders = [f for f in founders if f]
+
+    from vc_brain.intelligence.diligence import DiligenceReport
+    from vc_brain.intelligence.validator import ValidatorAgent
+    diligence = DiligenceReport(company_id=company.id, **(application.diligence_result or {}))
+
+    agent = ValidatorAgent(company=company, founders=founders)
+    report = await agent.validate(diligence)
+    return report.model_dump()
+
+
 @app.post("/api/applications/{app_id}/memo")
 async def generate_memo(app_id: str) -> dict[str, Any]:
     """Generate an investment memo for an application that has been screened and diligenced."""
