@@ -2,13 +2,10 @@
 
 from __future__ import annotations
 
-from datetime import datetime
-
 from pypdf import PdfReader
 
 from vc_brain.memory.models import (
     Application,
-    ApplicationStatus,
     Company,
     DataPoint,
     Founder,

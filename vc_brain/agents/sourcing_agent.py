@@ -1,6 +1,7 @@
 """Sourcing Agent: orchestrates outbound scanning across multiple channels.
 
-Runs GitHub and HN scanners, scores results, and flags top candidates for activation.
+Uses GitHubSourcingAgent for GitHub and HN scanner for Hacker News.
+Scores results and flags top candidates for activation.
 """
 
 from __future__ import annotations
@@ -11,7 +12,7 @@ from vc_brain.agents.base import BaseAgent
 from vc_brain.memory.founder_score import compute_founder_score
 from vc_brain.memory.ingestion import IngestionPipeline
 from vc_brain.memory.store import MemoryStore
-from vc_brain.sourcing.github_scanner import GitHubScanner
+from vc_brain.sourcing.github_agent import GitHubSourcingAgent, InvestorCriteria
 from vc_brain.sourcing.hackernews_scanner import HackerNewsScanner
 
 
@@ -29,43 +30,43 @@ class SourcingAgent(BaseAgent):
         results: dict[str, Any] = {"candidates": [], "sources_scanned": []}
 
         if "github" in channels:
-            scanner = GitHubScanner(self.pipeline)
-            language = context.get("language", "python")
-            candidates = await scanner.scan_trending(language=language, limit=10)
-            founders = await scanner.ingest_candidates(candidates)
-            results["candidates"].extend([f.id for f in founders])
+            criteria = InvestorCriteria(
+                sectors=context.get("sectors", ["ai"]),
+                languages=context.get("languages", ["python"]),
+                locations=context.get("locations", []),
+            )
+            agent = GitHubSourcingAgent(criteria)
+            candidates = await agent.run(max_candidates=context.get("limit", 10))
+            results["candidates"].extend([
+                {"username": c.username, "score": c.evaluation.score, "verdict": c.verdict}
+                for c in candidates
+            ])
             results["sources_scanned"].append("github")
 
         if "hackernews" in channels:
             scanner = HackerNewsScanner(self.pipeline)
             launches = await scanner.scan_show_hn(limit=15)
             founders = await scanner.ingest_launches(launches)
-            results["candidates"].extend([f.id for f in founders])
+            for f in founders:
+                f.score = compute_founder_score(f)
+                self.store.upsert_founder(f)
+            results["candidates"].extend([
+                {"username": f.name, "score": f.score.overall, "verdict": "potential"}
+                for f in founders
+            ])
             results["sources_scanned"].append("hackernews")
 
         return results
 
     async def think(self, observation: dict[str, Any]) -> dict[str, Any]:
-        """Score all candidates and identify who merits activation outreach."""
-        candidate_ids = observation.get("candidates", [])
-        scored = []
-        activate = []
-
-        for fid in candidate_ids:
-            founder = self.store.get_founder(fid)
-            if not founder:
-                continue
-            founder.score = compute_founder_score(founder)
-            self.store.upsert_founder(founder)
-
-            scored.append({"id": fid, "name": founder.name, "score": founder.score.overall})
-            if founder.score.overall >= self.min_score:
-                activate.append(fid)
+        """Identify who merits activation outreach."""
+        candidates = observation.get("candidates", [])
+        activate = [c for c in candidates if c["score"] >= self.min_score]
 
         return {
-            "total_scanned": len(candidate_ids),
-            "scored": sorted(scored, key=lambda x: x["score"], reverse=True),
-            "activate_ids": activate,
+            "total_scanned": len(candidates),
+            "scored": sorted(candidates, key=lambda x: x["score"], reverse=True),
+            "activate": activate,
             "confidence": 0.6,
         }
 
@@ -75,6 +76,6 @@ class SourcingAgent(BaseAgent):
             "action": "sourcing_complete",
             "total_scanned": reasoning["total_scanned"],
             "top_candidates": reasoning["scored"][:10],
-            "ready_for_activation": reasoning["activate_ids"],
-            "next_step": "activation" if reasoning["activate_ids"] else "continue_scanning",
+            "ready_for_activation": reasoning["activate"],
+            "next_step": "activation" if reasoning["activate"] else "continue_scanning",
         }

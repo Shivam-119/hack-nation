@@ -8,7 +8,7 @@ from __future__ import annotations
 from typing import Any
 
 from vc_brain.agents.base import BaseAgent
-from vc_brain.intelligence.screener import Screener, ScreeningResult
+from vc_brain.intelligence.screener import Screener
 from vc_brain.memory.founder_score import compute_founder_score
 from vc_brain.memory.models import Application, Company, Founder
 from vc_brain.memory.store import MemoryStore

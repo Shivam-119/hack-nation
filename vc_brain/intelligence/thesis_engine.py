@@ -2,36 +2,28 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class FundThesis(BaseModel):
-    """Configurable fund-specific investment thesis."""
-    name: str = "Default Fund"
-    sectors: list[str] = Field(default_factory=lambda: ["AI", "SaaS", "Developer Tools"])
-    stages: list[str] = Field(default_factory=lambda: ["pre-seed", "seed"])
-    geographies: list[str] = Field(default_factory=lambda: ["US", "Europe"])
-    check_size_min: int = 50_000
-    check_size_max: int = 150_000
-    target_ownership_pct: float = 5.0
-    risk_appetite: str = "moderate"  # conservative | moderate | aggressive
-    min_founder_score: float = 20.0
-    preferred_signals: list[str] = Field(
-        default_factory=lambda: ["technical founder", "prior exit", "enterprise traction"]
-    )
-    anti_signals: list[str] = Field(
-        default_factory=lambda: ["single founder with no technical skills", "crowded consumer market"]
-    )
+    name: str
+    sectors: list[str]
+    stages: list[str]
+    geographies: list[str]
+    check_size_min: int
+    check_size_max: int
+    target_ownership_pct: float
+    risk_appetite: str  # conservative | moderate | aggressive
+    min_founder_score: float
+    preferred_signals: list[str]
+    anti_signals: list[str]
 
 
 class ThesisEngine:
-    """Evaluate opportunities against the fund thesis."""
-
     def __init__(self, thesis: FundThesis):
         self.thesis = thesis
 
     def fits_thesis(self, sector: str, stage: str, geography: str) -> tuple[bool, list[str]]:
-        """Check if an opportunity fits the fund's thesis. Returns (passes, reasons)."""
         reasons = []
         passes = True
 
@@ -53,7 +45,6 @@ class ThesisEngine:
         return passes, reasons
 
     def score_alignment(self, sector: str, stage: str, geography: str) -> float:
-        """Return 0-1 alignment score with the thesis."""
         score = 0.0
         checks = 0
 

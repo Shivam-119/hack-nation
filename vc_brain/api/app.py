@@ -2,13 +2,11 @@
 
 from __future__ import annotations
 
-from contextlib import asynccontextmanager
 from typing import Any
 
-from fastapi import FastAPI, File, Form, UploadFile
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from vc_brain.intelligence.diligence import DiligenceEngine
@@ -25,8 +23,8 @@ from vc_brain.memory.store import MemoryStore
 # ---------------------------------------------------------------------------
 store = MemoryStore()
 pipeline = IngestionPipeline(store)
-thesis = FundThesis()
-thesis_engine = ThesisEngine(thesis)
+thesis: FundThesis | None = None
+thesis_engine: ThesisEngine | None = None
 screener = Screener()
 diligence_engine = DiligenceEngine()
 memo_generator = MemoGenerator()
@@ -46,7 +44,7 @@ app.add_middleware(
 # ---------------------------------------------------------------------------
 class ApplicationRequest(BaseModel):
     company_name: str
-    founder_name: str = ""
+    founder_name: str
     founder_email: str = ""
     sector: str = ""
     stage: str = ""
@@ -55,35 +53,37 @@ class ApplicationRequest(BaseModel):
 
 
 class ThesisUpdate(BaseModel):
-    name: str = "Default Fund"
-    sectors: list[str] = ["AI", "SaaS", "Developer Tools"]
-    stages: list[str] = ["pre-seed", "seed"]
-    geographies: list[str] = ["US", "Europe"]
-    check_size_min: int = 50_000
-    check_size_max: int = 150_000
-    target_ownership_pct: float = 5.0
-    risk_appetite: str = "moderate"
+    name: str
+    sectors: list[str]
+    stages: list[str]
+    geographies: list[str]
+    check_size_min: int
+    check_size_max: int
+    target_ownership_pct: float
+    risk_appetite: str
 
 
 class SearchQuery(BaseModel):
     query: str
-    limit: int = 10
+    limit: int
 
 
 # ---------------------------------------------------------------------------
 # Routes: Thesis
 # ---------------------------------------------------------------------------
 @app.get("/api/thesis")
-async def get_thesis() -> FundThesis:
-    return thesis
+async def get_thesis() -> dict[str, Any]:
+    if not thesis:
+        return {"error": "No thesis configured. PUT /api/thesis first."}
+    return thesis.model_dump()
 
 
 @app.put("/api/thesis")
-async def update_thesis(update: ThesisUpdate) -> FundThesis:
+async def update_thesis(update: ThesisUpdate) -> dict[str, Any]:
     global thesis, thesis_engine
     thesis = FundThesis(**update.model_dump())
     thesis_engine = ThesisEngine(thesis)
-    return thesis
+    return thesis.model_dump()
 
 
 # ---------------------------------------------------------------------------
@@ -112,7 +112,9 @@ async def submit_application(req: ApplicationRequest) -> dict[str, Any]:
             store.upsert_founder(founder)
 
     # Thesis fit check
-    fits, reasons = thesis_engine.fits_thesis(req.sector, req.stage, req.geography)
+    fits, reasons = None, ["No thesis configured"]
+    if thesis_engine:
+        fits, reasons = thesis_engine.fits_thesis(req.sector, req.stage, req.geography)
 
     return {
         "application_id": application.id,
@@ -255,17 +257,58 @@ async def search(query: SearchQuery) -> list[dict[str, Any]]:
 # ---------------------------------------------------------------------------
 # Routes: Outbound Sourcing
 # ---------------------------------------------------------------------------
+class GitHubSearchRequest(BaseModel):
+    sectors: list[str]
+    languages: list[str]
+    locations: list[str] = []
+    max_candidates: int = 15
+
+
 @app.post("/api/sourcing/github")
-async def scan_github(language: str = "python", min_stars: int = 50, limit: int = 10) -> dict[str, Any]:
-    """Trigger a GitHub scan for potential founders."""
-    from vc_brain.sourcing.github_scanner import GitHubScanner
-    scanner = GitHubScanner(pipeline)
-    candidates = await scanner.scan_trending(language, min_stars, limit)
-    founders = await scanner.ingest_candidates(candidates)
+async def scan_github(req: GitHubSearchRequest | None = None) -> dict[str, Any]:
+    """Find and evaluate founders on GitHub based on investor criteria."""
+    from vc_brain.sourcing.github_agent import GitHubSourcingAgent, InvestorCriteria
+
+    if req is None:
+        req = GitHubSearchRequest()
+
+    criteria = InvestorCriteria(
+        sectors=req.sectors,
+        languages=req.languages,
+        locations=req.locations,
+    )
+    agent = GitHubSourcingAgent(criteria)
+    candidates = await agent.run(max_candidates=req.max_candidates)
+
     return {
-        "candidates_found": len(candidates),
-        "founders_ingested": len(founders),
-        "founders": [{"id": f.id, "name": f.name} for f in founders],
+        "total_evaluated": len(candidates),
+        "strong_matches": len([c for c in candidates if c.verdict == "strong_match"]),
+        "candidates": [
+            {
+                "username": c.username,
+                "name": c.name,
+                "location": c.location,
+                "profile_url": c.profile_url,
+                "verdict": c.verdict,
+                "builder_grade": c.evaluation.grade,
+                "builder_score": c.evaluation.score,
+                "thesis_fit": c.thesis_fit,
+                "signals": c.evaluation.signals,
+                "red_flags": c.evaluation.red_flags,
+                "why_match": c.thesis_match,
+                "why_not": c.thesis_miss,
+                "breakdown": {
+                    "technical_ability": c.evaluation.technical_ability,
+                    "execution_ability": c.evaluation.execution_ability,
+                    "founder_product_ability": c.evaluation.founder_product_ability,
+                    "technical_background": c.evaluation.technical_background,
+                    "reputation": c.evaluation.reputation,
+                    "growth_signals": c.evaluation.growth_signals,
+                },
+                "not_measurable": c.evaluation.not_measurable,
+            }
+            for c in candidates
+        ],
     }
 
 
