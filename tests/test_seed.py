@@ -2,7 +2,7 @@
 
 import json
 
-from scripts.seed_mock_data import _enrich_screening, seed
+from vc_brain.memory.seed import _enrich_screening, ensure_seeded, seed
 from vc_brain.memory.store import MemoryStore
 
 FIXTURE = "frontend/fixtures/applications.json"
@@ -45,3 +45,11 @@ def test_enrich_screening_fills_all_swot_quadrants():
 
 def test_enrich_screening_handles_none():
     assert _enrich_screening(None) is None
+
+
+def test_ensure_seeded_is_a_noop_when_already_present(tmp_path):
+    path = str(tmp_path / "seed.db")
+    ensure_seeded(MemoryStore(path=path))          # first call seeds
+    n_before = len(MemoryStore(path=path).applications)
+    ensure_seeded(MemoryStore(path=path))          # second call: nothing missing
+    assert len(MemoryStore(path=path).applications) == n_before
