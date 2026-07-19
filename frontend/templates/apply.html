@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apply · VC Brain</title>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+
+<!-- Founder-facing: no VC navigation here on purpose. -->
+<nav class="nav">
+    <div class="nav__inner">
+        <div class="nav__brand"><span>VC</span> Brain</div>
+        <div class="nav__spacer"><span class="mock-flag" id="mockFlag" hidden>mock data</span></div>
+    </div>
+</nav>
+
+<div class="container container--narrow">
+    <div class="page-head">
+        <h1>Apply for funding</h1>
+        <p>A deck and your company name are all you need to start. Everything else is optional —
+           each field just gives us something specific to check, so you spend less time explaining
+           and we spend less time guessing. Decisions in 24 hours.</p>
+    </div>
+
+    <form id="form">
+        <!-- ---------------------------------------------------------- required -->
+        <div class="card">
+            <div class="card__title">The essentials</div>
+            <div class="card__hint">This is genuinely the minimum. You can stop after this.</div>
+
+            <div class="field">
+                <label class="field__label" for="company_name">Company name <span class="field__req">*</span></label>
+                <input type="text" id="company_name" name="company_name" required placeholder="Vektor">
+            </div>
+
+            <div class="field" style="margin-bottom:0;">
+                <label class="field__label">Deck <span class="field__req">*</span></label>
+                <span class="field__why">PDF or PowerPoint. We read it — we don't just file it.</span>
+                <div class="drop" id="drop" tabindex="0" role="button"
+                     aria-label="Choose a deck file or drop one here">
+                    <div class="drop__main" id="dropMain">Drop your deck here, or click to choose</div>
+                    <div class="drop__sub" id="dropSub">PDF or PPTX</div>
+                </div>
+                <input type="file" id="deck" accept=".pdf,.pptx" hidden>
+            </div>
+        </div>
+
+        <!-- -------------------------------------------------------------- team -->
+        <div class="card">
+            <div class="card__title">Founders</div>
+            <div class="card__hint">Handles let us read your public work directly instead of
+                asking you to describe it. All optional.</div>
+            <div id="founders"></div>
+            <button type="button" class="btn btn--ghost btn--sm" id="addFounder">Add a co-founder</button>
+        </div>
+
+        <!-- ----------------------------------------------------------- company -->
+        <div class="card">
+            <div class="card__title">The company</div>
+            <div class="card__hint">Used to check whether you fit what this fund invests in.</div>
+
+            <div class="field">
+                <label class="field__label" for="one_liner">One line on what you do</label>
+                <input type="text" id="one_liner" name="one_liner"
+                       placeholder="Vector database that runs inside the customer's own VPC.">
+            </div>
+
+            <div class="row">
+                <div class="field">
+                    <label class="field__label" for="sector">Sector</label>
+                    <input type="text" id="sector" name="sector" placeholder="AI Infrastructure">
+                </div>
+                <div class="field">
+                    <label class="field__label" for="stage">Stage</label>
+                    <select id="stage" name="stage">
+                        <option value="pre-seed">Pre-seed</option>
+                        <option value="seed">Seed</option>
+                        <option value="series-a">Series A</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="field">
+                    <label class="field__label" for="geography">Where you're based</label>
+                    <input type="text" id="geography" name="geography" placeholder="Berlin, Germany">
+                </div>
+                <div class="field">
+                    <label class="field__label" for="raising">How much you're raising</label>
+                    <input type="text" id="raising" name="raising" placeholder="$1.2M pre-seed">
+                </div>
+            </div>
+
+            <div class="row" style="margin-bottom:0;">
+                <div class="field" style="margin-bottom:0;">
+                    <label class="field__label" for="website">Website</label>
+                    <input type="url" id="website" name="website" placeholder="https://vektor.dev">
+                </div>
+                <div class="field" style="margin-bottom:0;">
+                    <label class="field__label" for="product_url">Product, repo or demo</label>
+                    <span class="field__why">A live thing beats a description of a thing.</span>
+                    <input type="url" id="product_url" name="product_url" placeholder="https://github.com/…">
+                </div>
+            </div>
+        </div>
+
+        <!-- ----------------------------------------------------------- context -->
+        <div class="card">
+            <div class="card__title">Context</div>
+            <div class="card__hint">The questions we'd otherwise ask on a call.</div>
+
+            <div class="field">
+                <label class="field__label" for="why_now">Why now?</label>
+                <span class="field__why">What changed recently that makes this buildable or buyable
+                    today, when it wasn't two years ago? Be specific — “AI got good” isn't an answer.</span>
+                <textarea id="why_now" name="why_now"
+                          placeholder="GPU memory prices fell ~60% in 18 months, and the EU AI Act made data residency a board-level question…"></textarea>
+            </div>
+
+            <div class="row" style="margin-bottom:0;">
+                <div class="field" style="margin-bottom:0;">
+                    <label class="field__label" for="accelerator">Accelerator</label>
+                    <input type="text" id="accelerator" name="accelerator" placeholder="Y Combinator S25 — or leave blank">
+                </div>
+                <div class="field" style="margin-bottom:0;">
+                    <label class="field__label" for="prior_companies">Anything you built before</label>
+                    <input type="text" id="prior_companies" name="prior_companies" placeholder="Sold a document-automation tool in 2023">
+                </div>
+            </div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:center;margin-top:20px;">
+            <button class="btn" type="submit" id="submit">Submit application</button>
+            <span id="status" style="font-size:13px;color:var(--muted);"></span>
+        </div>
+    </form>
+
+    <div id="done" hidden></div>
+</div>
+
+<script type="module">
+import { submitApplication, VERDICT, esc, USE_MOCK } from '/static/api.js';
+
+if (USE_MOCK) document.getElementById('mockFlag').hidden = false;
+
+/* --- deck picker -------------------------------------------------------- */
+
+const drop = document.getElementById('drop');
+const deck = document.getElementById('deck');
+
+const showFile = (f) => {
+    drop.classList.toggle('has-file', Boolean(f));
+    document.getElementById('dropMain').textContent = f ? f.name : 'Drop your deck here, or click to choose';
+    document.getElementById('dropSub').textContent = f
+        ? `${(f.size / 1024 / 1024).toFixed(1)} MB — click to replace`
+        : 'PDF or PPTX';
+};
+
+drop.addEventListener('click', () => deck.click());
+drop.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); deck.click(); }
+});
+deck.addEventListener('change', () => showFile(deck.files[0]));
+['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, (e) => {
+    e.preventDefault(); drop.classList.add('is-over');
+}));
+['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, () => drop.classList.remove('is-over')));
+drop.addEventListener('drop', (e) => {
+    e.preventDefault();
+    if (e.dataTransfer.files[0]) { deck.files = e.dataTransfer.files; showFile(deck.files[0]); }
+});
+
+/* --- founders ----------------------------------------------------------- */
+
+const founders = [{}];
+const F = document.getElementById('founders');
+
+function drawFounders() {
+    F.innerHTML = founders.map((f, i) => `
+        <div class="repeat-item">
+            <div class="repeat-item__head">
+                <span>${i === 0 ? 'You' : `Co-founder ${i + 1}`}</span>
+                ${i > 0 ? `<button type="button" class="btn btn--ghost btn--sm" data-del="${i}">Remove</button>` : ''}
+            </div>
+            <div class="row">
+                <div class="field" style="margin-bottom:12px;">
+                    <label class="field__label">Name</label>
+                    <input type="text" data-i="${i}" data-k="name" value="${esc(f.name || '')}" placeholder="Ada Whitfield">
+                </div>
+                <div class="field" style="margin-bottom:12px;">
+                    <label class="field__label">Email</label>
+                    <input type="email" data-i="${i}" data-k="email" value="${esc(f.email || '')}" placeholder="ada@vektor.dev">
+                </div>
+            </div>
+            <div class="row">
+                <div class="field" style="margin-bottom:0;">
+                    <label class="field__label">GitHub</label>
+                    <input type="text" data-i="${i}" data-k="github" value="${esc(f.github || '')}" placeholder="adawhitfield">
+                </div>
+                <div class="field" style="margin-bottom:0;">
+                    <label class="field__label">X / Twitter</label>
+                    <input type="text" data-i="${i}" data-k="twitter" value="${esc(f.twitter || '')}" placeholder="adabuilds">
+                </div>
+            </div>
+            <div class="field" style="margin:12px 0 0;">
+                <label class="field__label">LinkedIn</label>
+                <input type="text" data-i="${i}" data-k="linkedin" value="${esc(f.linkedin || '')}" placeholder="linkedin.com/in/adawhitfield">
+            </div>
+        </div>`).join('');
+
+    F.querySelectorAll('input').forEach(inp => inp.addEventListener('input', () => {
+        founders[Number(inp.dataset.i)][inp.dataset.k] = inp.value;
+    }));
+    F.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => {
+        founders.splice(Number(b.dataset.del), 1); drawFounders();
+    }));
+}
+document.getElementById('addFounder').addEventListener('click', () => { founders.push({}); drawFounders(); });
+drawFounders();
+
+/* --- submit ------------------------------------------------------------- */
+
+document.getElementById('form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const status = document.getElementById('status');
+    const btn = document.getElementById('submit');
+
+    if (!deck.files[0]) {
+        status.textContent = 'Add your deck before submitting.';
+        drop.focus();
+        return;
+    }
+
+    const fd = new FormData();
+    ['company_name','one_liner','sector','stage','geography','raising','website',
+     'product_url','why_now','accelerator','prior_companies']
+        .forEach(k => fd.append(k, document.getElementById(k)?.value || ''));
+    fd.append('deck', deck.files[0]);
+    fd.append('founders', JSON.stringify(founders.filter(f => f.name)));
+
+    btn.disabled = true;
+    status.textContent = 'Submitting…';
+    try {
+        const res = await submitApplication(fd);
+        const v = VERDICT[res.applicability.verdict] || VERDICT.out_of_scope;
+        document.getElementById('form').hidden = true;
+        const done = document.getElementById('done');
+        done.hidden = false;
+        done.innerHTML = `<div class="card">
+            <div class="card__title">Received</div>
+            <p style="margin:10px 0 16px;">Your application is in. You'll hear back within 24 hours.</p>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                <span class="pill pill--plain mono">${esc(res.application_id)}</span>
+                <span class="pill ${v.cls}">${v.label}</span>
+            </div>
+            ${res.applicability.reasons?.length
+                ? `<ul class="reasons">${res.applicability.reasons.map(r => `<li>${esc(r)}</li>`).join('')}</ul>`
+                : ''}
+            <div style="margin-top:18px;"><a class="btn btn--ghost btn--sm" href="/inbox">See it in the inbox</a></div>
+        </div>`;
+    } catch (err) {
+        status.textContent = `Could not submit: ${err.message}`;
+        btn.disabled = false;
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+[
+  {
+    "id": "a1f4c2e90b71",
+    "company_id": "c88de1204a35",
+    "company_name": "Vektor",
+    "one_liner": "Vector database that runs inside the customer's own VPC.",
+    "sector": "AI Infrastructure",
+    "stage": "pre-seed",
+    "geography": "Berlin, Germany",
+    "website": "https://vektor.dev",
+    "product_url": "https://github.com/vektor-dev/vektor",
+    "status": "screening",
+    "source": "inbound",
+    "submitted_at": "2026-07-18T09:12:44",
+    "raising": "$1.2M pre-seed",
+    "accelerator": "Y Combinator S25",
+    "prior_companies": "Both founders were early engineers at Celonis.",
+    "why_now": "Enterprises that were blocked from using hosted vector DBs on compliance grounds can now self-host at reasonable cost — GPU memory prices fell ~60% in 18 months, and the EU AI Act made data residency a board-level question rather than an IT preference.",
+    "deck": { "filename": "vektor-preseed-deck.pdf", "pages": 14, "uploaded_at": "2026-07-18T09:12:44" },
+    "founders": [
+      { "name": "Ada Whitfield", "email": "ada@vektor.dev", "github": "adawhitfield", "twitter": "adabuilds", "linkedin": "linkedin.com/in/adawhitfield" },
+      { "name": "Tomas Reiner", "email": "tomas@vektor.dev", "github": "treiner", "twitter": "", "linkedin": "linkedin.com/in/tomasreiner" }
+    ],
+    "applicability": {
+      "applicable": true,
+      "verdict": "in_scope",
+      "reasons": [
+        "Sector 'AI Infrastructure' matches thesis tag 'AI'",
+        "Stage 'pre-seed' is in mandate",
+        "Geography 'Berlin, Germany' matches 'Germany'"
+      ],
+      "thesis_fit": true,
+      "sanity": { "passed": true, "note": "Operating company with a public product and named team." }
+    },
+    "screening": {
+      "founder_axis": {
+        "score": 78.0,
+        "sentiment": "bullish",
+        "trend": "improving",
+        "confidence": 0.74,
+        "strengths": [
+          "Both founders shipped production infrastructure at Celonis before starting",
+          "Maintains an open-source project with 4.1k stars and steady commit history",
+          "Technical and commercial split across the two founders is clean"
+        ],
+        "weaknesses": [
+          "Neither founder has sold into enterprise procurement before",
+          "First company for both — no prior exit or failure to learn from"
+        ],
+        "evidence": [
+          "github.com/adawhitfield — 4.1k stars, 312 commits in the last 12 months",
+          "LinkedIn: 4 years Senior Engineer, Celonis (2019-2023)",
+          "YC S25 batch listing"
+        ]
+      },
+      "market_axis": {
+        "score": 64.0,
+        "sentiment": "bullish",
+        "trend": "improving",
+        "confidence": 0.61,
+        "strengths": [
+          "Self-hosted inference tooling is growing well above the wider database market",
+          "Compliance pressure creates a budget holder who is not the same person as the technical buyer"
+        ],
+        "weaknesses": [
+          "Pinecone, Weaviate and Qdrant are all funded and moving toward the same VPC story",
+          "Bottom-up sizing rests on a single assumed price point with no design partners at that price yet"
+        ],
+        "evidence": [
+          "Deck slide 7: TAM $4.2B by 2028, top-down, source not cited",
+          "Qdrant raised $28M Series A (Jan 2026) with an explicit self-hosted push"
+        ]
+      },
+      "idea_vs_market_axis": {
+        "score": 71.0,
+        "sentiment": "bullish",
+        "trend": "stable",
+        "confidence": 0.58,
+        "strengths": [
+          "Wedge is narrow and credible: regulated German mid-market first, not 'all enterprises'",
+          "Why-now names a specific, checkable shift rather than a general AI tailwind"
+        ],
+        "weaknesses": [
+          "The moat described is speed of execution, which is not a moat",
+          "No answer yet for what happens if the hosted incumbents ship the same deployment mode"
+        ],
+        "evidence": [
+          "Deck slide 4: 3 named design partners, all German industrials",
+          "Application answer: 'why now' cites GPU memory pricing and the EU AI Act"
+        ]
+      },
+      "passes_screen": true,
+      "rejection_reasons": []
+    }
+  },
+  {
+    "id": "b7c2a94e1d06",
+    "company_id": "d31fa7b95c28",
+    "company_name": "Perikles",
+    "one_liner": "Contract review for German SME law firms.",
+    "sector": "AI",
+    "stage": "seed",
+    "geography": "Munich, Germany",
+    "website": "https://perikles.legal",
+    "product_url": "",
+    "status": "screening",
+    "source": "inbound",
+    "submitted_at": "2026-07-17T16:40:03",
+    "raising": "$2.5M seed",
+    "accelerator": "",
+    "prior_companies": "Founder previously built and sold a document-automation tool to a Munich legal publisher.",
+    "why_now": "Long-context models finally handle a full German commercial contract in one pass, which was not true 18 months ago.",
+    "deck": { "filename": "perikles-seed.pdf", "pages": 21, "uploaded_at": "2026-07-17T16:40:03" },
+    "founders": [
+      { "name": "Johanna Brand", "email": "jb@perikles.legal", "github": "jbrand", "twitter": "", "linkedin": "linkedin.com/in/johannabrand" }
+    ],
+    "applicability": {
+      "applicable": true,
+      "verdict": "in_scope",
+      "reasons": [
+        "Sector 'AI' matches thesis tag 'AI'",
+        "Stage 'seed' is in mandate",
+        "Geography 'Munich, Germany' matches 'Germany'"
+      ],
+      "thesis_fit": true,
+      "sanity": { "passed": true, "note": "Registered company, prior exit verifiable." }
+    },
+    "screening": {
+      "founder_axis": {
+        "score": 84.0,
+        "sentiment": "bullish",
+        "trend": "improving",
+        "confidence": 0.81,
+        "strengths": [
+          "Second-time founder in exactly this domain — built and sold a document-automation product to a legal publisher",
+          "Ten years inside the buyer's world before starting, so the ICP is named precisely rather than described",
+          "Shipped a working product before raising"
+        ],
+        "weaknesses": [
+          "Solo founder with no technical co-founder named",
+          "Engineering is currently one contractor"
+        ],
+        "evidence": [
+          "Handelsregister: prior company incorporated 2019, acquired 2023",
+          "Application answer names the buyer as 'partners at 5-30 lawyer commercial firms'"
+        ]
+      },
+      "market_axis": {
+        "score": 29.0,
+        "sentiment": "bear",
+        "trend": "declining",
+        "confidence": 0.66,
+        "strengths": [
+          "The named beachhead genuinely has budget and a compliance reason to buy"
+        ],
+        "weaknesses": [
+          "German SME legal software is a few hundred million at most, and the deck's $8B figure is the global legal-tech market",
+          "Every incumbent legal suite shipped contract review as a bundled feature in the last year",
+          "Price point implies ~4,000 firms at full penetration — the whole addressable market is roughly that size"
+        ],
+        "evidence": [
+          "Deck slide 9: '$8B legal tech market' — global, top-down, not the served market",
+          "Bundled contract review shipped by two incumbent suites in 2025"
+        ]
+      },
+      "idea_vs_market_axis": {
+        "score": 38.0,
+        "sentiment": "neutral",
+        "trend": "stable",
+        "confidence": 0.54,
+        "strengths": [
+          "Founder is credible enough that a pivot inside legal tooling is plausible",
+          "Why-now is real: long-context models did change what is buildable here"
+        ],
+        "weaknesses": [
+          "The idea as stated is a feature of a suite, not a company",
+          "No expansion path out of German SME firms is described",
+          "Same capability is being given away free by the tools the customer already pays for"
+        ],
+        "evidence": [
+          "Application answer: no expansion market named beyond 'other DACH firms'",
+          "Deck has no competitive slide"
+        ]
+      },
+      "passes_screen": true,
+      "rejection_reasons": []
+    }
+  },
+  {
+    "id": "e5d80c1a7b43",
+    "company_id": "f2b6033ce914",
+    "company_name": "Loomly",
+    "one_liner": "Resale marketplace for designer childrenswear.",
+    "sector": "consumer marketplace",
+    "stage": "seed",
+    "geography": "Paris, France",
+    "website": "https://loomly.fr",
+    "product_url": "https://apps.apple.com/app/loomly",
+    "status": "received",
+    "source": "inbound",
+    "submitted_at": "2026-07-19T07:55:10",
+    "raising": "€3M seed",
+    "accelerator": "Station F",
+    "prior_companies": "Founder was head of merchandising at Vestiaire Collective.",
+    "why_now": "Secondhand childrenswear is the fastest-growing resale category and no marketplace is built for it specifically.",
+    "deck": { "filename": "loomly-seed-deck.pdf", "pages": 18, "uploaded_at": "2026-07-19T07:55:10" },
+    "founders": [
+      { "name": "Camille Ferrand", "email": "camille@loomly.fr", "github": "", "twitter": "camilleferrand", "linkedin": "linkedin.com/in/camilleferrand" }
+    ],
+    "applicability": {
+      "applicable": false,
+      "verdict": "out_of_scope",
+      "reasons": [
+        "Sector 'consumer marketplace' matches no thesis tag: AI, fintech, SaaS, health",
+        "Geography 'Paris, France' does not match 'Germany', 'DACH' — matches 'Europe'",
+        "Desire conflict: fund states 'not consumer social'; adjacent but not identical"
+      ],
+      "thesis_fit": false,
+      "sanity": { "passed": true, "note": "Real company, live app, credible team. Simply not this fund's mandate." }
+    },
+    "screening": null
+  },
+  {
+    "id": "c04b6f28ea15",
+    "company_id": "a97e5d310cb2",
+    "company_name": "Gelato Rossi",
+    "one_liner": "Premium ice cream truck fleet for Munich events.",
+    "sector": "food",
+    "stage": "seed",
+    "geography": "Munich, Germany",
+    "website": "",
+    "product_url": "",
+    "status": "received",
+    "source": "inbound",
+    "submitted_at": "2026-07-19T11:20:31",
+    "raising": "€250k",
+    "accelerator": "",
+    "prior_companies": "",
+    "why_now": "Summer is coming and we already have three trucks.",
+    "deck": { "filename": "gelato-rossi.pdf", "pages": 3, "uploaded_at": "2026-07-19T11:20:31" },
+    "founders": [
+      { "name": "Marco Rossi", "email": "marco@gelatorossi.de", "github": "", "twitter": "", "linkedin": "" }
+    ],
+    "applicability": {
+      "applicable": false,
+      "verdict": "not_viable",
+      "reasons": [
+        "Not a venture-scale business: a truck fleet scales linearly with capital, not with software",
+        "No technology component of any kind described",
+        "Sector 'food' matches no thesis tag",
+        "Deck is 3 pages with no market, product or team section"
+      ],
+      "thesis_fit": false,
+      "sanity": { "passed": false, "note": "Local catering operation. Venture funding is the wrong instrument here — this is a bank loan." }
+    },
+    "screening": null
+  }
+]
