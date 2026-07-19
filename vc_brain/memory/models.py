@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 from datetime import datetime
 from enum import Enum
 from typing import Any
@@ -20,6 +22,7 @@ class SourceType(str, Enum):
     ARXIV = "arxiv"
     CRUNCHBASE = "crunchbase"
     ACCELERATOR = "accelerator"
+    WEB = "web"  # press, court/regulator filings, journals -- reputation scanner
     MANUAL = "manual"
     APPLICATION = "application"
 
@@ -41,6 +44,23 @@ class DataPoint(BaseModel):
     confidence: float = 0.5  # 0-1 trust score for this data point
     extracted_at: datetime = Field(default_factory=datetime.utcnow)
     tags: list[str] = Field(default_factory=list)
+
+    def dedup_key(self) -> str:
+        """Identity of this data point for merge-on-ingest (latest wins).
+
+        A re-scanned profile SNAPSHOT (github/socials/etc.) shares
+        (source, url, type), so re-ingesting the same source replaces it instead
+        of appending a duplicate — that's what prevented the Founder Score from
+        doubling. Reputation FINDINGS are list items, so they also key on a
+        content hash to stay distinct even under the same (source, url)."""
+        kind = str(self.content.get("type") or self.content.get("kind") or "")
+        base = f"{self.source.value}|{self.source_url}|{kind}"
+        if kind == "reputation_finding":
+            digest = hashlib.sha1(
+                json.dumps(self.content, sort_keys=True, default=str).encode()
+            ).hexdigest()[:12]
+            return f"{base}|{digest}"
+        return base
 
 
 # ---------------------------------------------------------------------------

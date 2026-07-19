@@ -1,0 +1,39 @@
+{
+  "profile": {
+    "name": "Jane Doe",
+    "bio": "Co-founder & CTO at Acme. Building AI developer infrastructure. Previously Infrastructure @ Stripe. YC S23.",
+    "url": "https://www.linkedin.com/in/janedoe",
+    "followers": 9120,
+    "following": 0,
+    "verified": false
+  },
+  "posts": [
+    {
+      "text": "We just crossed 1,000 teams using Acme's inference gateway in production. When we started, everyone told us developers wouldn't pay for latency. Grateful to our early customers who bet on us.",
+      "created_at": "2026-06-15T10:00:00Z",
+      "url": "https://www.linkedin.com/feed/update/1",
+      "likes": 640, "reposts": 58, "replies": 74,
+      "mentions": [], "hashtags": ["startups", "ai", "infrastructure"]
+    },
+    {
+      "text": "Reflections on going from IC to founder: the hardest skill was learning to hire people better than me. A thread on what worked and what didn't.",
+      "created_at": "2026-06-01T08:30:00Z",
+      "url": "https://www.linkedin.com/feed/update/2",
+      "likes": 410, "reposts": 33, "replies": 51,
+      "mentions": [], "hashtags": ["leadership", "hiring"]
+    },
+    {
+      "text": "Proud that Acme was selected for the YC S23 batch. To every founder still grinding pre-traction: keep talking to users.",
+      "created_at": "2026-05-18T14:12:00Z",
+      "url": "https://www.linkedin.com/feed/update/3",
+      "likes": 880, "reposts": 40, "replies": 96,
+      "mentions": [], "hashtags": ["ycombinator", "founders"]
+    }
+  ],
+  "connections": [],
+  "comments": [
+    {"post_url": "https://www.linkedin.com/feed/update/1", "author_handle": "aaronlevie", "author_name": "Aaron Levie", "text": "Congrats on the milestone — betting on latency was the right call.", "likes": 120, "created_at": "2026-06-15T12:00:00Z"},
+    {"post_url": "https://www.linkedin.com/feed/update/1", "author_handle": "marcus-chen-vc", "author_name": "Marcus Chen", "text": "Impressive traction. Would love to connect.", "likes": 9, "created_at": "2026-06-15T13:30:00Z"},
+    {"post_url": "https://www.linkedin.com/feed/update/3", "author_handle": "sara-devrel", "author_name": "Sara Nolan", "text": "So inspiring for early founders!", "likes": 15, "created_at": "2026-05-18T15:00:00Z"}
+  ]
+}

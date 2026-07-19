@@ -1,0 +1,54 @@
+{
+  "name": "Ada Whitfield",
+  "note": "Fictional sample data for offline tests and demos. Not a real person.",
+  "articles": [
+    {
+      "title": "International Mathematical Olympiad 2014 — Individual Results",
+      "url": "https://imo-official.org/participant_r.aspx?id=2014-whitfield",
+      "snippet": "Ada Whitfield (United Kingdom) was awarded a Gold Medal at the 55th International Mathematical Olympiad, placing 11th overall out of 560 contestants.",
+      "published": "2014-07-12"
+    },
+    {
+      "title": "Consensus Under Partial Synchrony in Geo-Replicated Stores",
+      "url": "https://arxiv.org/abs/2019.04412",
+      "snippet": "Authors: A. Whitfield, R. Nakamura. We present a consensus protocol reducing cross-region commit latency by 38%. The paper has been cited 240 times since publication.",
+      "published": "2019-04-09"
+    },
+    {
+      "title": "Rivulet raises $4M seed to rebuild database replication",
+      "url": "https://techcrunch.com/2021/09/14/rivulet-seed-round/",
+      "snippet": "Rivulet, founded by former Stripe engineer Ada Whitfield, has raised a $4M seed round led by Accel with participation from Y Combinator. The company graduated from the YC W21 batch.",
+      "published": "2021-09-14"
+    },
+    {
+      "title": "The European deep-tech founders investors are watching",
+      "url": "https://www.reuters.com/technology/european-deeptech-founders-2022-11-03/",
+      "snippet": "Among them is Ada Whitfield, whose infrastructure startup Rivulet has become a quiet favourite among database engineers. Whitfield previously spent four years at Stripe.",
+      "published": "2022-11-03"
+    },
+    {
+      "title": "Scalable replication for scientific data pipelines",
+      "url": "https://www.nature.com/articles/s41597-023-02219-7",
+      "snippet": "Whitfield, A. et al. describe a replication layer adopted by three national research computing centres.",
+      "published": "2023-05-22"
+    },
+    {
+      "title": "Forbes 30 Under 30 Europe — Technology",
+      "url": "https://www.forbes.com/30-under-30-europe/2023/technology/",
+      "snippet": "Ada Whitfield, 28, founder of Rivulet, is recognised for work on distributed database infrastructure used by more than 400 companies.",
+      "published": "2023-02-01"
+    },
+    {
+      "title": "Why we rewrote our replication layer from scratch",
+      "url": "https://medium.com/@adawhitfield/why-we-rewrote-replication-9f2a1c",
+      "snippet": "A technical write-up by Rivulet founder Ada Whitfield on the company engineering blog.",
+      "published": "2022-06-18"
+    },
+    {
+      "title": "Ada Whitfield — Founder & CEO at Rivulet",
+      "url": "https://www.linkedin.com/in/adawhitfield/",
+      "snippet": "Founder & CEO at Rivulet. Previously Senior Engineer at Stripe. MEng Computer Science, University of Cambridge.",
+      "published": ""
+    }
+  ]
+}

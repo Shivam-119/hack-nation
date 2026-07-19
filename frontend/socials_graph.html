@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Socials — Connection Graph</title>
+  <style>
+    :root { --bg:#0b0f17; --fg:#e6edf3; --muted:#8b949e; --seed:#f0b429; --notable:#3fb950; }
+    * { box-sizing: border-box; }
+    html, body { margin:0; height:100%; background:var(--bg); color:var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+    #hud { position:fixed; top:0; left:0; right:0; padding:14px 18px; z-index:10;
+      background:linear-gradient(180deg, rgba(11,15,23,.95), rgba(11,15,23,0));
+      pointer-events:none; }
+    #hud h1 { margin:0; font-size:18px; font-weight:650; }
+    #hud .score { font-size:26px; font-weight:750; color:var(--notable); }
+    #hud .meta { color:var(--muted); font-size:13px; margin-top:2px; }
+    #legend { position:fixed; bottom:14px; left:18px; font-size:12px; color:var(--muted); z-index:10; }
+    #legend .dot { display:inline-block; width:9px; height:9px; border-radius:50%; margin:0 5px 0 12px; }
+    #graph { position:absolute; inset:0; }
+  </style>
+  <script src="https://unpkg.com/force-graph"></script>
+</head>
+<body>
+  <div id="hud">
+    <h1 id="title">Connection graph</h1>
+    <div class="meta"><span class="score" id="score"></span> notable connections
+      &nbsp;·&nbsp; <span id="counts"></span></div>
+  </div>
+  <div id="legend">
+    <span class="dot" style="background:var(--seed)"></span>founder
+    <span class="dot" style="background:var(--notable)"></span>notable connection
+    <span class="dot" style="background:var(--muted)"></span>other
+  </div>
+  <div id="graph"></div>
+
+  <script>
+    const DATA = __GRAPH_DATA__;
+    const META = __META__;
+
+    document.getElementById("title").textContent = META.name || "Connection graph";
+    document.getElementById("score").textContent = (META.notable_count ?? 0);
+    document.getElementById("counts").textContent =
+      `${DATA.nodes.length} people · ${DATA.links.length} connections`;
+
+    const el = document.getElementById("graph");
+    const Graph = ForceGraph()(el)
+      .backgroundColor("#0b0f17")
+      .graphData(DATA)
+      .nodeLabel(n => n.label + (n.category ? ` — ${n.category}` : ""))
+      .nodeColor(n => n.seed ? "#f0b429" : (n.notable ? "#3fb950" : "#8b949e"))
+      .nodeVal(n => n.val || 1)
+      .nodeRelSize(5)
+      .linkColor(() => "rgba(139,148,158,0.28)")
+      .linkDirectionalArrowLength(3)
+      .linkDirectionalArrowRelPos(1);
+
+    addEventListener("resize", () => Graph.width(innerWidth).height(innerHeight));
+    Graph.width(innerWidth).height(innerHeight);
+  </script>
+</body>
+</html>

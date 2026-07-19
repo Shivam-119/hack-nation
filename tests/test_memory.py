@@ -5,8 +5,8 @@ from vc_brain.memory.store import MemoryStore
 from vc_brain.memory.founder_score import compute_founder_score
 
 
-def test_founder_upsert_deduplicates():
-    store = MemoryStore(path="/tmp/test_vc_brain.json")
+def test_founder_upsert_deduplicates(tmp_path):
+    store = MemoryStore(path=str(tmp_path / "mem.db"))
     f1 = Founder(name="Alice", email="alice@example.com")
     f2 = Founder(name="Alice Updated", email="alice@example.com", skills=["python"])
 
@@ -41,8 +41,15 @@ def test_founder_score_computation():
     assert score.leadership > 0
 
 
-def test_company_deduplication():
-    store = MemoryStore(path="/tmp/test_vc_brain2.json")
+def test_store_persists_across_instances(tmp_path):
+    path = str(tmp_path / "mem_roundtrip.db")
+    f = MemoryStore(path=path).upsert_founder(Founder(name="Ada", email="ada@x.com"))
+    # a brand-new store on the same DB file must see the founder (durable SQLite)
+    assert MemoryStore(path=path).get_founder(f.id).name == "Ada"
+
+
+def test_company_deduplication(tmp_path):
+    store = MemoryStore(path=str(tmp_path / "mem2.db"))
     from vc_brain.memory.models import Company
 
     c1 = store.upsert_company(Company(name="Acme AI", sector="AI"))

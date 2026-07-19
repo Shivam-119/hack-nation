@@ -1,0 +1,67 @@
+{
+  "profile": {
+    "name": "Jane Doe",
+    "bio": "Building AI developer tools @acmehq. ex-Stripe infra. YC S23. Opinions my own.",
+    "url": "https://twitter.com/janedoe",
+    "followers": 4820,
+    "following": 612,
+    "verified": false
+  },
+  "posts": [
+    {
+      "text": "Shipped our new inference gateway today — 40% p99 latency drop. Huge thanks to the team for grinding on this.",
+      "created_at": "2026-06-14T15:02:00Z",
+      "url": "https://twitter.com/janedoe/status/1001",
+      "likes": 241, "reposts": 31, "replies": 18,
+      "mentions": [], "hashtags": ["ai", "devtools"]
+    },
+    {
+      "text": "Great back-and-forth with @sama on eval harnesses. The real bottleneck is data quality, not model size.",
+      "created_at": "2026-06-10T09:20:00Z",
+      "url": "https://twitter.com/janedoe/status/1002",
+      "likes": 512, "reposts": 44, "replies": 27,
+      "mentions": ["sama"], "hashtags": []
+    },
+    {
+      "text": "Re-reading @paulg on founder mode. The parts about hiring vs. doing hit different at 15 people.",
+      "created_at": "2026-06-02T18:41:00Z",
+      "url": "https://twitter.com/janedoe/status/1003",
+      "likes": 198, "reposts": 12, "replies": 9,
+      "mentions": ["paulg"], "hashtags": []
+    },
+    {
+      "text": "We're hiring senior infra engineers who love low-latency systems. Remote-friendly. DMs open.",
+      "created_at": "2026-05-28T12:00:00Z",
+      "url": "https://twitter.com/janedoe/status/1004",
+      "likes": 87, "reposts": 22, "replies": 5,
+      "mentions": [], "hashtags": ["hiring"]
+    },
+    {
+      "text": "Hot take: most RAG stacks are overengineered. Start with good keyword search and measure before adding a vector DB.",
+      "created_at": "2026-05-20T21:15:00Z",
+      "url": "https://twitter.com/janedoe/status/1005",
+      "likes": 903, "reposts": 140, "replies": 61,
+      "mentions": [], "hashtags": ["rag", "ai"]
+    }
+  ],
+  "connections": [
+    {"target_handle": "sama", "edge_type": "follows", "source_url": "https://twitter.com/janedoe/following"},
+    {"target_handle": "paulg", "edge_type": "follows", "source_url": "https://twitter.com/janedoe/following"},
+    {"target_handle": "naval", "edge_type": "follows", "source_url": "https://twitter.com/janedoe/following"},
+    {"target_handle": "garrytan", "edge_type": "follows", "source_url": "https://twitter.com/janedoe/following"},
+    {"target_handle": "karpathy", "edge_type": "follows", "source_url": "https://twitter.com/janedoe/following"},
+    {"target_handle": "levelsio", "edge_type": "follows", "source_url": "https://twitter.com/janedoe/following"},
+    {"target_handle": "acmehq", "edge_type": "follows", "source_url": "https://twitter.com/janedoe/following"},
+    {"target_handle": "priya_builds", "edge_type": "follows", "source_url": "https://twitter.com/janedoe/following"},
+    {"target_handle": "devops_dan", "edge_type": "follows", "source_url": "https://twitter.com/janedoe/following"},
+    {"source_handle": "garrytan", "target_handle": "janedoe", "edge_type": "follows", "source_url": "https://twitter.com/janedoe/followers"},
+    {"source_handle": "eladgil", "target_handle": "janedoe", "edge_type": "follows", "source_url": "https://twitter.com/janedoe/followers"}
+  ],
+  "comments": [
+    {"post_url": "https://twitter.com/janedoe/status/1005", "author_handle": "levelsio", "author_name": "Pieter Levels", "text": "This is the way. Keyword search gets you 80% there.", "likes": 88, "created_at": "2026-05-20T22:01:00Z"},
+    {"post_url": "https://twitter.com/janedoe/status/1005", "author_handle": "eladgil", "author_name": "Elad Gil", "text": "Strong take. Measuring first is underrated.", "likes": 54, "created_at": "2026-05-20T22:40:00Z"},
+    {"post_url": "https://twitter.com/janedoe/status/1005", "author_handle": "randobuilder22", "author_name": "Alex Rando", "text": "disagree, vector search is essential at scale", "likes": 3, "created_at": "2026-05-21T02:10:00Z"},
+    {"post_url": "https://twitter.com/janedoe/status/1002", "author_handle": "priya_builds", "author_name": "Priya Sharma", "text": "Love this framing. Data quality is everything.", "likes": 12, "created_at": "2026-06-10T10:05:00Z"},
+    {"post_url": "https://twitter.com/janedoe/status/1002", "author_handle": "devops_dan", "author_name": "Dan Okoro", "text": "Curious how you're doing eval data collection?", "likes": 6, "created_at": "2026-06-10T11:20:00Z"}
+  ]
+}

@@ -17,6 +17,8 @@ dependencies = [
     "pypdf>=4.0",
     "beautifulsoup4>=4.12",
     "feedparser>=6.0",
+    "networkx>=3.0",
+    "python-dotenv>=1.0",
 ]
 
 [project.optional-dependencies]
@@ -28,6 +30,11 @@ dev = [
 
 [tool.setuptools.packages.find]
 include = ["vc_brain*"]
+
+[tool.pytest.ini_options]
+markers = [
+    "live: hits real external APIs and spends credits; skipped unless RUN_LIVE_TESTS=1",
+]
 
 [tool.ruff]
 line-length = 100
