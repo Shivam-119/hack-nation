@@ -425,6 +425,30 @@ async def scan_hackernews(limit: int = 20) -> dict[str, Any]:
     }
 
 
+@app.post("/api/sourcing/evaluate/{username}")
+async def evaluate_github_user(username: str) -> dict[str, Any]:
+    """Evaluate a single GitHub user as a founder candidate."""
+    from vc_brain.sourcing.github_evaluator import evaluate
+    evaluation = await evaluate(username)
+    return {
+        "username": username,
+        "grade": evaluation.grade,
+        "score": evaluation.score,
+        "is_builder": evaluation.is_builder,
+        "breakdown": {
+            "technical_ability": evaluation.technical_ability,
+            "execution_ability": evaluation.execution_ability,
+            "founder_product_ability": evaluation.founder_product_ability,
+            "technical_background": evaluation.technical_background,
+            "reputation": evaluation.reputation,
+            "growth_signals": evaluation.growth_signals,
+        },
+        "signals": evaluation.signals,
+        "red_flags": evaluation.red_flags,
+        "not_measurable": evaluation.not_measurable,
+    }
+
+
 @app.post("/api/sourcing/arxiv")
 async def scan_arxiv(limit_per_query: int = 10) -> dict[str, Any]:
     """Scan arXiv for recent AI/ML papers and ingest primary authors as candidates."""
