@@ -6,7 +6,7 @@ from vc_brain.memory.founder_score import compute_founder_score
 
 
 def test_founder_upsert_deduplicates():
-    store = MemoryStore(path="/tmp/test_vc_brain.json")
+    store = MemoryStore(db_path=":memory:")
     f1 = Founder(name="Alice", email="alice@example.com")
     f2 = Founder(name="Alice Updated", email="alice@example.com", skills=["python"])
 
@@ -42,7 +42,7 @@ def test_founder_score_computation():
 
 
 def test_company_deduplication():
-    store = MemoryStore(path="/tmp/test_vc_brain2.json")
+    store = MemoryStore(db_path=":memory:")
     from vc_brain.memory.models import Company
 
     c1 = store.upsert_company(Company(name="Acme AI", sector="AI"))
