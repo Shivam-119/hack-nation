@@ -269,6 +269,15 @@ async def generate_memo(app_id: str) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 # Routes: Founders
 # ---------------------------------------------------------------------------
+@app.get("/api/sourcing/channel-stats")
+async def get_channel_stats() -> list[dict[str, Any]]:
+    """Return sourcing channel effectiveness: which sources produce the best founders."""
+    from vc_brain.memory.channel_stats import compute_channel_stats, channel_stats_to_dict
+    all_founders = list(store.founders.values())
+    stats = compute_channel_stats(all_founders)
+    return channel_stats_to_dict(stats)
+
+
 @app.get("/api/founders/search")
 async def search_founders(q: str, limit: int = 20) -> list[dict[str, Any]]:
     """Fast indexed text search across founder name, location, and skills."""

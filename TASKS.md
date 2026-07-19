@@ -18,7 +18,7 @@ Work through these in order. Mark [x] when done. Commit after each.
 ## Memory
 - [x] Switch from JSON file to SQLite
 - [x] Add search indexing for faster founder lookups
-- [ ] Track sourcing channel effectiveness (which sources produce best founders)
+- [x] Track sourcing channel effectiveness (which sources produce best founders)
 
 ## API
 - [ ] Add `POST /api/sourcing/evaluate/{username}` endpoint for single GitHub eval
