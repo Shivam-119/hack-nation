@@ -16,7 +16,7 @@ Work through these in order. Mark [x] when done. Commit after each.
 - [x] Cold-start founder handling — explicit path for zero-history applicants
 
 ## Memory
-- [ ] Switch from JSON file to SQLite
+- [x] Switch from JSON file to SQLite
 - [ ] Add search indexing for faster founder lookups
 - [ ] Track sourcing channel effectiveness (which sources produce best founders)
 

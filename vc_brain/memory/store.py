@@ -1,4 +1,13 @@
-"""In-memory store with JSON persistence. Swap for a real DB later."""
+"""SQLite-backed memory store.
+
+Replaces the JSON file store. Each entity is persisted as a JSON blob in SQLite.
+Same public interface as before — callers don't need to change.
+
+Schema:
+  founders(id TEXT PK, data TEXT)
+  companies(id TEXT PK, name TEXT, data TEXT)
+  applications(id TEXT PK, status TEXT, data TEXT)
+"""
 
 from __future__ import annotations
 
@@ -7,28 +16,61 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from vc_brain.memory.models import (
-    Application,
-    Company,
-    Founder,
-)
+from sqlalchemy import Column, String, Text, create_engine, text
+from sqlalchemy.orm import DeclarativeBase, Session
 
+from vc_brain.memory.models import Application, Company, Founder
+
+
+# ── ORM models ────────────────────────────────────────────────────────────────
+
+class _Base(DeclarativeBase):
+    pass
+
+
+class _FounderRow(_Base):
+    __tablename__ = "founders"
+    id = Column(String, primary_key=True)
+    email = Column(String, index=True, default="")
+    github_url = Column(String, index=True, default="")
+    data = Column(Text, nullable=False)
+
+
+class _CompanyRow(_Base):
+    __tablename__ = "companies"
+    id = Column(String, primary_key=True)
+    name_lower = Column(String, index=True, default="")
+    data = Column(Text, nullable=False)
+
+
+class _ApplicationRow(_Base):
+    __tablename__ = "applications"
+    id = Column(String, primary_key=True)
+    status = Column(String, index=True, default="received")
+    data = Column(Text, nullable=False)
+
+
+# ── Store ──────────────────────────────────────────────────────────────────────
 
 class MemoryStore:
-    """Simple in-memory store backed by a JSON file for persistence."""
+    """SQLite-backed store with an in-memory cache for fast reads."""
 
-    def __init__(self, path: str = "vc_brain_data.json"):
-        self._path = Path(path)
+    def __init__(self, db_path: str = "vc_brain.db"):
+        url = f"sqlite:///{db_path}"
+        self._engine = create_engine(url, connect_args={"check_same_thread": False})
+        _Base.metadata.create_all(self._engine)
+
+        # Warm in-memory cache from DB on startup
         self.founders: dict[str, Founder] = {}
         self.companies: dict[str, Company] = {}
         self.applications: dict[str, Application] = {}
         self._load()
 
     # -- Founders -----------------------------------------------------------
+
     def upsert_founder(self, founder: Founder) -> Founder:
         existing = self._find_founder_by_identity(founder)
         if existing:
-            # Merge data points, update fields
             existing.data_points.extend(founder.data_points)
             for field in ("name", "email", "linkedin_url", "github_url", "twitter_url",
                           "location", "bio"):
@@ -38,10 +80,11 @@ class MemoryStore:
             existing.skills = list(set(existing.skills + founder.skills))
             existing.updated_at = datetime.utcnow()
             self.founders[existing.id] = existing
-            self._save()
+            self._save_founder(existing)
             return existing
+
         self.founders[founder.id] = founder
-        self._save()
+        self._save_founder(founder)
         return founder
 
     def get_founder(self, founder_id: str) -> Founder | None:
@@ -56,7 +99,6 @@ class MemoryStore:
         return results
 
     def _find_founder_by_identity(self, founder: Founder) -> Founder | None:
-        """Deduplication: match on email or GitHub URL."""
         for existing in self.founders.values():
             if founder.email and founder.email == existing.email:
                 return existing
@@ -65,6 +107,7 @@ class MemoryStore:
         return None
 
     # -- Companies ----------------------------------------------------------
+
     def upsert_company(self, company: Company) -> Company:
         for existing in self.companies.values():
             if company.name.lower() == existing.name.lower():
@@ -76,19 +119,21 @@ class MemoryStore:
                 existing.founder_ids = list(set(existing.founder_ids + company.founder_ids))
                 existing.updated_at = datetime.utcnow()
                 self.companies[existing.id] = existing
-                self._save()
+                self._save_company(existing)
                 return existing
+
         self.companies[company.id] = company
-        self._save()
+        self._save_company(company)
         return company
 
     def get_company(self, company_id: str) -> Company | None:
         return self.companies.get(company_id)
 
     # -- Applications -------------------------------------------------------
+
     def add_application(self, app: Application) -> Application:
         self.applications[app.id] = app
-        self._save()
+        self._save_application(app)
         return app
 
     def get_application(self, app_id: str) -> Application | None:
@@ -100,27 +145,73 @@ class MemoryStore:
             apps = [a for a in apps if a.status.value == status]
         return apps
 
-    # -- Persistence --------------------------------------------------------
-    def _save(self):
-        data = {
-            "founders": {k: v.model_dump(mode="json") for k, v in self.founders.items()},
-            "companies": {k: v.model_dump(mode="json") for k, v in self.companies.items()},
-            "applications": {k: v.model_dump(mode="json") for k, v in self.applications.items()},
-        }
-        self._path.write_text(json.dumps(data, indent=2, default=str))
+    # -- SQLite persistence -------------------------------------------------
 
-    def _load(self):
-        if not self._path.exists():
-            return
-        try:
-            data = json.loads(self._path.read_text())
-            self.founders = {k: Founder(**v) for k, v in data.get("founders", {}).items()}
-            self.companies = {k: Company(**v) for k, v in data.get("companies", {}).items()}
-            self.applications = {
-                k: Application(**v) for k, v in data.get("applications", {}).items()
-            }
-        except (json.JSONDecodeError, Exception):
-            pass  # Start fresh on corrupt data
+    def _save_founder(self, founder: Founder) -> None:
+        blob = founder.model_dump_json()
+        with Session(self._engine) as session:
+            row = session.get(_FounderRow, founder.id)
+            if row:
+                row.data = blob
+                row.email = founder.email or ""
+                row.github_url = founder.github_url or ""
+            else:
+                session.add(_FounderRow(
+                    id=founder.id,
+                    email=founder.email or "",
+                    github_url=founder.github_url or "",
+                    data=blob,
+                ))
+            session.commit()
+
+    def _save_company(self, company: Company) -> None:
+        blob = company.model_dump_json()
+        with Session(self._engine) as session:
+            row = session.get(_CompanyRow, company.id)
+            if row:
+                row.data = blob
+                row.name_lower = company.name.lower()
+            else:
+                session.add(_CompanyRow(
+                    id=company.id,
+                    name_lower=company.name.lower(),
+                    data=blob,
+                ))
+            session.commit()
+
+    def _save_application(self, app: Application) -> None:
+        blob = app.model_dump_json()
+        with Session(self._engine) as session:
+            row = session.get(_ApplicationRow, app.id)
+            if row:
+                row.data = blob
+                row.status = app.status.value
+            else:
+                session.add(_ApplicationRow(
+                    id=app.id,
+                    status=app.status.value,
+                    data=blob,
+                ))
+            session.commit()
+
+    def _load(self) -> None:
+        """Hydrate in-memory cache from SQLite on startup."""
+        with Session(self._engine) as session:
+            for row in session.query(_FounderRow).all():
+                try:
+                    self.founders[row.id] = Founder.model_validate_json(row.data)
+                except Exception:
+                    pass
+            for row in session.query(_CompanyRow).all():
+                try:
+                    self.companies[row.id] = Company.model_validate_json(row.data)
+                except Exception:
+                    pass
+            for row in session.query(_ApplicationRow).all():
+                try:
+                    self.applications[row.id] = Application.model_validate_json(row.data)
+                except Exception:
+                    pass
 
 
 def _matches(obj: Any, key: str, val: Any) -> bool:
