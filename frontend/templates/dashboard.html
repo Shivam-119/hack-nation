@@ -205,6 +205,10 @@
                     <svg id="radarSvg" width="300" height="300" viewBox="-10 -10 320 320"></svg>
                 </div>
                 <div class="radar-legend" id="radarLegend"></div>
+                <div id="radarGaps" style="display:none; margin-top: 16px;">
+                    <p style="font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Data Gaps (not measurable)</p>
+                    <ul id="radarGapList" style="font-size: 13px; color: var(--yellow); padding-left: 20px; line-height: 1.8;"></ul>
+                </div>
             </div>
 
             <!-- Thesis Configuration -->
@@ -446,6 +450,19 @@
             legend.innerHTML = labels.map((l, i) =>
                 `<span>${l}: <strong style="color:var(--accent)">${Math.round(scores[i])}</strong></span>`
             ).join('');
+
+            // Show not_measurable gaps
+            const gapsWrap = document.getElementById('radarGaps');
+            const gapList = document.getElementById('radarGapList');
+            const gaps = ghDp && ghDp.content && ghDp.content.not_measurable
+                ? ghDp.content.not_measurable
+                : (f.data_points || []).flatMap(dp => (dp.content && dp.content.not_measurable) || []);
+            if (gaps.length) {
+                gapList.innerHTML = gaps.map(g => `<li>${g}</li>`).join('');
+                gapsWrap.style.display = '';
+            } else {
+                gapsWrap.style.display = 'none';
+            }
         }
 
         function renderRadar(scores, labels, title) {
