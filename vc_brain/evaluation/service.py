@@ -39,7 +39,31 @@ class StoreEvaluationMemory(MemoryClient):
         founder = next((self.store.get_founder(fid) for fid in application.founder_ids if self.store.get_founder(fid)), None)
         if not founder:
             raise MemoryReadError("Application has no founder information")
-        return founder.model_dump(mode="json")
+        data = founder.model_dump(mode="json")
+
+        # Fold in the sourcing enrichment for this founder -- GitHub builder
+        # evaluation, socials activity and press -- so the founder axis scores
+        # against what we actually found, not just the thin entity record. This
+        # is the difference between "no data, score 10" and an evidence-based
+        # read of a real public footprint (including any adverse press).
+        enrichment = (application.evaluation_artifacts or {}).get("enrichment") or {}
+        name = founder.name.strip().lower()
+        match = next(
+            (f for f in enrichment.get("founders", []) if (f.get("name") or "").strip().lower() == name),
+            None,
+        )
+        if match:
+            socials = match.get("socials") or {}
+            data["public_footprint"] = {
+                "github_builder_evaluation": match.get("github"),
+                "socials_analysis": socials.get("analysis"),
+                "socials_activity": {
+                    "posts": socials.get("post_count"),
+                    "comments": socials.get("comment_count"),
+                },
+                "press_and_web": (match.get("reputation") or {}).get("findings"),
+            }
+        return data
 
     def get_founder_score(self, founder_id: str) -> float | None:
         founder = self.store.get_founder(founder_id)
