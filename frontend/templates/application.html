@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Application · VC Brain</title>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav__inner">
+        <div class="nav__brand"><span>VC</span> Brain</div>
+        <div class="nav__links">
+            <a class="nav__link" href="/inbox" aria-current="page">Inbox</a>
+            <a class="nav__link" href="/investor">Criteria</a>
+            <a class="nav__link" href="/apply">Apply</a>
+            <a class="nav__link" href="/">Dashboard</a>
+        </div>
+        <div class="nav__spacer"><span class="mock-flag" id="mockFlag" hidden>mock data</span></div>
+    </div>
+</nav>
+
+<div class="container" id="root">
+    <div class="empty"><div class="empty__body">Loading…</div></div>
+</div>
+
+<script type="module">
+import { getApplication, deckUrl, TREND, scoreClass, fmtDate, esc, USE_MOCK }
+    from '/static/api.js';
+
+if (USE_MOCK) document.getElementById('mockFlag').hidden = false;
+
+const id = location.pathname.split('/').filter(Boolean).pop();
+const root = document.getElementById('root');
+
+const list = (items, cls = 'axis__list') => items && items.length
+    ? `<ul class="${cls}">${items.map(i => `<li>${esc(i)}</li>`).join('')}</ul>`
+    : `<div class="table__sub">None recorded</div>`;
+
+function axisCard(name, question, axis) {
+    const cls = scoreClass(axis.score);
+    return `<div class="axis">
+        <div class="axis__name">${name}</div>
+        <div class="axis__q">${question}</div>
+
+        <div class="axis__score">${Math.round(axis.score)}<span>/100</span></div>
+        <div class="track track--${cls}"><div class="track__fill" style="width:${Math.max(0, Math.min(100, axis.score))}%"></div></div>
+
+        <div class="axis__meta">
+            <span class="chip">${esc(axis.sentiment)}</span>
+            <span class="chip">${TREND[axis.trend] || ''} ${esc(axis.trend)}</span>
+            <span class="chip">confidence ${axis.confidence.toFixed(2)}</span>
+        </div>
+
+        <div class="axis__group">
+            <div class="axis__grouphead axis__grouphead--up">Strengths</div>
+            ${list(axis.strengths)}
+        </div>
+        <div class="axis__group">
+            <div class="axis__grouphead axis__grouphead--down">Weaknesses</div>
+            ${list(axis.weaknesses)}
+        </div>
+        <div class="axis__group">
+            <div class="axis__grouphead" style="color:var(--faint)">Evidence</div>
+            ${list(axis.evidence, 'axis__list axis__ev')}
+        </div>
+    </div>`;
+}
+
+function screeningSection(s) {
+    if (!s) {
+        return `<div class="card">
+            <div class="card__title">Screening</div>
+            <div class="empty">
+                <div class="empty__title">Not screened yet</div>
+                <div class="empty__body">Screening runs once an application is in scope.</div>
+            </div>
+        </div>`;
+    }
+
+    const scores = [s.founder_axis.score, s.market_axis.score, s.idea_vs_market_axis.score];
+    const spread = Math.round(Math.max(...scores) - Math.min(...scores));
+
+    return `<div class="card">
+        <div class="card__title">Screening — three independent axes</div>
+        <div class="card__hint">Scored separately and never combined. A single number would hide
+            exactly the disagreement worth looking at.</div>
+
+        <div class="axes">
+            ${axisCard('Founder', 'Who they are, their traits and track record.', s.founder_axis)}
+            ${axisCard('Market', 'Sizing, competitors, SWOT.', s.market_axis)}
+            ${axisCard('Idea vs Market', 'Does the idea survive scrutiny as-is — or is the team strong enough to pivot?', s.idea_vs_market_axis)}
+        </div>
+
+        <div class="spread">
+            <span>Spread across axes</span><strong>${spread} points</strong>
+            <span>${spread >= 25
+                ? '— the axes disagree sharply. Read all three before deciding.'
+                : '— the axes broadly agree.'}</span>
+        </div>
+    </div>`;
+}
+
+function applicabilityCard(a) {
+    const failed = a.sanity.passed === false;
+    const total = a.breakdown.reduce((n, b) => n + b.weight, 0) || 100;
+
+    const bar = a.breakdown.map(b => `
+        <div class="fit__seg ${b.awarded ? 'fit__seg--hi' : 'fit__seg--none'}"
+             style="flex:${b.weight} 0 0"
+             title="${esc(b.label)}: ${b.awarded} of ${b.weight}">
+            <i style="width:${b.weight ? (b.awarded / b.weight) * 100 : 0}%"></i>
+        </div>`).join('');
+
+    const rows = a.breakdown.map(b => `
+        <div class="fit__label">${esc(b.label)}</div>
+        <div class="fit__pts ${b.awarded ? '' : 'fit__pts--zero'}">${b.awarded} / ${b.weight}</div>
+        <div class="fit__why">${esc(b.note)}</div>`).join('');
+
+    return `<div class="card">
+        <div class="card__title">Fit with your criteria</div>
+        <div class="card__hint">How well this matches what you said you're looking for — and,
+            separately, whether it's a venture-scale company at all.</div>
+
+        ${failed ? `
+            <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;">
+                <span class="pill pill--dead">Not viable</span>
+            </div>
+            <div class="notice"><strong>${esc(a.sanity.note)}</strong></div>
+            <div class="fit__hint field__why" style="margin-top:14px;">
+                Criteria were not scored: a company that fails this check would not become a fit
+                by being in the right sector.
+            </div>
+        ` : `
+            <div class="fit__head">
+                <div class="fit__score">${a.fit_score}<span>% of ${total}</span></div>
+                <div class="fit__note">${esc(a.sanity.note)}</div>
+            </div>
+            <div class="fit__bar">${bar}</div>
+            <div class="fit__rows">${rows}</div>
+        `}
+    </div>`;
+}
+
+function founderRows(founders) {
+    if (!founders || !founders.length) return '<div class="table__sub">No founders listed</div>';
+    return founders.map(f => {
+        const links = [
+            f.github ? `<a href="https://github.com/${esc(f.github)}">github/${esc(f.github)}</a>` : '',
+            f.twitter ? `<a href="https://x.com/${esc(f.twitter)}">x/${esc(f.twitter)}</a>` : '',
+            f.linkedin ? `<a href="https://${esc(f.linkedin)}">linkedin</a>` : '',
+        ].filter(Boolean).join(' · ');
+        return `<div style="padding:10px 0;border-bottom:1px solid var(--border);">
+            <div style="font-weight:500;">${esc(f.name)}</div>
+            <div class="table__sub mono">${esc(f.email || '')}</div>
+            <div style="font-size:13px;margin-top:4px;">${links || '<span class="table__sub">No public profiles supplied</span>'}</div>
+        </div>`;
+    }).join('');
+}
+
+function render(a) {
+    document.title = `${a.company_name} · VC Brain`;
+    root.innerHTML = `
+        <div class="page-head">
+            <a href="/inbox" style="font-size:13px;">← Inbox</a>
+            <h1 style="margin-top:8px;">${esc(a.company_name)}</h1>
+            <p>${esc(a.one_liner || '')}</p>
+            <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+                <span class="chip">${esc(a.sector || '—')}</span>
+                <span class="chip">${esc(a.stage || '—')}</span>
+                <span class="chip">${esc(a.geography || '—')}</span>
+                <span class="chip">${esc(a.raising || '—')}</span>
+                <span class="chip">${fmtDate(a.submitted_at)}</span>
+            </div>
+        </div>
+
+        ${applicabilityCard(a.applicability)}
+        ${screeningSection(a.screening)}
+
+        <div class="split" style="margin-top:20px;">
+            <div class="card">
+                <div class="card__title">Team</div>
+                <div class="card__hint">Handles feed the GitHub, socials and reputation scanners.</div>
+                ${founderRows(a.founders)}
+            </div>
+
+            <div class="card">
+                <div class="card__title">Application</div>
+                <div class="card__hint">What the founder told us.</div>
+                <dl class="kv">
+                    <dt>Deck</dt>
+                    <dd>${a.deck?.filename
+                        ? `<a class="mono" href="${deckUrl(a.id)}" target="_blank" rel="noopener">${esc(a.deck.filename)}</a>${a.deck.pages ? ` <span class="table__sub">· ${a.deck.pages}pp</span>` : ''}`
+                        : '<span class="table__sub">No deck uploaded</span>'}</dd>
+                    <dt>Website</dt><dd>${a.website ? `<a href="${esc(a.website)}">${esc(a.website)}</a>` : '—'}</dd>
+                    <dt>Product</dt><dd>${a.product_url ? `<a href="${esc(a.product_url)}">${esc(a.product_url)}</a>` : '—'}</dd>
+                    <dt>Accelerator</dt><dd>${esc(a.accelerator || '—')}</dd>
+                    <dt>Prior companies</dt><dd>${esc(a.prior_companies || '—')}</dd>
+                    <dt>Why now</dt><dd>${esc(a.why_now || '—')}</dd>
+                </dl>
+            </div>
+        </div>`;
+}
+
+try {
+    render(await getApplication(id));
+} catch (err) {
+    root.innerHTML = `<div class="empty">
+        <div class="empty__title">Could not load this application</div>
+        <div class="empty__body">${esc(err.message)}</div>
+        <div style="margin-top:16px;"><a class="btn btn--ghost btn--sm" href="/inbox">Back to inbox</a></div>
+    </div>`;
+}
+</script>
+</body>
+</html>

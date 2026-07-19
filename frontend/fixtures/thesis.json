@@ -1,0 +1,15 @@
+{
+  "name": "Maschmeyer Group — VC Brain",
+  "sectors": ["AI", "fintech", "SaaS", "health"],
+  "stages": ["pre-seed", "seed"],
+  "geographies": ["Germany", "DACH", "Europe"],
+  "risk_appetite": "aggressive",
+  "desires": [
+    "technical co-founder",
+    "shipped something publicly before raising",
+    "top-tier accelerator (YC, Techstars, EF)",
+    "no agencies or consultancies",
+    "not consumer social"
+  ],
+  "configured": false
+}

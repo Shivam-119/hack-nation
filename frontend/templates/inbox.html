@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inbox · VC Brain</title>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav__inner">
+        <div class="nav__brand"><span>VC</span> Brain</div>
+        <div class="nav__links">
+            <a class="nav__link" href="/inbox" aria-current="page">Inbox</a>
+            <a class="nav__link" href="/investor">Criteria</a>
+            <a class="nav__link" href="/apply">Apply</a>
+            <a class="nav__link" href="/">Dashboard</a>
+        </div>
+        <div class="nav__spacer"><span class="mock-flag" id="mockFlag" hidden>mock data</span></div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="page-head">
+        <h1>Inbox</h1>
+        <p>Every application, inbound and sourced. Fit is how closely it matches your criteria;
+           anything that isn't a venture-scale company is flagged separately, because those are
+           two different reasons to pass.</p>
+    </div>
+
+    <div class="toolbar">
+        <button class="filter" data-filter="all" aria-pressed="true">All</button>
+        <button class="filter" data-filter="strong" aria-pressed="false">70%+ fit</button>
+        <button class="filter" data-filter="weak" aria-pressed="false">Below 70%</button>
+        <button class="filter" data-filter="not_viable" aria-pressed="false">Not viable</button>
+        <span class="toolbar__spacer"></span>
+        <span id="count" class="mono" style="font-size:13px;color:var(--faint);"></span>
+    </div>
+
+    <div class="card" style="padding:20px 8px;">
+        <div id="body">
+            <div class="empty"><div class="empty__body">Loading…</div></div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+import { listApplications, getThesis, fitPill, TREND, scoreClass, fmtDate, esc, USE_MOCK }
+    from '/static/api.js';
+
+if (USE_MOCK) document.getElementById('mockFlag').hidden = false;
+
+// Criteria come first: scoring candidates against defaults the VC has never
+// seen is worse than making them spend ten seconds confirming them.
+try {
+    const thesis = await getThesis();
+    if (!thesis.configured) {
+        location.replace('/investor?first=1');
+    }
+} catch { /* criteria unavailable — show the inbox rather than trapping the user */ }
+
+let apps = [];
+let filter = 'all';
+
+const matchesFilter = (a) => {
+    const { fit_score: fit, sanity } = a.applicability;
+    if (filter === 'all') return true;
+    if (filter === 'not_viable') return sanity.passed === false;
+    if (filter === 'strong') return sanity.passed !== false && fit >= 70;
+    if (filter === 'weak') return sanity.passed !== false && fit < 70;
+    return true;
+};
+
+function axisChips(s) {
+    if (!s) return '<span class="table__sub">Not screened</span>';
+    const one = (label, axis) => `<span class="chip chip--${scoreClass(axis.score)}"
+        title="${esc(label)} · ${esc(axis.sentiment)} · trend ${esc(axis.trend)}">${label} ${Math.round(axis.score)} ${TREND[axis.trend] || ''}</span>`;
+    return `<span style="display:inline-flex;gap:4px;flex-wrap:wrap;">
+        ${one('F', s.founder_axis)}${one('M', s.market_axis)}${one('I', s.idea_vs_market_axis)}
+    </span>`;
+}
+
+function render() {
+    const rows = apps.filter(matchesFilter);
+    const el = document.getElementById('body');
+
+    document.getElementById('count').textContent =
+        `${rows.length} of ${apps.length}`;
+
+    if (!rows.length) {
+        el.innerHTML = `<div class="empty">
+            <div class="empty__title">Nothing here</div>
+            <div class="empty__body">No applications match this filter.</div>
+        </div>`;
+        return;
+    }
+
+    el.innerHTML = `<table class="table">
+        <thead><tr>
+            <th>Company</th>
+            <th class="table__hide-sm">Sector · Stage</th>
+            <th>Fit</th>
+            <th>Screening</th>
+            <th class="table__hide-sm">Submitted</th>
+            <th></th>
+        </tr></thead>
+        <tbody>${rows.map(a => {
+            const p = fitPill(a.applicability);
+            return `<tr>
+                <td>
+                    <div class="table__co">${esc(a.company_name)}</div>
+                    <div class="table__sub">${esc(a.one_liner || '')}</div>
+                </td>
+                <td class="table__hide-sm">
+                    <div>${esc(a.sector || '—')}</div>
+                    <div class="table__sub mono">${esc(a.stage || '')}</div>
+                </td>
+                <td><span class="pill ${p.cls}">${p.label}</span></td>
+                <td>${axisChips(a.screening)}</td>
+                <td class="table__hide-sm mono table__sub">${fmtDate(a.submitted_at)}</td>
+                <td style="text-align:right;"><a class="btn btn--ghost btn--sm" href="/inbox/${esc(a.id)}">Open</a></td>
+            </tr>`;
+        }).join('')}</tbody>
+    </table>`;
+}
+
+document.querySelectorAll('.filter').forEach(b => {
+    b.addEventListener('click', () => {
+        filter = b.dataset.filter;
+        document.querySelectorAll('.filter').forEach(x =>
+            x.setAttribute('aria-pressed', String(x === b)));
+        render();
+    });
+});
+
+try {
+    apps = await listApplications();
+    render();
+} catch (err) {
+    document.getElementById('body').innerHTML = `<div class="empty">
+        <div class="empty__title">Could not load applications</div>
+        <div class="empty__body">${esc(err.message)}</div>
+    </div>`;
+}
+</script>
+</body>
+</html>

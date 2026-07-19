@@ -2,13 +2,16 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+from vc_brain.api.mock_routes import router as mock_router
 from vc_brain.intelligence.diligence import DiligenceEngine
 from vc_brain.intelligence.memo_generator import MemoGenerator
 from vc_brain.intelligence.reasoning import ReasoningEngine
@@ -37,6 +40,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+FRONTEND = Path(__file__).resolve().parents[2] / "frontend"
+app.mount("/static", StaticFiles(directory=FRONTEND / "static"), name="static")
+
+# Fixture data for the frontend scaffold. Remove once the real routes exist.
+app.include_router(mock_router)
 
 
 # ---------------------------------------------------------------------------
@@ -329,11 +338,39 @@ async def scan_hackernews(limit: int = 20) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 # Routes: Dashboard (HTML)
 # ---------------------------------------------------------------------------
+def _page(name: str) -> str:
+    """Return a template from frontend/templates, or a readable fallback."""
+    template = FRONTEND / "templates" / name
+    if template.exists():
+        return template.read_text()
+    return f"<h1>VC Brain</h1><p>Template {name} not found. See /docs for the API.</p>"
+
+
 @app.get("/", response_class=HTMLResponse)
 async def dashboard():
     """Serve the investor dashboard."""
-    from pathlib import Path
-    template = Path(__file__).parent.parent.parent / "frontend" / "templates" / "dashboard.html"
-    if template.exists():
-        return template.read_text()
-    return "<h1>VC Brain</h1><p>Dashboard template not found. See /docs for API.</p>"
+    return _page("dashboard.html")
+
+
+@app.get("/investor", response_class=HTMLResponse)
+async def investor_criteria():
+    """What the fund is looking for — filled in before sourcing starts."""
+    return _page("investor.html")
+
+
+@app.get("/apply", response_class=HTMLResponse)
+async def apply():
+    """Founder-facing application form."""
+    return _page("apply.html")
+
+
+@app.get("/inbox", response_class=HTMLResponse)
+async def inbox():
+    """Every application, with its applicability flag."""
+    return _page("inbox.html")
+
+
+@app.get("/inbox/{app_id}", response_class=HTMLResponse)
+async def application_detail(app_id: str):
+    """One application: applicability and the three screening axes."""
+    return _page("application.html")

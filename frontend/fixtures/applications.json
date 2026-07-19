@@ -1,0 +1,580 @@
+[
+  {
+    "id": "a1f4c2e90b71",
+    "company_id": "c88de1204a35",
+    "company_name": "Vektor",
+    "one_liner": "Vector database that runs inside the customer's own VPC.",
+    "sector": "AI Infrastructure",
+    "stage": "pre-seed",
+    "geography": "Berlin, Germany",
+    "website": "https://vektor.dev",
+    "product_url": "https://github.com/vektor-dev/vektor",
+    "status": "screening",
+    "source": "inbound",
+    "submitted_at": "2026-07-18T09:12:44",
+    "raising": "$1.2M pre-seed",
+    "accelerator": "Y Combinator S25",
+    "prior_companies": "Both founders were early engineers at Celonis.",
+    "why_now": "Enterprises blocked from hosted vector DBs on compliance grounds can now self-host at reasonable cost — GPU memory prices fell ~60% in 18 months, and the EU AI Act made data residency a board-level question rather than an IT preference.",
+    "deck": { "filename": "vektor-preseed-deck.pdf", "pages": 14, "uploaded_at": "2026-07-18T09:12:44" },
+    "founders": [
+      { "name": "Ada Whitfield", "email": "ada@vektor.dev", "github": "adawhitfield", "twitter": "adabuilds", "linkedin": "linkedin.com/in/adawhitfield" },
+      { "name": "Tomas Reiner", "email": "tomas@vektor.dev", "github": "treiner", "twitter": "", "linkedin": "linkedin.com/in/tomasreiner" }
+    ],
+    "applicability": {
+      "fit_score": 97,
+      "sanity": { "passed": true, "note": "Operating company with a public product and a named team." },
+      "breakdown": [
+        { "label": "Sector", "weight": 40, "awarded": 40, "note": "'AI Infrastructure' matches thesis tag 'AI'" },
+        { "label": "Stage", "weight": 25, "awarded": 25, "note": "pre-seed is in mandate" },
+        { "label": "Geography", "weight": 20, "awarded": 20, "note": "Berlin matches 'Germany'" },
+        { "label": "Desires", "weight": 15, "awarded": 12, "note": "Technical co-founders, YC, shipped publicly" }
+      ]
+    },
+    "screening": {
+      "founder_axis": {
+        "score": 78.0, "sentiment": "bullish", "trend": "improving", "confidence": 0.74,
+        "strengths": [
+          "Both founders shipped production infrastructure at Celonis before starting",
+          "Maintains an open-source project with 4.1k stars and steady commit history",
+          "Technical and commercial split across the two founders is clean"
+        ],
+        "weaknesses": [
+          "Neither founder has sold into enterprise procurement before",
+          "First company for both — no prior exit or failure to learn from"
+        ],
+        "evidence": [
+          "github.com/adawhitfield — 4.1k stars, 312 commits in the last 12 months",
+          "LinkedIn: 4 years Senior Engineer, Celonis (2019-2023)",
+          "YC S25 batch listing"
+        ]
+      },
+      "market_axis": {
+        "score": 64.0, "sentiment": "bullish", "trend": "improving", "confidence": 0.61,
+        "strengths": [
+          "Self-hosted inference tooling is growing well above the wider database market",
+          "Compliance pressure creates a budget holder separate from the technical buyer"
+        ],
+        "weaknesses": [
+          "Pinecone, Weaviate and Qdrant are all funded and moving toward the same VPC story",
+          "Bottom-up sizing rests on one assumed price point with no design partners at that price"
+        ],
+        "evidence": [
+          "Deck slide 7: TAM $4.2B by 2028, top-down, source not cited",
+          "Qdrant raised $28M Series A (Jan 2026) with an explicit self-hosted push"
+        ]
+      },
+      "idea_vs_market_axis": {
+        "score": 71.0, "sentiment": "bullish", "trend": "stable", "confidence": 0.58,
+        "strengths": [
+          "Wedge is narrow and credible: regulated German mid-market first, not 'all enterprises'",
+          "Why-now names a specific, checkable shift rather than a general AI tailwind"
+        ],
+        "weaknesses": [
+          "The moat described is speed of execution, which is not a moat",
+          "No answer for what happens if hosted incumbents ship the same deployment mode"
+        ],
+        "evidence": [
+          "Deck slide 4: 3 named design partners, all German industrials",
+          "Application answer cites GPU memory pricing and the EU AI Act"
+        ]
+      },
+      "passes_screen": true,
+      "rejection_reasons": []
+    }
+  },
+  {
+    "id": "f3a91d5c8e24",
+    "company_id": "b52c7e01f9a6",
+    "company_name": "Kontoform",
+    "one_liner": "Reconciliation engine for German Mittelstand finance teams.",
+    "sector": "fintech",
+    "stage": "seed",
+    "geography": "Frankfurt, Germany",
+    "website": "https://kontoform.de",
+    "product_url": "https://kontoform.de/demo",
+    "status": "screening",
+    "source": "inbound",
+    "submitted_at": "2026-07-18T14:30:12",
+    "raising": "€2M seed",
+    "accelerator": "Techstars Berlin 2025",
+    "prior_companies": "CTO was employee #4 at Solarisbank.",
+    "why_now": "The 2025 e-invoicing mandate forced every German company above the threshold onto structured invoice data. That data did not exist in machine-readable form two years ago, and reconciliation was impossible to automate without it.",
+    "deck": { "filename": "kontoform-seed.pdf", "pages": 17, "uploaded_at": "2026-07-18T14:30:12" },
+    "founders": [
+      { "name": "Lena Hofmann", "email": "lena@kontoform.de", "github": "", "twitter": "lenahofmann", "linkedin": "linkedin.com/in/lenahofmann" },
+      { "name": "Piotr Zawadzki", "email": "piotr@kontoform.de", "github": "pzawadzki", "twitter": "", "linkedin": "linkedin.com/in/pzawadzki" }
+    ],
+    "applicability": {
+      "fit_score": 95,
+      "sanity": { "passed": true, "note": "Registered company, paying pilots verifiable." },
+      "breakdown": [
+        { "label": "Sector", "weight": 40, "awarded": 40, "note": "'fintech' matches thesis tag exactly" },
+        { "label": "Stage", "weight": 25, "awarded": 25, "note": "seed is in mandate" },
+        { "label": "Geography", "weight": 20, "awarded": 20, "note": "Frankfurt matches 'Germany'" },
+        { "label": "Desires", "weight": 15, "awarded": 10, "note": "Technical co-founder, Techstars; nothing shipped publicly" }
+      ]
+    },
+    "screening": {
+      "founder_axis": {
+        "score": 74.0, "sentiment": "bullish", "trend": "stable", "confidence": 0.68,
+        "strengths": [
+          "CTO was employee #4 at Solarisbank — has shipped regulated financial infrastructure",
+          "Commercial founder spent six years selling into Mittelstand finance teams"
+        ],
+        "weaknesses": [
+          "No public engineering footprint to inspect — one GitHub account with little activity",
+          "Neither founder has run a company before"
+        ],
+        "evidence": [
+          "LinkedIn: Solarisbank 2016-2021, engineering",
+          "Techstars Berlin 2025 cohort listing"
+        ]
+      },
+      "market_axis": {
+        "score": 71.0, "sentiment": "bullish", "trend": "improving", "confidence": 0.64,
+        "strengths": [
+          "A regulatory mandate creates the budget line rather than the founders having to argue for it",
+          "Mittelstand finance software is a large and famously underserved segment"
+        ],
+        "weaknesses": [
+          "DATEV sits between this product and almost every German finance team",
+          "Incumbent accounting suites can bundle reconciliation as a feature"
+        ],
+        "evidence": [
+          "Deck slide 11: 4 paid pilots at €1.8k/month",
+          "German e-invoicing mandate, phased from Jan 2025"
+        ]
+      },
+      "idea_vs_market_axis": {
+        "score": 69.0, "sentiment": "bullish", "trend": "stable", "confidence": 0.6,
+        "strengths": [
+          "Why-now is a hard regulatory date, not a soft trend",
+          "Narrow enough to be finishable: one workflow, one buyer"
+        ],
+        "weaknesses": [
+          "DATEV integration is the whole business and is not yet built",
+          "Expansion path beyond reconciliation is asserted, not shown"
+        ],
+        "evidence": [
+          "Deck slide 6: DATEV integration marked 'in progress'",
+          "Application answer names the e-invoicing mandate as the trigger"
+        ]
+      },
+      "passes_screen": true,
+      "rejection_reasons": []
+    }
+  },
+  {
+    "id": "d7e2b0a94c15",
+    "company_id": "e19b6f30d872",
+    "company_name": "Myelin",
+    "one_liner": "Turns radiology reports into structured data for research cohorts.",
+    "sector": "digital health",
+    "stage": "pre-seed",
+    "geography": "Heidelberg, Germany",
+    "website": "https://myelin.health",
+    "product_url": "",
+    "status": "received",
+    "source": "inbound",
+    "submitted_at": "2026-07-19T08:44:02",
+    "raising": "€900k pre-seed",
+    "accelerator": "",
+    "prior_companies": "",
+    "why_now": "Hospitals digitised reports years ago but never structured them. Long-context models made the extraction accurate enough to trust for research use in the last year.",
+    "deck": { "filename": "myelin-preseed.pdf", "pages": 12, "uploaded_at": "2026-07-19T08:44:02" },
+    "founders": [
+      { "name": "Dr. Nadia Kern", "email": "nadia@myelin.health", "github": "", "twitter": "", "linkedin": "linkedin.com/in/nadiakern" },
+      { "name": "Samir Haddad", "email": "samir@myelin.health", "github": "shaddad", "twitter": "", "linkedin": "" }
+    ],
+    "applicability": {
+      "fit_score": 90,
+      "sanity": { "passed": true, "note": "University spin-out, named clinical partner." },
+      "breakdown": [
+        { "label": "Sector", "weight": 40, "awarded": 40, "note": "'digital health' matches thesis tag 'health'" },
+        { "label": "Stage", "weight": 25, "awarded": 25, "note": "pre-seed is in mandate" },
+        { "label": "Geography", "weight": 20, "awarded": 20, "note": "Heidelberg matches 'Germany'" },
+        { "label": "Desires", "weight": 15, "awarded": 5, "note": "Technical co-founder; no accelerator, nothing shipped publicly" }
+      ]
+    },
+    "screening": null
+  },
+  {
+    "id": "c6b3f812a09d",
+    "company_id": "a48e2d97b013",
+    "company_name": "Forgekit",
+    "one_liner": "Preview environments for monorepos, one per pull request.",
+    "sector": "developer SaaS",
+    "stage": "seed",
+    "geography": "Remote, Europe",
+    "website": "https://forgekit.io",
+    "product_url": "https://github.com/forgekit/cli",
+    "status": "screening",
+    "source": "outbound-github",
+    "submitted_at": "2026-07-17T11:05:38",
+    "raising": "$3M seed",
+    "accelerator": "",
+    "prior_companies": "Founder maintained a widely used CI plugin for six years.",
+    "why_now": "Monorepos got big enough that preview environments stopped fitting on one machine.",
+    "deck": { "filename": "forgekit-seed.pdf", "pages": 9, "uploaded_at": "2026-07-17T11:05:38" },
+    "founders": [
+      { "name": "Rhys Calder", "email": "rhys@forgekit.io", "github": "rhyscalder", "twitter": "rhysbuilds", "linkedin": "linkedin.com/in/rhyscalder" }
+    ],
+    "applicability": {
+      "fit_score": 88,
+      "sanity": { "passed": true, "note": "Open-source project with real users and paying customers." },
+      "breakdown": [
+        { "label": "Sector", "weight": 40, "awarded": 40, "note": "'developer SaaS' matches thesis tag 'SaaS'" },
+        { "label": "Stage", "weight": 25, "awarded": 25, "note": "seed is in mandate" },
+        { "label": "Geography", "weight": 20, "awarded": 20, "note": "Remote, Europe matches 'Europe'" },
+        { "label": "Desires", "weight": 15, "awarded": 3, "note": "Shipped publicly; solo founder, no accelerator" }
+      ]
+    },
+    "screening": {
+      "founder_axis": {
+        "score": 72.0, "sentiment": "bullish", "trend": "improving", "confidence": 0.79,
+        "strengths": [
+          "Six years maintaining a CI plugin used by thousands of repositories",
+          "The distribution channel already exists — his own users are the first customers"
+        ],
+        "weaknesses": [
+          "Solo founder with no co-founder named",
+          "No commercial experience; has never charged for anything before"
+        ],
+        "evidence": [
+          "github.com/rhyscalder — plugin with 2.8k stars, 7 years of commits",
+          "Deck slide 5: 140 paying teams converted from the free plugin"
+        ]
+      },
+      "market_axis": {
+        "score": 58.0, "sentiment": "neutral", "trend": "stable", "confidence": 0.55,
+        "strengths": [
+          "Real revenue already, which is unusual at this stage",
+          "Buyer is the same engineer who adopts it — no procurement cycle"
+        ],
+        "weaknesses": [
+          "Vercel and Netlify give a version of this away for free",
+          "Preview environments are a feature of CI platforms, not obviously a company"
+        ],
+        "evidence": [
+          "Deck slide 8: $34k ARR, growing ~9% month on month",
+          "Deck has no competitor slide"
+        ]
+      },
+      "idea_vs_market_axis": {
+        "score": 44.0, "sentiment": "neutral", "trend": "stable", "confidence": 0.5,
+        "strengths": [
+          "Traction is real and self-generated, so the wedge clearly works"
+        ],
+        "weaknesses": [
+          "Why-now is a general trend, not a specific shift — this was equally buildable in 2023",
+          "No expansion story beyond preview environments",
+          "Nothing stops the CI platforms from absorbing this"
+        ],
+        "evidence": [
+          "Application answer, why now: 'Monorepos got big enough' — no dated trigger",
+          "Deck slide 9: roadmap is more preview-environment features"
+        ]
+      },
+      "passes_screen": true,
+      "rejection_reasons": []
+    }
+  },
+  {
+    "id": "b7c2a94e1d06",
+    "company_id": "d31fa7b95c28",
+    "company_name": "Perikles",
+    "one_liner": "Contract review for German SME law firms.",
+    "sector": "AI",
+    "stage": "seed",
+    "geography": "Munich, Germany",
+    "website": "https://perikles.legal",
+    "product_url": "",
+    "status": "screening",
+    "source": "inbound",
+    "submitted_at": "2026-07-17T16:40:03",
+    "raising": "$2.5M seed",
+    "accelerator": "",
+    "prior_companies": "Founder previously built and sold a document-automation tool to a Munich legal publisher.",
+    "why_now": "Long-context models finally handle a full German commercial contract in one pass, which was not true 18 months ago.",
+    "deck": { "filename": "perikles-seed.pdf", "pages": 21, "uploaded_at": "2026-07-17T16:40:03" },
+    "founders": [
+      { "name": "Johanna Brand", "email": "jb@perikles.legal", "github": "jbrand", "twitter": "", "linkedin": "linkedin.com/in/johannabrand" }
+    ],
+    "applicability": {
+      "fit_score": 85,
+      "sanity": { "passed": true, "note": "Registered company, prior exit verifiable." },
+      "breakdown": [
+        { "label": "Sector", "weight": 40, "awarded": 40, "note": "'AI' matches thesis tag exactly" },
+        { "label": "Stage", "weight": 25, "awarded": 25, "note": "seed is in mandate" },
+        { "label": "Geography", "weight": 20, "awarded": 20, "note": "Munich matches 'Germany'" },
+        { "label": "Desires", "weight": 15, "awarded": 0, "note": "Solo founder, no accelerator, nothing shipped publicly" }
+      ]
+    },
+    "screening": {
+      "founder_axis": {
+        "score": 84.0, "sentiment": "bullish", "trend": "improving", "confidence": 0.81,
+        "strengths": [
+          "Second-time founder in exactly this domain — built and sold a document-automation product",
+          "Ten years inside the buyer's world, so the ICP is named precisely rather than described",
+          "Shipped a working product before raising"
+        ],
+        "weaknesses": [
+          "Solo founder with no technical co-founder named",
+          "Engineering is currently one contractor"
+        ],
+        "evidence": [
+          "Handelsregister: prior company incorporated 2019, acquired 2023",
+          "Application answer names the buyer as 'partners at 5-30 lawyer commercial firms'"
+        ]
+      },
+      "market_axis": {
+        "score": 29.0, "sentiment": "bear", "trend": "declining", "confidence": 0.66,
+        "strengths": [
+          "The named beachhead genuinely has budget and a compliance reason to buy"
+        ],
+        "weaknesses": [
+          "German SME legal software is a few hundred million at most; the deck's $8B is the global legal-tech market",
+          "Every incumbent legal suite shipped contract review as a bundled feature last year",
+          "Price point implies ~4,000 firms at full penetration — roughly the entire market"
+        ],
+        "evidence": [
+          "Deck slide 9: '$8B legal tech market' — global, top-down, not the served market",
+          "Bundled contract review shipped by two incumbent suites in 2025"
+        ]
+      },
+      "idea_vs_market_axis": {
+        "score": 38.0, "sentiment": "neutral", "trend": "stable", "confidence": 0.54,
+        "strengths": [
+          "Founder is credible enough that a pivot inside legal tooling is plausible",
+          "Why-now is real: long-context models did change what is buildable here"
+        ],
+        "weaknesses": [
+          "The idea as stated is a feature of a suite, not a company",
+          "No expansion path out of German SME firms is described",
+          "The same capability is being given away free by tools the customer already pays for"
+        ],
+        "evidence": [
+          "Application answer: no expansion market named beyond 'other DACH firms'",
+          "Deck has no competitive slide"
+        ]
+      },
+      "passes_screen": true,
+      "rejection_reasons": []
+    }
+  },
+  {
+    "id": "e8d417c2b063",
+    "company_id": "f70a3b16d549",
+    "company_name": "Halden",
+    "one_liner": "Scheduling for community mental-health clinics.",
+    "sector": "health",
+    "stage": "pre-seed",
+    "geography": "Leipzig, Germany",
+    "website": "",
+    "product_url": "",
+    "status": "screening",
+    "source": "inbound",
+    "submitted_at": "2026-07-19T06:18:55",
+    "raising": "€400k pre-seed",
+    "accelerator": "",
+    "prior_companies": "",
+    "why_now": "Germany's 2025 outpatient reform pushed clinics onto per-appointment reimbursement, so a missed slot now costs them directly rather than being absorbed.",
+    "deck": { "filename": "halden.pdf", "pages": 8, "uploaded_at": "2026-07-19T06:18:55" },
+    "founders": [
+      { "name": "Ingrid Sølvberg", "email": "ingrid@halden.care", "github": "", "twitter": "", "linkedin": "" }
+    ],
+    "applicability": {
+      "fit_score": 85,
+      "sanity": { "passed": true, "note": "Coherent application with a named clinical pilot site." },
+      "breakdown": [
+        { "label": "Sector", "weight": 40, "awarded": 40, "note": "'health' matches thesis tag exactly" },
+        { "label": "Stage", "weight": 25, "awarded": 25, "note": "pre-seed is in mandate" },
+        { "label": "Geography", "weight": 20, "awarded": 20, "note": "Leipzig matches 'Germany'" },
+        { "label": "Desires", "weight": 15, "awarded": 0, "note": "No public footprint to check against any desire" }
+      ]
+    },
+    "screening": {
+      "founder_axis": {
+        "score": 41.0, "sentiment": "neutral", "trend": "stable", "confidence": 0.22,
+        "strengths": [
+          "Eight years working inside community mental-health clinics — describes the problem as an operator, not an observer",
+          "The pilot site named in the application is where she currently works"
+        ],
+        "weaknesses": [
+          "No GitHub, no X, no LinkedIn — nothing public to verify any of this against",
+          "No technical co-founder, and no evidence of who would build it"
+        ],
+        "evidence": [
+          "Application answers only — no external source found for any claim",
+          "Cold start: the usual signals do not exist for this founder"
+        ]
+      },
+      "market_axis": {
+        "score": 55.0, "sentiment": "neutral", "trend": "stable", "confidence": 0.4,
+        "strengths": [
+          "The 2025 reform changes who bears the cost of a missed appointment, which creates a buyer",
+          "Fragmented market of small clinics with no incumbent software vendor"
+        ],
+        "weaknesses": [
+          "Small clinics have almost no budget and buy slowly",
+          "Market size not established — no bottom-up figure given"
+        ],
+        "evidence": [
+          "Application answer cites the 2025 outpatient reform",
+          "Deck slide 3: 'roughly 2,800 clinics in Germany' — no source"
+        ]
+      },
+      "idea_vs_market_axis": {
+        "score": 52.0, "sentiment": "neutral", "trend": "stable", "confidence": 0.38,
+        "strengths": [
+          "Why-now is a specific dated policy change, not a general trend",
+          "The founder is the customer, which is the strongest form of insight at this stage"
+        ],
+        "weaknesses": [
+          "Nothing built yet, so there is nothing to evaluate but the description",
+          "Scheduling software is crowded generally, even if not for this niche"
+        ],
+        "evidence": [
+          "No product URL supplied",
+          "Application answer: pilot clinic named, no letter of intent attached"
+        ]
+      },
+      "passes_screen": true,
+      "rejection_reasons": []
+    }
+  },
+  {
+    "id": "a05c9e37f1b8",
+    "company_id": "c93d5a80e267",
+    "company_name": "Tidepool Labs",
+    "one_liner": "Evaluation harness for agent pipelines.",
+    "sector": "AI tooling",
+    "stage": "seed",
+    "geography": "San Francisco, United States",
+    "website": "https://tidepool.dev",
+    "product_url": "https://github.com/tidepool-labs/harness",
+    "status": "received",
+    "source": "outbound-github",
+    "submitted_at": "2026-07-16T19:22:47",
+    "raising": "$4M seed",
+    "accelerator": "Y Combinator W25",
+    "prior_companies": "Two of three founders were at Scale AI.",
+    "why_now": "Agent pipelines became long enough that nobody can tell which step regressed without a harness.",
+    "deck": { "filename": "tidepool-seed.pdf", "pages": 16, "uploaded_at": "2026-07-16T19:22:47" },
+    "founders": [
+      { "name": "Marcus Oyelaran", "email": "marcus@tidepool.dev", "github": "moyelaran", "twitter": "moyelaran", "linkedin": "linkedin.com/in/moyelaran" },
+      { "name": "Jia Lin Tan", "email": "jia@tidepool.dev", "github": "jltan", "twitter": "", "linkedin": "linkedin.com/in/jialintan" }
+    ],
+    "applicability": {
+      "fit_score": 70,
+      "sanity": { "passed": true, "note": "YC company with a public repository and named team." },
+      "breakdown": [
+        { "label": "Sector", "weight": 40, "awarded": 40, "note": "'AI tooling' matches thesis tag 'AI'" },
+        { "label": "Stage", "weight": 25, "awarded": 25, "note": "seed is in mandate" },
+        { "label": "Geography", "weight": 20, "awarded": 0, "note": "San Francisco matches no thesis region — mandate is Germany, DACH, Europe" },
+        { "label": "Desires", "weight": 15, "awarded": 5, "note": "Technical co-founders, YC; strong on desires but out of region" }
+      ]
+    },
+    "screening": null
+  },
+  {
+    "id": "e5d80c1a7b43",
+    "company_id": "f2b6033ce914",
+    "company_name": "Loomly",
+    "one_liner": "Resale marketplace for designer childrenswear.",
+    "sector": "consumer marketplace",
+    "stage": "seed",
+    "geography": "Paris, France",
+    "website": "https://loomly.fr",
+    "product_url": "https://apps.apple.com/app/loomly",
+    "status": "received",
+    "source": "inbound",
+    "submitted_at": "2026-07-19T07:55:10",
+    "raising": "€3M seed",
+    "accelerator": "Station F",
+    "prior_companies": "Founder was head of merchandising at Vestiaire Collective.",
+    "why_now": "Secondhand childrenswear is the fastest-growing resale category and no marketplace is built for it specifically.",
+    "deck": { "filename": "loomly-seed-deck.pdf", "pages": 18, "uploaded_at": "2026-07-19T07:55:10" },
+    "founders": [
+      { "name": "Camille Ferrand", "email": "camille@loomly.fr", "github": "", "twitter": "camilleferrand", "linkedin": "linkedin.com/in/camilleferrand" }
+    ],
+    "applicability": {
+      "fit_score": 25,
+      "sanity": { "passed": true, "note": "Real company, live app, credible team. Simply not this fund's mandate." },
+      "breakdown": [
+        { "label": "Sector", "weight": 40, "awarded": 0, "note": "'consumer marketplace' matches no thesis tag: AI, fintech, SaaS, health" },
+        { "label": "Stage", "weight": 25, "awarded": 25, "note": "seed is in mandate" },
+        { "label": "Geography", "weight": 20, "awarded": 0, "note": "Paris is in Europe but outside the Germany/DACH focus" },
+        { "label": "Desires", "weight": 15, "awarded": 0, "note": "Adjacent to the stated 'not consumer social'" }
+      ]
+    },
+    "screening": null
+  },
+  {
+    "id": "b41f7de9c0a2",
+    "company_id": "d02a8c6b34f1",
+    "company_name": "ChainVault",
+    "one_liner": "Tokenised real-world asset custody, guaranteed yield.",
+    "sector": "crypto",
+    "stage": "seed",
+    "geography": "Tallinn, Estonia",
+    "website": "https://chainvault.finance",
+    "product_url": "",
+    "status": "received",
+    "source": "inbound",
+    "submitted_at": "2026-07-19T10:02:19",
+    "raising": "$5M seed",
+    "accelerator": "",
+    "prior_companies": "Team lists four prior ventures, none of which resolve to a registered company.",
+    "why_now": "RWA tokenisation is the biggest opportunity of the decade and we are first to market.",
+    "deck": { "filename": "chainvault-deck.pdf", "pages": 32, "uploaded_at": "2026-07-19T10:02:19" },
+    "founders": [
+      { "name": "Alex Renner", "email": "alex@chainvault.finance", "github": "", "twitter": "chainvault_ceo", "linkedin": "" }
+    ],
+    "applicability": {
+      "fit_score": 0,
+      "sanity": { "passed": false, "note": "Guaranteed yield on custody is not a claim a legitimate company makes. Named team does not resolve to any registered entity, and the prior ventures cited cannot be found." },
+      "breakdown": [
+        { "label": "Sector", "weight": 40, "awarded": 0, "note": "Not scored — failed the viability check" },
+        { "label": "Stage", "weight": 25, "awarded": 0, "note": "Not scored — failed the viability check" },
+        { "label": "Geography", "weight": 20, "awarded": 0, "note": "Not scored — failed the viability check" },
+        { "label": "Desires", "weight": 15, "awarded": 0, "note": "Not scored — failed the viability check" }
+      ]
+    },
+    "screening": null
+  },
+  {
+    "id": "c04b6f28ea15",
+    "company_id": "a97e5d310cb2",
+    "company_name": "Gelato Rossi",
+    "one_liner": "Premium ice cream truck fleet for Munich events.",
+    "sector": "food",
+    "stage": "seed",
+    "geography": "Munich, Germany",
+    "website": "",
+    "product_url": "",
+    "status": "received",
+    "source": "inbound",
+    "submitted_at": "2026-07-19T11:20:31",
+    "raising": "€250k",
+    "accelerator": "",
+    "prior_companies": "",
+    "why_now": "Summer is coming and we already have three trucks.",
+    "deck": { "filename": "gelato-rossi.pdf", "pages": 3, "uploaded_at": "2026-07-19T11:20:31" },
+    "founders": [
+      { "name": "Marco Rossi", "email": "marco@gelatorossi.de", "github": "", "twitter": "", "linkedin": "" }
+    ],
+    "applicability": {
+      "fit_score": 0,
+      "sanity": { "passed": false, "note": "Local catering operation. It scales with trucks and capital, not software — venture funding is the wrong instrument, a bank loan is the right one." },
+      "breakdown": [
+        { "label": "Sector", "weight": 40, "awarded": 0, "note": "Not scored — failed the viability check" },
+        { "label": "Stage", "weight": 25, "awarded": 0, "note": "Not scored — failed the viability check" },
+        { "label": "Geography", "weight": 20, "awarded": 0, "note": "Not scored — failed the viability check" },
+        { "label": "Desires", "weight": 15, "awarded": 0, "note": "Not scored — failed the viability check" }
+      ]
+    },
+    "screening": null
+  }
+]

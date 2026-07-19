@@ -64,8 +64,9 @@ Checkboxes, both on by default:
 - `pre-seed`
 - `seed`
 
-These exact strings, lowercase. The candidate-side form still offers `series-a`; that is correct
-and unchanged — a candidate may simply be out of mandate.
+These exact strings, lowercase. The candidate-side application form offers the same two and
+nothing later: the fund writes $100K cheques and does not invest beyond seed, so listing
+`series-a` would only invite applications it can never fund.
 
 ### 4. Geographies
 

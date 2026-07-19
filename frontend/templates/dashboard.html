@@ -102,7 +102,6 @@
         <div class="pipeline">
             <div class="stage">Sourcing</div>
             <div class="stage">Screening</div>
-            <div class="stage">Diligence</div>
             <div class="stage">Decision</div>
         </div>
 
@@ -132,7 +131,6 @@
                         <select name="stage">
                             <option value="pre-seed">Pre-Seed</option>
                             <option value="seed">Seed</option>
-                            <option value="series-a">Series A</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -229,7 +227,6 @@
                     </div>
                     <div style="display:flex; gap:4px;">
                         <button onclick="screenApp('${a.id}')" style="padding:4px 8px; font-size:12px;">Screen</button>
-                        <button onclick="diligenceApp('${a.id}')" style="padding:4px 8px; font-size:12px;">Diligence</button>
                         <button onclick="memoApp('${a.id}')" style="padding:4px 8px; font-size:12px;">Memo</button>
                     </div>
                 </div>
@@ -239,12 +236,6 @@
         async function screenApp(id) {
             showResult('Running 3-axis screening...');
             const res = await fetch(`${API}/api/applications/${id}/screen`, {method: 'POST'});
-            showResult(await res.json());
-        }
-
-        async function diligenceApp(id) {
-            showResult('Running diligence...');
-            const res = await fetch(`${API}/api/applications/${id}/diligence`, {method: 'POST'});
             showResult(await res.json());
         }
 

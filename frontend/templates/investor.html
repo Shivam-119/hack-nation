@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Criteria · VC Brain</title>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav__inner">
+        <div class="nav__brand"><span>VC</span> Brain</div>
+        <div class="nav__links">
+            <a class="nav__link" href="/inbox">Inbox</a>
+            <a class="nav__link" href="/investor" aria-current="page">Criteria</a>
+            <a class="nav__link" href="/apply">Apply</a>
+            <a class="nav__link" href="/">Dashboard</a>
+        </div>
+        <div class="nav__spacer"><span class="mock-flag" id="mockFlag" hidden>mock data</span></div>
+    </div>
+</nav>
+
+<div class="container container--narrow">
+    <div class="page-head">
+        <h1 id="heading">What you're looking for</h1>
+        <p id="subhead">Set this once, before sourcing starts. Every candidate is filtered and
+           scored through it. Takes about a minute.</p>
+    </div>
+
+    <form id="form">
+        <div class="card">
+            <div class="field">
+                <label class="field__label" for="name">Fund name</label>
+                <input type="text" id="name" name="name" placeholder="Maschmeyer Group — VC Brain">
+            </div>
+
+            <div class="field">
+                <label class="field__label">Sectors</label>
+                <span class="field__why">Keep tags broad. <strong>AI</strong> matches
+                    “AI Infrastructure”, but “AI Infrastructure” matches nothing labelled just “AI”.</span>
+                <div class="tags" id="sectorTags"></div>
+                <div class="tags" id="sectorPresets"></div>
+                <input type="text" id="sectorInput" placeholder="Add a sector and press Enter">
+                <div id="sectorWarn" class="field__why" style="color:var(--yellow);margin-top:6px;" hidden></div>
+            </div>
+
+            <div class="field">
+                <label class="field__label">Stage</label>
+                <span class="field__why">This fund writes $100K cheques, so the mandate is early only.</span>
+                <div class="checks">
+                    <label class="check"><input type="checkbox" name="stage" value="pre-seed" checked> Pre-seed</label>
+                    <label class="check"><input type="checkbox" name="stage" value="seed" checked> Seed</label>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="field__label">Geographies</label>
+                <span class="field__why">Broader is safer — “Germany” matches “Berlin, Germany”,
+                    but not the other way round.</span>
+                <div class="tags" id="geoTags"></div>
+                <div class="tags" id="geoPresets"></div>
+                <input type="text" id="geoInput" placeholder="Add a region and press Enter">
+            </div>
+
+            <div class="field">
+                <label class="field__label">Risk appetite</label>
+                <span class="field__why">How harshly to treat a thin or unproven opportunity.</span>
+                <div class="radio-row">
+                    <label class="check"><input type="radio" name="risk" value="conservative"> Conservative</label>
+                    <label class="check"><input type="radio" name="risk" value="moderate" checked> Moderate</label>
+                    <label class="check"><input type="radio" name="risk" value="aggressive"> Aggressive</label>
+                </div>
+            </div>
+
+            <div class="field" style="margin-bottom:0;">
+                <label class="field__label">Desires</label>
+                <span class="field__why">What you want and what you won't touch, in plain language.
+                    Write negatives normally — “no agencies” reads as a negative.</span>
+                <div id="desires"></div>
+                <button type="button" class="btn btn--ghost btn--sm" id="addDesire">Add another</button>
+            </div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:center;margin-top:20px;">
+            <button class="btn" type="submit" id="save">Save criteria</button>
+            <span id="status" style="font-size:13px;color:var(--muted);"></span>
+        </div>
+    </form>
+</div>
+
+<script type="module">
+import { getThesis, saveThesis, esc, USE_MOCK } from '/static/api.js';
+
+if (USE_MOCK) document.getElementById('mockFlag').hidden = false;
+
+// Arriving here because the inbox had no criteria yet. Defaults are already
+// filled in, so this is one click — but the VC sees what they are accepting.
+const firstRun = new URLSearchParams(location.search).get('first') === '1';
+if (firstRun) {
+    document.getElementById('heading').textContent = 'First, what are you looking for?';
+    document.getElementById('subhead').textContent =
+        'Everything below is pre-filled with sensible defaults. Change what you disagree with, '
+        + 'then continue — every candidate is scored against this.';
+    document.getElementById('save').textContent = 'Save and continue';
+}
+
+const SECTOR_PRESETS = ['AI','fintech','SaaS','devtools','health','bio','climate','energy',
+                        'marketplace','consumer','security','robotics','space','crypto'];
+const GEO_PRESETS = ['Germany','DACH','Europe','UK','US','Remote'];
+
+const state = { sectors: [], geographies: [], desires: [] };
+
+/* --- tag inputs --------------------------------------------------------- */
+
+function renderTags(key, tagsEl, presetsEl, presets) {
+    tagsEl.innerHTML = state[key].map((t, i) => `
+        <span class="tag">${esc(t)}<button type="button" data-i="${i}" aria-label="Remove ${esc(t)}">×</button></span>
+    `).join('');
+    tagsEl.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+        state[key].splice(Number(b.dataset.i), 1);
+        renderTags(key, tagsEl, presetsEl, presets);
+    }));
+
+    presetsEl.innerHTML = presets
+        .filter(p => !state[key].some(t => t.toLowerCase() === p.toLowerCase()))
+        .map(p => `<button type="button" class="preset">${esc(p)}</button>`).join('');
+    presetsEl.querySelectorAll('.preset').forEach(b => b.addEventListener('click', () => {
+        add(key, b.textContent, tagsEl, presetsEl, presets);
+    }));
+}
+
+function add(key, value, tagsEl, presetsEl, presets) {
+    const v = value.trim();
+    if (!v || state[key].some(t => t.toLowerCase() === v.toLowerCase())) return;
+    state[key].push(v);
+    renderTags(key, tagsEl, presetsEl, presets);
+}
+
+function wireTagInput(key, inputId, tagsId, presetsId, presets, onAdd) {
+    const input = document.getElementById(inputId);
+    const tagsEl = document.getElementById(tagsId);
+    const presetsEl = document.getElementById(presetsId);
+    input.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
+        add(key, input.value, tagsEl, presetsEl, presets);
+        if (onAdd) onAdd(input.value);
+        input.value = '';
+    });
+    return () => renderTags(key, tagsEl, presetsEl, presets);
+}
+
+const drawSectors = wireTagInput('sectors', 'sectorInput', 'sectorTags', 'sectorPresets',
+    SECTOR_PRESETS, (v) => {
+        // Long sector phrases match almost nothing — warn rather than silently fail.
+        const warn = document.getElementById('sectorWarn');
+        const tooLong = v.trim().split(/\s+/).length > 2;
+        warn.hidden = !tooLong;
+        if (tooLong) warn.textContent =
+            `“${v.trim()}” is narrow — it only matches candidates who describe themselves that exact way. A shorter tag catches more.`;
+    });
+const drawGeos = wireTagInput('geographies', 'geoInput', 'geoTags', 'geoPresets', GEO_PRESETS);
+
+/* --- desires ------------------------------------------------------------ */
+
+function drawDesires() {
+    const el = document.getElementById('desires');
+    el.innerHTML = state.desires.map((d, i) => `
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <input type="text" value="${esc(d)}" data-i="${i}" placeholder="e.g. technical co-founder — or: no agencies">
+            <button type="button" class="btn btn--ghost btn--sm" data-del="${i}" aria-label="Remove">×</button>
+        </div>`).join('');
+    el.querySelectorAll('input').forEach(inp =>
+        inp.addEventListener('input', () => { state.desires[Number(inp.dataset.i)] = inp.value; }));
+    el.querySelectorAll('[data-del]').forEach(b =>
+        b.addEventListener('click', () => { state.desires.splice(Number(b.dataset.del), 1); drawDesires(); }));
+}
+
+document.getElementById('addDesire').addEventListener('click', () => {
+    state.desires.push(''); drawDesires();
+    document.querySelector('#desires input:last-of-type')?.focus();
+});
+
+/* --- load + save -------------------------------------------------------- */
+
+try {
+    const t = await getThesis();
+    document.getElementById('name').value = t.name || '';
+    state.sectors = t.sectors || [];
+    state.geographies = t.geographies || [];
+    state.desires = t.desires || [];
+    document.querySelectorAll('[name="stage"]').forEach(c => { c.checked = (t.stages || []).includes(c.value); });
+    const risk = document.querySelector(`[name="risk"][value="${t.risk_appetite}"]`);
+    if (risk) risk.checked = true;
+} catch (err) {
+    document.getElementById('status').textContent = `Could not load saved criteria: ${err.message}`;
+}
+drawSectors(); drawGeos(); drawDesires();
+
+document.getElementById('form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const status = document.getElementById('status');
+    status.textContent = 'Saving…';
+    try {
+        const saved = await saveThesis({
+            name: document.getElementById('name').value,
+            sectors: state.sectors,
+            stages: [...document.querySelectorAll('[name="stage"]:checked')].map(c => c.value),
+            geographies: state.geographies,
+            risk_appetite: document.querySelector('[name="risk"]:checked')?.value || 'moderate',
+            desires: state.desires.map(d => d.trim()).filter(Boolean),
+        });
+        if (firstRun) {
+            status.textContent = 'Saved. Taking you to the inbox…';
+            location.assign('/inbox');
+            return;
+        }
+        status.textContent = `Saved — ${saved.sectors.length} sectors, ${saved.stages.length} stages, ${saved.desires.length} desires.`;
+    } catch (err) {
+        status.textContent = `Could not save: ${err.message}`;
+    }
+});
+</script>
+</body>
+</html>
