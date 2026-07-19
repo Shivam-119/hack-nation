@@ -3,7 +3,7 @@
 Work through these in order. Mark [x] when done. Commit after each.
 
 ## Sourcing
-- [ ] Add Product Hunt scanner
+- [x] Add Product Hunt scanner
 - [ ] Add TechCrunch/RSS launch scanner
 - [ ] LinkedIn profile enrichment (when URL provided)
 - [ ] arXiv paper scanner for AI researchers

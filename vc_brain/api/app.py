@@ -326,6 +326,25 @@ async def scan_hackernews(limit: int = 20) -> dict[str, Any]:
     }
 
 
+@app.post("/api/sourcing/producthunt")
+async def scan_producthunt(limit: int = 20) -> dict[str, Any]:
+    """Trigger a Product Hunt scan for recent launches and their makers."""
+    from vc_brain.sourcing.producthunt_scanner import ProductHuntScanner
+    from vc_brain.config import config as cfg
+    scanner = ProductHuntScanner(pipeline)
+    launches = await scanner.scan_launches(limit)
+    founders = await scanner.ingest_launches(launches)
+    return {
+        "launches_found": len(launches),
+        "founders_ingested": len(founders),
+        "source": "api" if cfg.producthunt_token else "rss",
+        "founders": [
+            {"id": f.id, "name": f.name, "bio": f.bio}
+            for f in founders
+        ],
+    }
+
+
 # ---------------------------------------------------------------------------
 # Routes: Dashboard (HTML)
 # ---------------------------------------------------------------------------
