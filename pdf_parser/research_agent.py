@@ -154,6 +154,9 @@ def run_research(agent1_output: MarketExtraction, openai_api_key: str, tavily_ap
             model=MODEL,
             max_completion_tokens=MAX_TOKENS,
             messages=messages,
+            # `tools` must still be declared even when forbidding their use --
+            # the API rejects tool_choice when tools is absent.
+            tools=[WEB_SEARCH_TOOL],
             tool_choice="none",
         )
         final_content = response.choices[0].message.content
@@ -176,6 +179,9 @@ def run_research(agent1_output: MarketExtraction, openai_api_key: str, tavily_ap
             model=MODEL,
             max_completion_tokens=MAX_TOKENS,
             messages=messages,
+            # `tools` must still be declared even when forbidding their use --
+            # the API rejects tool_choice when tools is absent.
+            tools=[WEB_SEARCH_TOOL],
             tool_choice="none",
         )
         retry_content = response.choices[0].message.content
