@@ -7,7 +7,7 @@ from .llm_client import call_structured_json
 from .schemas import AdversarialOutput
 
 THIS_DIR = Path(__file__).parent
-MODEL = "gpt-4.1"
+MODEL = "gpt-5"
 _PROMPT_PATH = THIS_DIR / "prompts" / "adversarial_system_prompt.txt"
 
 

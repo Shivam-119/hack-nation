@@ -13,7 +13,7 @@ from .memory_client import MemoryReadError, MockMemoryClient
 from .schemas import MarketAxisScore
 
 THIS_DIR = Path(__file__).parent
-MODEL = "gpt-4.1"
+MODEL = "gpt-5"
 _PROMPT_PATH = THIS_DIR / "prompts" / "market_scorer_system_prompt.txt"
 
 

@@ -6,9 +6,10 @@ from typing import TypeVar
 from openai import OpenAI
 from pydantic import BaseModel, ValidationError
 
-DEFAULT_MODEL = "gpt-4.1"
-MAX_TOKENS = 2048
-TEMPERATURE = 0.2
+# GPT-5 counts hidden reasoning tokens against the completion cap, so keep it
+# generous -- a tight cap risks being spent on reasoning and returning empty JSON.
+DEFAULT_MODEL = "gpt-5"
+MAX_TOKENS = 8192
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -23,7 +24,6 @@ def call_structured_json(
     response_model: type[T],
     api_key: str,
     model: str = DEFAULT_MODEL,
-    temperature: float = TEMPERATURE,
 ) -> T:
     """Call OpenAI chat completions requesting a JSON object, validate against response_model.
 
@@ -37,8 +37,7 @@ def call_structured_json(
         user_content = user if extra_note is None else f"{user}\n\n{extra_note}"
         completion = client.chat.completions.create(
             model=model,
-            max_tokens=MAX_TOKENS,
-            temperature=temperature,
+            max_completion_tokens=MAX_TOKENS,
             response_format={"type": "json_object"},
             messages=[
                 {"role": "system", "content": system},
