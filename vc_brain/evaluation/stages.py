@@ -167,7 +167,9 @@ def progress_payload(application: Any) -> dict[str, Any]:
         "complete": complete,
         "failed": failed,
         "elapsed_seconds": _run_elapsed(application, complete),
-        "typical_duration": TYPICAL_DURATION,
+        # A run may advertise its own expectation -- the mock demo finishes in
+        # seconds, and promising minutes there would read as broken.
+        "typical_duration": progress.get("typical_duration") or TYPICAL_DURATION,
     }
 
 

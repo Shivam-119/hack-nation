@@ -1,0 +1,207 @@
+{
+  "company_name": "Northwind Labs",
+  "one_liner": "Incident replay for distributed systems — rewind any production failure.",
+  "sector": "developer SaaS",
+  "stage": "seed",
+  "geography": "Amsterdam, Netherlands",
+  "website": "https://northwind.dev",
+  "product_url": "https://github.com/northwind-labs/replay",
+  "raising": "$100K",
+  "why_now": "Tracing finally standardised on OpenTelemetry, so the event stream needed to replay an incident now exists in most stacks — it did not two years ago.",
+  "accelerator": "",
+  "prior_companies": "Built and sold a load-testing tool to a monitoring vendor in 2022",
+  "founders": [
+    {
+      "name": "Mira Kovalenko",
+      "email": "mira@northwind.dev",
+      "github_url": "mirakov",
+      "twitter_url": "mirabuilds",
+      "linkedin_url": "linkedin.com/in/mirakovalenko"
+    }
+  ],
+  "applicability": {
+    "fit_score": 92,
+    "sanity": {
+      "passed": true,
+      "note": "Live open-source product, named technical founder, revenue-generating design partners."
+    },
+    "breakdown": [
+      { "label": "Sector", "weight": 40, "awarded": 40, "note": "'developer SaaS' matches thesis tag" },
+      { "label": "Stage", "weight": 25, "awarded": 25, "note": "seed is in mandate" },
+      { "label": "Geography", "weight": 20, "awarded": 17, "note": "Netherlands is in the EU focus region" },
+      { "label": "Cheque fit", "weight": 15, "awarded": 10, "note": "Raising $100K — matches the standard cheque" }
+    ]
+  },
+  "screening": {
+    "founder_axis": {
+      "score": 78.0,
+      "sentiment": "bullish",
+      "trend": "improving",
+      "confidence": 0.72,
+      "strengths": [
+        "Technical founder with a prior exit in the same adjacent category (load testing → observability)",
+        "Ships publicly — the replay engine is open source with steady commit history and external contributors",
+        "Writes credibly about distributed-systems debugging, which is how the first design partners found them"
+      ],
+      "weaknesses": [
+        "Solo founder — no named GTM or commercial counterpart yet",
+        "Prior exit was small and the terms are not public, so the outcome is hard to size"
+      ],
+      "opportunities": [
+        "A commercial co-founder would remove the single biggest execution risk",
+        "Existing open-source contributors are a natural first hiring pool"
+      ],
+      "threats": [
+        "Solo-founder companies stall disproportionately at the seed-to-A transition"
+      ],
+      "evidence": [
+        "GitHub: northwind-labs/replay — 1.2k stars, 34 contributors",
+        "LinkedIn: Northwind Labs, founded 2024, 2–10 employees"
+      ]
+    },
+    "market_axis": {
+      "score": 84.0,
+      "sentiment": "bullish",
+      "trend": "improving",
+      "confidence": 0.68,
+      "strengths": [
+        "Observability spend keeps growing while buyers actively look to cut incumbent bills",
+        "OpenTelemetry standardisation removed the integration work that blocked this category",
+        "Clear budget owner — platform and SRE teams already pay for tooling in this line item"
+      ],
+      "weaknesses": [
+        "Crowded adjacent market dominated by very well-funded incumbents",
+        "Buyers consolidate tools in downturns, which pressures a point solution"
+      ],
+      "opportunities": [
+        "Incumbent pricing backlash is pushing teams to unbundle their observability stack"
+      ],
+      "threats": [
+        "An incumbent could ship replay as a feature and bundle it at no extra cost"
+      ],
+      "evidence": [
+        "Multiple 2025 vendor reports cite observability cost control as a top-three platform priority"
+      ]
+    },
+    "idea_vs_market_axis": {
+      "score": 71.0,
+      "sentiment": "neutral",
+      "trend": "stable",
+      "confidence": 0.61,
+      "strengths": [
+        "Replay is a genuinely differentiated wedge, not another dashboard",
+        "Open-source distribution gives a credible bottom-up path into teams that will not take a sales call"
+      ],
+      "weaknesses": [
+        "Deck does not show conversion from open-source users to paying customers",
+        "Pricing model is unstated, and this category is unusually sensitive to per-volume pricing"
+      ],
+      "opportunities": [
+        "Land-and-expand from a single team to a platform-wide contract is well-proven here"
+      ],
+      "threats": [
+        "If replay becomes a checkbox feature, the wedge closes before expansion revenue arrives"
+      ],
+      "evidence": [
+        "Deck lists 4 design partners but no stated conversion or contract values"
+      ]
+    },
+    "passes_screen": true,
+    "rejection_reasons": []
+  },
+  "enrichment": {
+    "company_name": "Northwind Labs",
+    "industry": "Developer Tools / Observability",
+    "one_liner": "Incident replay for distributed systems",
+    "deck_chars": 5840,
+    "company_reputation": {
+      "articles_reviewed": 41,
+      "by_category": { "product": 3, "team": 1, "funding": 1 },
+      "findings": [
+        {
+          "summary": "Northwind Labs open-sourced its replay engine, which reconstructs a production incident from OpenTelemetry traces so engineers can step through the failure after the fact.",
+          "category": "product",
+          "polarity": "positive",
+          "relevance": 9,
+          "source": "InfoQ",
+          "url": "https://www.infoq.com/"
+        },
+        {
+          "summary": "Coverage of the debugging-tools space names Northwind among a group of early companies attacking incident response from the replay angle rather than dashboards.",
+          "category": "product",
+          "polarity": "positive",
+          "relevance": 7,
+          "source": "The New Stack",
+          "url": "https://thenewstack.io/"
+        },
+        {
+          "summary": "Founder discussed the limits of trace sampling in a conference talk, arguing most teams discard the data needed to reconstruct the incidents they care about.",
+          "category": "team",
+          "polarity": "neutral",
+          "relevance": 5,
+          "source": "SREcon",
+          "url": "https://www.usenix.org/conferences"
+        }
+      ]
+    },
+    "founders": [
+      {
+        "name": "Mira Kovalenko",
+        "handles": { "github": "mirakov", "twitter": "mirabuilds" },
+        "github": {
+          "score": 81,
+          "grade": "A",
+          "is_builder": true,
+          "username": "mirakov",
+          "dimensions": {
+            "code_volume": 84,
+            "consistency": 88,
+            "project_depth": 79,
+            "collaboration": 72,
+            "community_traction": 83
+          },
+          "signals": [
+            "Commits across 3 years with no long gaps",
+            "Maintains a repo with external contributors, not just personal projects",
+            "Reviews and merges other people's pull requests"
+          ]
+        },
+        "socials": {
+          "profiles": { "twitter": { "handle": "mirabuilds" }, "linkedin": { "handle": "mirakovalenko" } },
+          "post_count": 24,
+          "comment_count": 11,
+          "analysis": {
+            "topics": ["distributed systems", "debugging", "open source", "observability"],
+            "sentiment": "constructive",
+            "tone": "technical"
+          },
+          "sample_posts": [
+            {
+              "network": "twitter",
+              "text": "Sampling traces at 1% then asking why you can't debug the outage is the observability equivalent of deleting your logs to save disk."
+            },
+            {
+              "network": "linkedin",
+              "text": "Replay is now open source. If you can reconstruct the incident, the postmortem writes itself."
+            }
+          ]
+        },
+        "reputation": {
+          "articles_reviewed": 12,
+          "findings": [
+            {
+              "summary": "Named as founder of Northwind Labs and previously the technical lead on a load-testing tool acquired by a monitoring vendor in 2022.",
+              "category": "background",
+              "polarity": "positive",
+              "relevance": 8,
+              "source": "TechCrunch",
+              "url": "https://techcrunch.com/"
+            }
+          ]
+        },
+        "errors": []
+      }
+    ],
+    "errors": []
+  }
+}

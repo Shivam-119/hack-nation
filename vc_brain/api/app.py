@@ -21,7 +21,7 @@ from vc_brain.memory.ingestion import IngestionPipeline
 from vc_brain.memory.models import DataPoint, Founder, SourceType
 from vc_brain.memory.store import MemoryStore
 from vc_brain.api import keepalive
-from vc_brain.evaluation import stages
+from vc_brain.evaluation import demo, stages
 from vc_brain.evaluation.service import run_evaluation
 
 # ---------------------------------------------------------------------------
@@ -305,6 +305,20 @@ async def get_application_evaluation(app_id: str) -> dict[str, Any]:
         "progress": stages.progress_payload(application),
         "result": evaluation,
     }
+
+
+@app.post("/api/applications/demo")
+async def start_demo_evaluation(background_tasks: BackgroundTasks) -> dict[str, Any]:
+    """Start a mock screening that walks the real stages in about 30 seconds.
+
+    Reuses one demo application, so clicking repeatedly restarts that row rather
+    than filling the inbox. Makes no LLM or network calls, so it costs nothing
+    and works with no API keys configured.
+    """
+    application_id, run_id = demo.start(store)
+    background_tasks.add_task(demo.run, store, run_id)
+    keepalive.ensure_running(store)
+    return {"application_id": application_id, "state": "queued"}
 
 
 @app.post("/api/applications/{app_id}/evaluation")
