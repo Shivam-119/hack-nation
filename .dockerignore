@@ -1,0 +1,24 @@
+# Keep the build context small and free of local/host-specific junk.
+.git
+.gitignore
+.venv
+venv
+**/node_modules
+**/__pycache__
+*.pyc
+.pytest_cache
+.ruff_cache
+*.egg-info
+build
+# Local data + secrets (rebuilt/injected at deploy, never baked into the image)
+*.db
+.env
+.env.*
+frontend/dist
+# Editor / OS cruft
+.idea
+.vscode
+.DS_Store
+# Docs/specs that don't belong in the runtime image
+*.pdf
+*.zip

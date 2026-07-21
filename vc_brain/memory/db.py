@@ -72,7 +72,14 @@ def to_sync_url(url: str) -> str:
 
 
 def make_engine(url: str) -> Engine:
-    engine = create_engine(to_sync_url(url), future=True)
+    url = to_sync_url(url)
+    connect_args: dict[str, Any] = {}
+    if url.startswith("sqlite"):
+        # The app serves requests from a threadpool sharing one engine, so the
+        # default one-connection-per-thread check would raise. `timeout` lets a
+        # write wait instead of failing with "database is locked" under load.
+        connect_args = {"check_same_thread": False, "timeout": 30}
+    engine = create_engine(url, future=True, connect_args=connect_args)
     metadata.create_all(engine)
     return engine
 

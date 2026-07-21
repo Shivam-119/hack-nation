@@ -1,0 +1,26 @@
+# Render blueprint — free single-service deploy (API + built frontend in one).
+# Connect the repo in the Render dashboard, then set the three secret keys.
+# Ephemeral disk is fine: the DB auto-seeds the demo apps on every startup.
+services:
+  - type: web
+    name: vc-brain
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/thesis
+    envVars:
+      # Secrets — set these in the Render dashboard (sync:false = not stored in git).
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: APIFY_TOKEN
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+      # Providers default to mock ($0). Flip to a live backend once keys are set.
+      - key: SOCIALS_TWITTER_PROVIDER
+        value: mock
+      - key: SOCIALS_LINKEDIN_PROVIDER
+        value: mock
+      - key: SOCIALS_IDENTITY_PROVIDER
+        value: mock
+      - key: REPUTATION_PROVIDER
+        value: mock

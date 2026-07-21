@@ -23,4 +23,7 @@ def _seed() -> None:
 
 if __name__ == "__main__":
     _seed()
-    uvicorn.run("vc_brain.api.app:app", host="0.0.0.0", port=8000, reload=True)
+    # Host platforms inject $PORT. reload is dev-only (VC_BRAIN_RELOAD=1 to enable).
+    port = int(os.getenv("PORT", "8000"))
+    reload = os.getenv("VC_BRAIN_RELOAD", "0").lower() in ("1", "true", "yes")
+    uvicorn.run("vc_brain.api.app:app", host="0.0.0.0", port=port, reload=reload)
