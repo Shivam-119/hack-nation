@@ -12,17 +12,20 @@ every one carries its sources by name and link, and nothing invents a ranking.
 
 import asyncio
 
+import pytest
+
 from vc_brain.memory.ingestion import IngestionPipeline
 from vc_brain.memory.models import SourceType
 from vc_brain.memory.store import MemoryStore
+from vc_brain.sourcing.reputation import analyzer as analyzer_module
 from vc_brain.sourcing.reputation.aggregate import (
     dedupe_sources,
     index_by_category,
     index_by_polarity,
-    merge_findings,
+    merge_by_clusters,
     sort_findings,
 )
-from vc_brain.sourcing.reputation.analyzer import _as_relevance
+from vc_brain.sourcing.reputation.analyzer import _as_relevance, cluster_findings
 from vc_brain.sourcing.reputation.enrichment import (
     apply_extractions,
     select_for_extraction,
@@ -49,6 +52,19 @@ from vc_brain.sourcing.reputation.queries import (
 from vc_brain.sourcing.reputation import scanner as scanner_module
 from vc_brain.sourcing.reputation.scanner import ReputationScanner
 from vc_brain.sourcing.reputation.sources import source_name
+
+
+async def _no_cluster(*args, **kwargs):
+    """Stand-in for the LLM dedup step: no findings are grouped."""
+    return []
+
+
+@pytest.fixture(autouse=True)
+def _offline_clustering(monkeypatch):
+    """Keep every scanner run offline -- the dedup LLM call is stubbed to a
+    no-op so tests never depend on a key or the network. Tests that exercise
+    cluster_findings directly stub complete_json themselves and are unaffected."""
+    monkeypatch.setattr(scanner_module, "cluster_findings", _no_cluster, raising=False)
 
 
 def _source(url="https://techcrunch.com/a", relevance=8):
@@ -152,29 +168,40 @@ def test_finding_relevance_takes_the_best_source():
     incidental = _source("https://sportsblog.com/a", relevance=1)
     direct = _source("https://www.reuters.com/a", relevance=10)
 
-    merged = merge_findings([
-        _finding(summary="Led the Series B round", sources=[incidental]),
-        _finding(summary="Led the Series B round", sources=[direct]),
-    ])
+    merged = merge_by_clusters(
+        [
+            _finding(summary="Led the Series B round", sources=[incidental]),
+            _finding(summary="Led the Series B round", sources=[direct]),
+        ],
+        [[0, 1]],
+    )
 
     assert len(merged) == 1
     assert merged[0].relevance == 10
 
 
 # -- Deduplication ----------------------------------------------------------
+#
+# *Which* findings describe the same story is the model's call (cluster_findings,
+# exercised below with a stubbed LLM). These tests cover the mechanical merge:
+# given the model's index groups, merge_by_clusters must combine the sources,
+# keep the strongest wording, and never drop or duplicate a finding.
 
-def test_same_story_across_sources_becomes_one_finding_with_both_links():
+def test_clustered_story_becomes_one_finding_with_both_links():
     summary = "Was charged by the SEC with misleading investors"
-    merged = merge_findings([
-        _finding(
-            summary=summary, category=FindingCategory.FRAUD, polarity=Polarity.NEGATIVE,
-            entity="Northwind", sources=[_source("https://www.reuters.com/a", 9)],
-        ),
-        _finding(
-            summary=summary, category=FindingCategory.FRAUD, polarity=Polarity.NEGATIVE,
-            entity="Northwind", sources=[_source("https://www.sec.gov/b", 10)],
-        ),
-    ])
+    merged = merge_by_clusters(
+        [
+            _finding(
+                summary=summary, category=FindingCategory.FRAUD, polarity=Polarity.NEGATIVE,
+                entity="Northwind", sources=[_source("https://www.reuters.com/a", 9)],
+            ),
+            _finding(
+                summary=summary, category=FindingCategory.FRAUD, polarity=Polarity.NEGATIVE,
+                entity="Northwind", sources=[_source("https://www.sec.gov/b", 10)],
+            ),
+        ],
+        [[0, 1]],
+    )
 
     assert len(merged) == 1
     finding = merged[0]
@@ -188,57 +215,82 @@ def test_same_story_across_sources_becomes_one_finding_with_both_links():
     assert finding.primary_source.source == "sec.gov"
 
 
-def test_differently_phrased_versions_of_one_story_merge():
-    """Outlets rarely phrase a fact identically, so matching is by similarity."""
-    merged = merge_findings([
-        _finding(
-            summary="Elizabeth Holmes founded Theranos in 2003 and was its CEO",
-            category=FindingCategory.CURRENT_ROLE, entity="Theranos",
-            sources=[_source("https://www.britannica.com/a", 7)],
-        ),
-        _finding(
-            summary="Elizabeth Holmes was the founder and CEO of Theranos from 2003 to 2018",
-            category=FindingCategory.CURRENT_ROLE, entity="Theranos",
-            sources=[_source("https://www.reuters.com/a", 9)],
-        ),
-    ])
+def test_cluster_keeps_the_strongest_wording():
+    """When a group is merged, the best-supported phrasing survives."""
+    merged = merge_by_clusters(
+        [
+            _finding(
+                summary="Holmes founded Theranos",
+                category=FindingCategory.CURRENT_ROLE, entity="Theranos",
+                sources=[_source("https://www.britannica.com/a", 7)],
+            ),
+            _finding(
+                summary="Elizabeth Holmes was the founder and CEO of Theranos from 2003 to 2018",
+                category=FindingCategory.CURRENT_ROLE, entity="Theranos",
+                sources=[_source("https://www.reuters.com/a", 9)],
+            ),
+        ],
+        [[0, 1]],
+    )
 
     assert len(merged) == 1
     assert merged[0].source_count == 2
+    # The more on-point, more detailed version wins the wording.
+    assert "2003 to 2018" in merged[0].summary
 
 
-def test_different_stories_in_one_category_stay_separate():
-    """Similarity merging must not collapse genuinely distinct events."""
-    merged = merge_findings([
-        _finding(
-            summary="Was sentenced to more than 11 years in prison",
-            category=FindingCategory.LEGAL, entity="Theranos", polarity=Polarity.NEGATIVE,
-        ),
-        _finding(
-            summary="Owes over 25 million dollars to company creditors",
-            category=FindingCategory.LEGAL, entity="Theranos", polarity=Polarity.NEGATIVE,
-        ),
-    ])
+def test_unclustered_findings_stay_separate():
+    """No group means no merge -- distinct events each stand on their own."""
+    merged = merge_by_clusters(
+        [
+            _finding(
+                summary="Was sentenced to more than 11 years in prison",
+                category=FindingCategory.LEGAL, entity="Theranos", polarity=Polarity.NEGATIVE,
+            ),
+            _finding(
+                summary="Owes over 25 million dollars to company creditors",
+                category=FindingCategory.LEGAL, entity="Theranos", polarity=Polarity.NEGATIVE,
+            ),
+        ],
+        [],
+    )
     assert len(merged) == 2
 
 
 def test_same_url_twice_is_only_one_source():
     summary = "Company shut down after failing to raise"
-    merged = merge_findings([
-        _finding(summary=summary, category=FindingCategory.FAILURE,
-                 sources=[_source("https://techcrunch.com/a")]),
-        _finding(summary=summary, category=FindingCategory.FAILURE,
-                 sources=[_source("https://techcrunch.com/a")]),
-    ])
+    merged = merge_by_clusters(
+        [
+            _finding(summary=summary, category=FindingCategory.FAILURE,
+                     sources=[_source("https://techcrunch.com/a")]),
+            _finding(summary=summary, category=FindingCategory.FAILURE,
+                     sources=[_source("https://techcrunch.com/a")]),
+        ],
+        [[0, 1]],
+    )
     assert len(merged) == 1
     assert merged[0].source_count == 1
 
 
-def test_distinct_stories_are_not_merged():
-    merged = merge_findings([
+def test_out_of_range_and_repeated_indices_never_drop_a_finding():
+    """A malformed cluster list can only fail to merge, never lose data."""
+    findings = [
         _finding(summary="Won a gold medal at the IMO", category=FindingCategory.AWARD),
         _finding(summary="Raised a $4M seed round led by Accel", category=FindingCategory.FUNDING),
-    ])
+    ]
+    # Nonsense clusters: a phantom index, and 0 named in two groups at once.
+    merged = merge_by_clusters(findings, [[0, 99], [0, 1]])
+    # Every real finding still present exactly once, nothing duplicated.
+    assert {f.summary for f in merged} == {f.summary for f in findings}
+    assert len(merged) <= len(findings)
+
+
+def test_empty_clusters_leave_every_finding_standing():
+    findings = [
+        _finding(summary="Won a gold medal at the IMO", category=FindingCategory.AWARD),
+        _finding(summary="Raised a $4M seed round led by Accel", category=FindingCategory.FUNDING),
+    ]
+    merged = merge_by_clusters(findings, [])
     assert len(merged) == 2
 
 
@@ -257,9 +309,66 @@ def test_merging_is_deterministic():
         _finding(summary="Was sued by investors", category=FindingCategory.LEGAL,
                  polarity=Polarity.NEGATIVE),
     ]
-    assert [f.summary for f in merge_findings(findings)] == [
-        f.summary for f in merge_findings(findings)
+    assert [f.summary for f in merge_by_clusters(findings, [])] == [
+        f.summary for f in merge_by_clusters(findings, [])
     ]
+
+
+# -- LLM clustering (stubbed model) -----------------------------------------
+
+def _stub_complete_json(result):
+    async def _run(prompt, system="", **kwargs):
+        return result
+
+    return _run
+
+
+def test_cluster_findings_returns_model_groups(monkeypatch):
+    monkeypatch.setattr(
+        analyzer_module, "complete_json", _stub_complete_json({"groups": [[0, 2]]})
+    )
+    findings = [
+        _finding(summary="a"), _finding(summary="b"), _finding(summary="c"),
+    ]
+    groups = asyncio.run(cluster_findings("Subject", findings))
+    assert groups == [[0, 2]]
+
+
+def test_cluster_findings_drops_singletons_and_non_lists(monkeypatch):
+    monkeypatch.setattr(
+        analyzer_module,
+        "complete_json",
+        _stub_complete_json({"groups": [[1], "nonsense", [0, 2]]}),
+    )
+    findings = [_finding(summary=s) for s in ("a", "b", "c")]
+    groups = asyncio.run(cluster_findings("Subject", findings))
+    # Only the real group of two survives; a singleton and a non-list are dropped.
+    assert groups == [[0, 2]]
+
+
+def test_cluster_findings_is_fail_soft(monkeypatch):
+    async def _boom(*args, **kwargs):
+        raise RuntimeError("no LLM key configured")
+
+    monkeypatch.setattr(analyzer_module, "complete_json", _boom)
+    findings = [_finding(summary="a"), _finding(summary="b")]
+    # A failed dedup must never abort the sweep -- it just skips clustering.
+    assert asyncio.run(cluster_findings("Subject", findings)) == []
+
+
+def test_cluster_findings_skips_the_model_below_two_findings():
+    called = False
+
+    async def _tripwire(*args, **kwargs):
+        nonlocal called
+        called = True
+        return {"groups": []}
+
+    # Not monkeypatched onto the module: cluster_findings must short-circuit
+    # before ever reaching the model when there is nothing to compare.
+    assert asyncio.run(cluster_findings("Subject", [_finding(summary="only one")])) == []
+    assert asyncio.run(cluster_findings("Subject", [])) == []
+    assert called is False
 
 
 # -- Indexing ---------------------------------------------------------------

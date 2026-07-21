@@ -35,6 +35,8 @@ PROMPT_PATHS: dict[EntityType, Path] = {
     EntityType.COMPANY: _PROMPT_DIR / "company_extraction.txt",
 }
 
+DEDUP_PROMPT_PATH = _PROMPT_DIR / "reputation_dedup.txt"
+
 # Small batches keep each prompt focused and bound the blast radius of one
 # failed call -- a bad batch loses its own articles, not the whole sweep.
 BATCH_SIZE = 8
@@ -188,3 +190,66 @@ async def extract_findings(
         if isinstance(result, list):
             findings.extend(result)
     return findings
+
+
+_DEDUP_FALLBACK_SYSTEM = (
+    "You group web findings that describe the SAME underlying event or fact "
+    "about the subject, even when worded differently or reported by different "
+    "outlets. Findings about different events stay in different groups. Return "
+    'JSON {"groups": [[index, ...], ...]} listing only groups of two or more; '
+    "omit singletons."
+)
+
+
+def _load_dedup_prompt() -> str:
+    try:
+        return DEDUP_PROMPT_PATH.read_text().strip()
+    except OSError:
+        return _DEDUP_FALLBACK_SYSTEM
+
+
+async def cluster_findings(
+    name: str, findings: list[ReputationFinding], entity: EntityType = EntityType.PERSON
+) -> list[list[int]]:
+    """Ask the model which findings describe the same underlying story.
+
+    Returns groups of indices into `findings` that should be merged into one.
+    Findings the model does not group stay on their own. Fail-soft: returns []
+    on any error (no merging) rather than raising -- deduplication is a
+    nice-to-have, never a reason to lose a sweep.
+
+    The decision is the model's; string similarity is deliberately not used,
+    because outlets phrase the same event too differently for it to tell "same
+    story" from merely "same topic".
+    """
+    if len(findings) < 2:
+        return []
+
+    label = "COMPANY" if entity is EntityType.COMPANY else "PERSON"
+    listing = "\n".join(
+        f"[{i}] ({f.category.value}) {f.summary}" for i, f in enumerate(findings)
+    )
+    prompt = (
+        f"{label}: {name}\n\n"
+        f"FINDINGS:\n{listing}\n\n"
+        "Group the indices whose findings describe the same underlying event or "
+        "fact. Return JSON as specified."
+    )
+
+    try:
+        data = await complete_json(prompt, system=_load_dedup_prompt())
+    except Exception:  # noqa: BLE001 -- a failed dedup must not abort the sweep
+        return []
+
+    raw = data.get("groups") if isinstance(data, dict) else None
+    if not isinstance(raw, list):
+        return []
+
+    groups: list[list[int]] = []
+    for group in raw:
+        if not isinstance(group, list):
+            continue
+        idxs = [int(x) for x in group if isinstance(x, (int, float)) and not isinstance(x, bool)]
+        if len(idxs) >= 2:
+            groups.append(idxs)
+    return groups

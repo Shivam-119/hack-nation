@@ -20,8 +20,9 @@ about this person) and every source supporting it.
 from vc_brain.sourcing.reputation.aggregate import (
     index_by_category,
     index_by_polarity,
-    merge_findings,
+    merge_by_clusters,
 )
+from vc_brain.sourcing.reputation.analyzer import cluster_findings
 from vc_brain.sourcing.reputation.models import (
     RELEVANCE_DEFAULT,
     RELEVANCE_DIRECT,
@@ -49,8 +50,9 @@ __all__ = [
     "ReputationReport",
     "ReputationScanner",
     "SourceRef",
+    "cluster_findings",
     "get_provider",
     "index_by_category",
     "index_by_polarity",
-    "merge_findings",
+    "merge_by_clusters",
 ]

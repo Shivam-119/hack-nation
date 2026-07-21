@@ -1,69 +1,16 @@
 """Merge findings that describe the same thing, and index the result.
 
-No weighting happens here. This stage only removes duplication and attaches
-every supporting article to the finding it belongs to. Corroboration is left
-as a raw count of distinct sources -- deciding what that is worth is a
-downstream concern, deliberately not ours.
-
-Pure functions, no I/O, no LLM: same input, same output.
+*Which* findings describe the same underlying story is decided by the model
+(see `analyzer.cluster_findings`) -- outlets phrase the same event a dozen
+different ways, and string similarity cannot reliably tell "same story" from
+"same topic". This module only does the mechanical merge once the model has
+grouped them: combine the sources, keep the best-worded version. No weighting
+happens here; corroboration is left as a raw count of distinct sources.
 """
 
 from __future__ import annotations
 
-import re
-
-from vc_brain.sourcing.reputation.models import (
-    ReputationFinding,
-    SourceRef,
-)
-
-_WORD_RE = re.compile(r"[a-z0-9]+")
-_STOPWORDS = {
-    "the", "a", "an", "and", "or", "of", "in", "on", "at", "to", "for", "with",
-    "his", "her", "their", "was", "were", "is", "are", "be", "been", "by",
-    "that", "this", "it", "as", "from", "after", "over", "into", "has", "had",
-}
-
-
-# Two summaries in the same category and about the same entity are treated as
-# the same story when this much of the smaller one is contained in the larger.
-# Overlap (rather than Jaccard) is used deliberately: outlets routinely report
-# the same fact at very different lengths, and a detailed write-up should still
-# absorb the one-line version of itself.
-MERGE_THRESHOLD = 0.55
-
-_SUFFIXES = ("ing", "ed", "er", "s")
-
-
-def _normalize(text: str) -> str:
-    return " ".join(_WORD_RE.findall((text or "").lower()))
-
-
-def _stem(token: str) -> str:
-    """Crude suffix trim so 'founded', 'founder' and 'founding' agree."""
-    for suffix in _SUFFIXES:
-        if len(token) > 4 and token.endswith(suffix):
-            return token[: -len(suffix)]
-    return token
-
-
-def _tokens(summary: str) -> frozenset[str]:
-    """Content words of a summary, stemmed, for similarity comparison."""
-    return frozenset(
-        _stem(t) for t in _normalize(summary).split() if t not in _STOPWORDS
-    )
-
-
-def _overlap(a: frozenset[str], b: frozenset[str]) -> float:
-    """Overlap coefficient: |A n B| / min(|A|, |B|)."""
-    if not a or not b:
-        return 0.0
-    return len(a & b) / min(len(a), len(b))
-
-
-def _group_key(finding: ReputationFinding) -> tuple[str, str]:
-    """Only findings of the same kind, about the same entity, may merge."""
-    return (finding.category.value, _normalize(finding.entity))
+from vc_brain.sourcing.reputation.models import ReputationFinding, SourceRef
 
 
 def _rank(finding: ReputationFinding) -> tuple[int, float, int]:
@@ -87,63 +34,47 @@ def dedupe_sources(sources: list[SourceRef]) -> list[SourceRef]:
     return sorted(seen.values(), key=lambda s: (-s.relevance, s.source))
 
 
-def _absorb(
-    winner: ReputationFinding, other: ReputationFinding
-) -> ReputationFinding:
+def _absorb(winner: ReputationFinding, other: ReputationFinding) -> ReputationFinding:
     """Fold `other` into `winner`, keeping the strongest wording."""
     combined = list(winner.sources) + list(other.sources)
-
     kept = other.model_copy(deep=True) if _rank(other) > _rank(winner) else winner
-
     kept.sources = combined
     kept.relevance = max(winner.relevance, other.relevance)
     kept.confidence = max(winner.confidence, other.confidence)
     return kept
 
 
-def merge_findings(findings: list[ReputationFinding]) -> list[ReputationFinding]:
-    """Collapse findings about the same thing into one, keeping every source.
+def merge_by_clusters(
+    findings: list[ReputationFinding], clusters: list[list[int]]
+) -> list[ReputationFinding]:
+    """Merge findings grouped by the model into one finding per group.
 
-    Outlets rarely phrase a story identically, so matching is by similarity
-    rather than exact wording -- "founded Theranos in 2003" and "was the
-    founder and CEO of Theranos from 2003" are one finding with two sources,
-    not two findings.
+    `clusters` are index groups from `analyzer.cluster_findings`. A finding
+    named in no group stands on its own, and out-of-range or already-used
+    indices are ignored -- so a malformed cluster list can only fail to merge,
+    never drop or duplicate a finding.
     """
-    groups: dict[tuple[str, str], list[ReputationFinding]] = {}
-    for finding in findings:
-        groups.setdefault(_group_key(finding), []).append(finding)
+    n = len(findings)
+    assigned: set[int] = set()
+    groups: list[list[int]] = []
+
+    for cluster in clusters:
+        idxs = [i for i in cluster if isinstance(i, int) and 0 <= i < n and i not in assigned]
+        if idxs:
+            assigned.update(idxs)
+            groups.append(idxs)
+    # Every finding the model didn't cluster stands alone.
+    groups.extend([i] for i in range(n) if i not in assigned)
 
     merged: list[ReputationFinding] = []
-    for group in groups.values():
-        # Each cluster is (tokens of the representative summary, the finding).
-        clusters: list[tuple[frozenset[str], ReputationFinding]] = []
-
-        for finding in group:
-            tokens = _tokens(finding.summary)
-            target = next(
-                (
-                    i
-                    for i, (cluster_tokens, _) in enumerate(clusters)
-                    if _overlap(tokens, cluster_tokens) >= MERGE_THRESHOLD
-                ),
-                None,
-            )
-
-            if target is None:
-                clusters.append((tokens, finding.model_copy(deep=True)))
-                continue
-
-            _, existing = clusters[target]
-            kept = _absorb(existing, finding)
-            # Track the representative's own tokens, so the cluster does not
-            # drift wider with every absorption.
-            clusters[target] = (_tokens(kept.summary), kept)
-
-        for _, finding in clusters:
-            finding.sources = dedupe_sources(finding.sources)
-            if finding.sources:
-                finding.relevance = max(s.relevance for s in finding.sources)
-            merged.append(finding)
+    for idxs in groups:
+        kept = findings[idxs[0]].model_copy(deep=True)
+        for j in idxs[1:]:
+            kept = _absorb(kept, findings[j])
+        kept.sources = dedupe_sources(kept.sources)
+        if kept.sources:
+            kept.relevance = max(s.relevance for s in kept.sources)
+        merged.append(kept)
 
     return sort_findings(merged)
 
