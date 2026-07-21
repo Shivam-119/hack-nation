@@ -42,10 +42,14 @@ from vc_brain.sourcing.reputation.models import (
 from vc_brain.sourcing.reputation.providers import get_provider
 from vc_brain.sourcing.reputation.providers.mock import MockProvider
 from vc_brain.sourcing.reputation.analyzer import _load_system_prompt
+from vc_brain.config import config
 from vc_brain.sourcing.reputation.queries import (
     BACKGROUND,
+    COMPANY_ANGLES,
+    CREDENTIAL,
     FORUM,
     NEGATIVE,
+    PERSON_ANGLES,
     POSITIVE,
     build_queries,
 )
@@ -146,8 +150,45 @@ def test_reddit_angle_is_domain_restricted():
 
         assert forum, f"{entity.value} sweep is missing a forum angle"
         assert all(q.include_domains == ("reddit.com",) for q in forum)
-        # Every other angle searches the open web.
-        assert all(q.include_domains == () for q in queries if q.intent != FORUM)
+        # Reddit and LinkedIn are the only domain-scoped angles; everything
+        # else searches the open web.
+        for query in queries:
+            if query.intent == FORUM:
+                continue
+            assert query.include_domains in ((), ("linkedin.com",))
+
+
+def test_person_sweep_asks_about_background_education_and_prizes():
+    """At pre-seed the founder is the investment -- the sweep must actually ask
+    about who they are, not only what went wrong."""
+    queries = build_queries("Ada Whitfield", max_queries=25, entity=EntityType.PERSON)
+    text = " ".join(q.text for q in queries).lower()
+
+    for term in ("university", "phd", "alma mater", "olympiad", "patent", "fellowship", "worked at"):
+        assert term in text, f"person sweep never asks about {term!r}"
+
+    # LinkedIn is the single best source of career history + education.
+    linkedin = [q for q in queries if q.include_domains == ("linkedin.com",)]
+    assert linkedin, "person sweep is missing the LinkedIn angle"
+    assert all(q.intent == CREDENTIAL for q in linkedin)
+
+    # Credentials are their own intent so a silent angle is a reportable gap.
+    assert CREDENTIAL in {q.intent for q in queries}
+
+
+def test_person_sweep_is_deeper_than_the_company_sweep():
+    """A company at pre-seed has little to find; a founder has a whole history."""
+    assert len(PERSON_ANGLES) > len(COMPANY_ANGLES)
+    assert config.reputation_person_max_queries > config.reputation_max_queries
+
+
+def test_tight_person_sweep_still_covers_both_polarities():
+    """The cap trims from the end, so the balance guarantee must survive it --
+    a background check that only asks flattering questions is worthless."""
+    for cap in (4, 6, 10, 15):
+        intents = {q.intent for q in build_queries("Subject", max_queries=cap)}
+        assert POSITIVE in intents, f"cap={cap} lost positive coverage"
+        assert NEGATIVE in intents, f"cap={cap} lost adverse coverage"
 
 
 # -- Relevance --------------------------------------------------------------

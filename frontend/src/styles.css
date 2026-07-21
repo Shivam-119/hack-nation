@@ -102,3 +102,17 @@ main { width:100%; } .narrow { max-width:780px; margin:0 auto; padding:42px 24px
 .landing-demo small { display:block; margin-top:9px; color:#9a9aa6; font-size:12.5px; }
 .landing-demo .sanity-note { margin-top:12px; text-align:left; }
 @media (max-width: 560px) { .landing-cards { grid-template-columns:1fr; } .landing-inner h1 { font-size:25px; } }
+
+/* ---- founder profile (grouped background / awards / adverse) ---- */
+.founder-profile { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; margin:14px 0 4px; }
+.fp-block { padding:14px 16px; border:1px solid #e3e6ea; border-radius:10px; background:#fafbfc; }
+.fp-block>b { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; color:#4f46e5; font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; }
+.fp-block>b em { color:#9a9aa6; font:400 11px 'IBM Plex Mono',monospace; }
+.fp-block ul { display:flex; flex-direction:column; gap:9px; margin:0; padding:0; list-style:none; }
+.fp-block li { font-size:12.5px; line-height:1.5; }
+.fp-block li a { display:block; margin-top:3px; color:#9a9aa6; font:11px 'IBM Plex Mono',monospace; }
+.fp-block li a:hover { color:#4f46e5; }
+.fp-block .subcopy { margin:0; font-size:12px; }
+.fp-adverse { border-color:#f3c9cf; background:#fff8f9; }
+.fp-adverse>b { color:#b42323; }
+@media (max-width:560px) { .founder-profile { grid-template-columns:1fr; } }

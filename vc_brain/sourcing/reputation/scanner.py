@@ -40,6 +40,7 @@ from vc_brain.sourcing.reputation.models import (
 from vc_brain.sourcing.reputation.providers import SearchProvider, get_provider
 from vc_brain.sourcing.reputation.queries import (
     BACKGROUND,
+    CREDENTIAL,
     FORUM,
     NEGATIVE,
     POSITIVE,
@@ -51,6 +52,7 @@ _INTENT_LABELS = {
     POSITIVE: "positive-signal",
     NEGATIVE: "adverse-media",
     BACKGROUND: "background",
+    CREDENTIAL: "credentials (education, prizes, patents)",
     FORUM: "forum/community",
 }
 
@@ -82,7 +84,13 @@ class ReputationScanner:
                 provider=getattr(self.provider, "name", "unknown"),
             )
 
-        queries = build_queries(name, hint, config.reputation_max_queries, entity)
+        # People get the deeper budget -- see config.reputation_person_max_queries.
+        max_queries = (
+            config.reputation_person_max_queries
+            if entity is EntityType.PERSON
+            else config.reputation_max_queries
+        )
+        queries = build_queries(name, hint, max_queries, entity)
         articles, per_intent = await self._sweep(queries)
         extracted = await self._enrich(articles)
         raw = await extract_findings(name, articles, hint, entity)

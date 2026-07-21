@@ -250,6 +250,36 @@ def _trim_findings(rep: dict | None, n: int) -> dict | None:
     }
 
 
+# Which bucket each finding category belongs to. At pre-seed the investor wants
+# the person's track record up front -- who they are, what they studied, what
+# they built and won -- with adverse findings called out separately rather than
+# mixed into the same undifferentiated list.
+_PROFILE_BUCKETS: dict[str, tuple[str, ...]] = {
+    "background": ("education", "prior_company", "current_role"),
+    "achievements": ("award", "recognition", "research"),
+    "adverse": ("fraud", "legal", "controversy", "failure", "rumor"),
+}
+
+
+def founder_profile(rep: dict | None) -> dict[str, list[dict]]:
+    """Bucket a founder's findings by category so the frontend stays dumb.
+
+    Anything not explicitly mapped (press, funding, other, or a category added
+    later) falls through to `press`, so a new category can never be silently
+    dropped from the UI.
+    """
+    profile: dict[str, list[dict]] = {"background": [], "achievements": [], "adverse": [], "press": []}
+    for finding in (rep or {}).get("findings") or []:
+        category = (finding.get("category") or "").strip().lower()
+        for bucket, categories in _PROFILE_BUCKETS.items():
+            if category in categories:
+                profile[bucket].append(finding)
+                break
+        else:
+            profile["press"].append(finding)
+    return profile
+
+
 def display_shape(d: dict[str, Any]) -> dict[str, Any]:
     """Compact a full DeckEnrichment dump down to what a UI renders.
 
@@ -292,7 +322,10 @@ def display_shape(d: dict[str, Any]) -> dict[str, Any]:
                 },
                 "sources": so.get("sources", []),
             } if so else None,
-            "reputation": _trim_findings(f.get("reputation"), 8),
+            # Founders get a far deeper cut than the company: they are the
+            # investment at this stage, and the sweep now asks ~25 angles.
+            "reputation": (founder_rep := _trim_findings(f.get("reputation"), 20)),
+            "profile": founder_profile(founder_rep),
             "errors": f.get("errors", []),
         })
     return {

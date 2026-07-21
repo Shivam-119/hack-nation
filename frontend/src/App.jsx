@@ -29,10 +29,34 @@ function EnrichFindings({ rep }) {
       {f.url && <a href={f.url} target="_blank" rel="noreferrer">{f.source}</a>}</li>)}</ul></>;
 }
 
+const PROFILE_BLOCKS = [
+  ['background', 'Background & education'],
+  ['achievements', 'Awards, prizes & research'],
+  ['adverse', 'Adverse findings'],
+  ['press', 'Press & other coverage'],
+];
+
+function FounderProfile({ profile }) {
+  if (!profile) return null;
+  return <div className="founder-profile">{PROFILE_BLOCKS.map(([key, label]) => {
+    const items = profile[key] || [];
+    return <div className={'fp-block' + (key === 'adverse' && items.length ? ' fp-adverse' : '')} key={key}>
+      <b>{label}<em>{items.length}</em></b>
+      {items.length
+        ? <ul>{items.map((x, i) => <li key={i}><span className="tag">{x.category}</span> {x.summary}
+          {x.url && <a href={x.url} target="_blank" rel="noreferrer">↗ {x.source}</a>}</li>)}</ul>
+        : <p className="subcopy">Nothing found.</p>}
+    </div>;
+  })}</div>;
+}
+
 function EnrichFounder({ f }) {
   const g = f.github, s = f.socials, a = s?.analysis || {};
   const cls = v => v >= 60 ? 'good' : v >= 35 ? 'warn' : 'bad';
   return <div className="card enrich-founder"><div className="eyebrow">{f.name}</div>
+    <FounderProfile profile={f.profile} />
+    {f.reputation?.articles_reviewed != null &&
+      <p className="subcopy">{f.reputation.articles_reviewed} articles reviewed across the founder sweep.</p>}
     <div className="enrich-cols">
       <div><b>GitHub — builder evaluation</b>
         {g ? <><div className="enrich-gh"><span className="big">{g.score}</span>
@@ -53,7 +77,8 @@ function EnrichFounder({ f }) {
             <li key={i}><span className="net">[{p.network}]</span> {p.text}</li>)}</ul></>
           : <p className="subcopy">No social handles supplied.</p>}</div>
     </div>
-    <div className="enrich-press"><b>Press &amp; web — article research</b><EnrichFindings rep={f.reputation} /></div>
+    {/* Older enrichment blobs predate the grouped profile -- fall back to the flat list. */}
+    {!f.profile && <div className="enrich-press"><b>Press &amp; web — article research</b><EnrichFindings rep={f.reputation} /></div>}
     {f.errors?.length > 0 && <ul className="enrich-errors">{f.errors.map((e, i) => <li key={i}>{e}</li>)}</ul>}
   </div>;
 }
@@ -63,11 +88,13 @@ function EnrichmentPanel({ data, error }) {
     <div className="sanity-note">Enrichment failed: {error}</div></section>;
   if (!data) return null;
   return <section className="enrichment">
-    <div className="section-intro"><b>Deep analysis — reputation · socials · GitHub</b>
-      <p>The sourcing scanners, run live on the company and its founders.</p></div>
-    <div className="card"><div className="eyebrow">Company — article research</div>
-      <EnrichFindings rep={data.company_reputation} /></div>
+    <div className="section-intro"><b>The founders — background, education, track record</b>
+      <p>At pre-seed the team is the investment, so they come first. Run live across ~25 search
+        angles per founder, plus GitHub and socials.</p></div>
     {(data.founders || []).map((f, i) => <EnrichFounder key={i} f={f} />)}
+    <div className="section-intro"><b>The company — article research</b>
+      <p>What the web says about the company itself.</p></div>
+    <div className="card"><EnrichFindings rep={data.company_reputation} /></div>
   </section>;
 }
 

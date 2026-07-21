@@ -181,3 +181,53 @@ def test_person_reputation_can_be_disabled(monkeypatch):
 def test_handles_helper_drops_empty_fields():
     assert FounderInput(name="A", twitter="t").handles() == {"twitter": "t"}
     assert FounderInput(name="A").handles() == {}
+
+
+# -- Founder profile bucketing ----------------------------------------------
+
+def _finding(category: str, summary: str = "x") -> dict:
+    return {"summary": summary, "category": category, "polarity": "neutral",
+            "relevance": 8, "sources": [{"source": "s.com", "url": "https://s.com/a"}]}
+
+
+def test_founder_profile_buckets_findings_by_category():
+    """The investor wants track record up front and adverse findings called
+    out, not one undifferentiated list."""
+    rep = {"findings": [
+        _finding("education", "PhD at Princeton"),
+        _finding("prior_company", "Founded Acme"),
+        _finding("current_role", "CTO at Front"),
+        _finding("award", "IMO gold medal"),
+        _finding("recognition", "30 under 30"),
+        _finding("research", "Published a paper"),
+        _finding("fraud", "Accused of fraud"),
+        _finding("legal", "Sued by investors"),
+        _finding("press", "Profiled by TechCrunch"),
+    ]}
+    profile = E.founder_profile(rep)
+
+    assert [f["summary"] for f in profile["background"]] == [
+        "PhD at Princeton", "Founded Acme", "CTO at Front"]
+    assert [f["summary"] for f in profile["achievements"]] == [
+        "IMO gold medal", "30 under 30", "Published a paper"]
+    assert [f["summary"] for f in profile["adverse"]] == [
+        "Accused of fraud", "Sued by investors"]
+    assert [f["summary"] for f in profile["press"]] == ["Profiled by TechCrunch"]
+
+
+def test_founder_profile_never_drops_an_unmapped_category():
+    """A category added later must surface somewhere rather than vanish."""
+    profile = E.founder_profile({"findings": [
+        _finding("funding", "Raised $4M"),
+        _finding("brand_new_category", "Something novel"),
+    ]})
+    assert [f["summary"] for f in profile["press"]] == ["Raised $4M", "Something novel"]
+    total = sum(len(v) for v in profile.values())
+    assert total == 2, "every finding must land in exactly one bucket"
+
+
+def test_founder_profile_handles_missing_reputation():
+    for empty in (None, {}, {"findings": []}):
+        profile = E.founder_profile(empty)
+        assert set(profile) == {"background", "achievements", "adverse", "press"}
+        assert all(v == [] for v in profile.values())

@@ -20,11 +20,18 @@ POSITIVE = "positive"
 NEGATIVE = "negative"
 BACKGROUND = "background"
 FORUM = "forum"
+# Verifiable credentials -- degrees, olympiads, patents, fellowships. Kept
+# distinct from BACKGROUND so "we looked for education and found nothing"
+# becomes a reportable gap rather than an invisible one.
+CREDENTIAL = "credential"
 
 # Community sites carry complaints and first-hand experience long before any
 # outlet covers them. Restricting by domain is far more reliable than a
 # "site:" operator, which Tavily's semantic search does not honour.
 REDDIT_DOMAINS = ("reddit.com",)
+# The single best source of a founder's career history and education. Scoped
+# by domain for the same reason as Reddit.
+LINKEDIN_DOMAINS = ("linkedin.com",)
 
 
 @dataclass(frozen=True)
@@ -38,23 +45,38 @@ class Query:
 _Angle = tuple[str, str, tuple[str, ...]]
 
 # Ordered by value: the cap in config trims from the end, so keep the
-# highest-signal angles first. Both polarities appear early, so a tight cap
-# still produces a balanced sweep.
+# highest-signal angles first.
+#
+# At pre-seed the founder IS the investment, so this sweep leads with who they
+# are -- role, career history, education, prior companies, prizes -- before it
+# asks what went wrong. The adverse angles are NOT demoted to the tail though:
+# fraud, lawsuits and forced exits are founder diligence, not company gossip,
+# and they stay in the top half so even a trimmed sweep stays balanced.
 PERSON_ANGLES: list[_Angle] = [
-    (NEGATIVE, '"{name}" fraud OR scam OR misconduct', ()),
     (POSITIVE, '"{name}" founder OR co-founder OR CEO', ()),
-    (NEGATIVE, '"{name}" lawsuit OR sued OR court OR settlement', ()),
-    (POSITIVE, '"{name}" award OR prize OR olympiad OR medalist OR winner', ()),
-    (NEGATIVE, '"{name}" investigation OR allegations OR probe OR SEC', ()),
-    (FORUM, '"{name}" reputation OR experience OR opinion', REDDIT_DOMAINS),
-    (POSITIVE, '"{name}" research OR paper OR publication OR patent', ()),
-    (NEGATIVE, '"{name}" controversy OR resigned OR fired OR ousted', ()),
-    (POSITIVE, '"{name}" raised OR funding OR investment round', ()),
-    (NEGATIVE, '"{name}" bankruptcy OR insolvency OR shut down OR failed', ()),
-    (POSITIVE, '"{name}" interview OR profile OR featured', ()),
-    (BACKGROUND, '"{name}" biography OR background OR career history', ()),
-    (POSITIVE, '"{name}" "30 under 30" OR award list OR recognition', ()),
+    (CREDENTIAL, '"{name}" experience OR education OR career', LINKEDIN_DOMAINS),
+    (CREDENTIAL, '"{name}" university OR PhD OR MSc OR graduated OR "alma mater" OR degree', ()),
+    (NEGATIVE, '"{name}" fraud OR scam OR misconduct', ()),
     (BACKGROUND, '"{name}" former OR previously OR prior company', ()),
+    (POSITIVE, '"{name}" award OR prize OR medalist OR winner', ()),
+    (CREDENTIAL, '"{name}" olympiad OR IMO OR IOI OR ICPC OR Putnam OR "gold medal"', ()),
+    (NEGATIVE, '"{name}" lawsuit OR sued OR court OR settlement', ()),
+    (BACKGROUND, '"{name}" "worked at" OR "ex-" OR engineer OR "head of"', ()),
+    (FORUM, '"{name}" reputation OR experience OR opinion', REDDIT_DOMAINS),
+    (POSITIVE, '"{name}" research OR paper OR publication', ()),
+    (NEGATIVE, '"{name}" controversy OR resigned OR fired OR ousted', ()),
+    (CREDENTIAL, '"{name}" patent OR inventor OR USPTO', ()),
+    (POSITIVE, '"{name}" "30 under 30" OR award list OR recognition', ()),
+    (CREDENTIAL, '"{name}" thesis OR dissertation OR professor OR lab', ()),
+    (NEGATIVE, '"{name}" investigation OR allegations OR probe OR SEC', ()),
+    (POSITIVE, '"{name}" interview OR profile OR featured', ()),
+    (CREDENTIAL, '"{name}" scholarship OR fellowship OR hackathon OR "science fair"', ()),
+    (BACKGROUND, '"{name}" biography OR background OR career history', ()),
+    (POSITIVE, '"{name}" acquired OR exit OR "sold company" OR IPO', ()),
+    (NEGATIVE, '"{name}" bankruptcy OR insolvency OR shut down OR failed', ()),
+    (POSITIVE, '"{name}" keynote OR speaker OR conference OR podcast', ()),
+    (BACKGROUND, '"{name}" blog OR "personal website" OR portfolio OR "about me"', ()),
+    (POSITIVE, '"{name}" raised OR funding OR investment round', ()),
     (NEGATIVE, '"{name}" complaint OR accused OR criticism', ()),
 ]
 

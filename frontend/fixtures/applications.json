@@ -65,22 +65,28 @@
     },
     "screening": {
       "founder_axis": {
-        "score": 68.0, "sentiment": "bullish", "trend": "stable", "confidence": 0.5,
+        "score": 68.0,
+        "sentiment": "bullish",
+        "trend": "stable",
+        "confidence": 0.5,
         "strengths": [
           "Founded in 2021 around a focused two-sided product for founders and investors",
-          "Clear domain motivation — building the access to capital the team felt was missing"
+          "Clear domain motivation \u2014 building the access to capital the team felt was missing"
         ],
         "weaknesses": [
-          "Small team (2–10) with no named technical or GTM lead in public data",
+          "Small team (2\u201310) with no named technical or GTM lead in public data",
           "Founder track record not independently verifiable from the deck alone"
         ],
         "evidence": [
-          "LinkedIn: Magic Sauce Online, founded 2021, 2–10 employees",
+          "LinkedIn: Magic Sauce Online, founded 2021, 2\u201310 employees",
           "Company site: magicsauce.online"
         ]
       },
       "market_axis": {
-        "score": 45.0, "sentiment": "neutral", "trend": "stable", "confidence": 0.45,
+        "score": 45.0,
+        "sentiment": "neutral",
+        "trend": "stable",
+        "confidence": 0.45,
         "strengths": [
           "Underrepresented-founder segment is real and structurally underserved"
         ],
@@ -95,16 +101,19 @@
         ]
       },
       "idea_vs_market_axis": {
-        "score": 52.0, "sentiment": "neutral", "trend": "stable", "confidence": 0.45,
+        "score": 52.0,
+        "sentiment": "neutral",
+        "trend": "stable",
+        "confidence": 0.45,
         "strengths": [
           "Mission-aligned wedge (diversity, access) can seed a genuine community moat"
         ],
         "weaknesses": [
-          "Bundling four things — education, data, diligence, dealflow — risks doing none of them sharply",
+          "Bundling four things \u2014 education, data, diligence, dealflow \u2014 risks doing none of them sharply",
           "Monetisation path is unclear at pre-seed"
         ],
         "evidence": [
-          "Application: 'because we knew it could be better — more diversity, better dealflow for investors'"
+          "Application: 'because we knew it could be better \u2014 more diversity, better dealflow for investors'"
         ]
       },
       "passes_screen": true,
@@ -323,7 +332,79 @@
               }
             ]
           },
-          "errors": []
+          "errors": [],
+          "profile": {
+            "background": [
+              {
+                "summary": "Guillermo Rauch is the CEO of Vercel, a $2.5 billion tech company.",
+                "category": "current_role",
+                "polarity": "positive",
+                "relevance": 10,
+                "source": "frederick.ai",
+                "url": "https://www.frederick.ai/blog/guillermo-rauch-vercel"
+              },
+              {
+                "summary": "Guillermo Rauch is the founder and CEO of Vercel and the creator of coding frameworks including NextJS and SocketIO.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 10,
+                "source": "gocontentflow.com",
+                "url": "https://gocontentflow.com/speakers/guillermo-rauch-2"
+              },
+              {
+                "summary": "Guillermo Rauch is the CEO of Vercel and Next.js, leading these platforms that have transformed web application development.",
+                "category": "current_role",
+                "polarity": "positive",
+                "relevance": 10,
+                "source": "kitrum.com",
+                "url": "https://kitrum.com/blog/the-inspirational-story-of-guillermo-rauch"
+              },
+              {
+                "summary": "Guillermo Rauch is Chief Executive Officer at Vercel and Founder of Rauch Capital.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "premieralts.com",
+                "url": "https://www.premieralts.com/investors/guillermo-rauch/portfolio"
+              },
+              {
+                "summary": "Guillermo Rauch is the CEO of Vercel.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "instagram.com",
+                "url": "https://www.instagram.com/p/C7E-1QEvE0g"
+              },
+              {
+                "summary": "In November 2015, Guillermo founded ZEIT, later rebranded as Vercel, focusing on cloud deployments and developer experience.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "werisebyliftingothers.in",
+                "url": "https://www.werisebyliftingothers.in/2024/05/evolution-of-guillermo-rauch-journey-in.html"
+              },
+              {
+                "summary": "Guillermo Rauch (@rauchg) tweeted about achieving some internal success with Bun on Vercel.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 6,
+                "source": "x.com",
+                "url": "https://x.com/rauchg/status/1976708207528886333"
+              }
+            ],
+            "achievements": [],
+            "adverse": [
+              {
+                "summary": "Vercel CEO Guillermo Rauch commented that the backlash to his social media post about meeting Israeli Prime Minister Benjamin Netanyahu hasn't cost him anything.",
+                "category": "controversy",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "bloomberg.com",
+                "url": "https://www.bloomberg.com/news/videos/2025-10-03/vercel-ceo-addresses-netanyahu-post-controversy-video"
+              }
+            ],
+            "press": []
+          }
         }
       ],
       "errors": []
@@ -460,6 +541,309 @@
       },
       "passes_screen": true,
       "rejection_reasons": []
+    },
+    "enrichment": {
+      "company_name": "Vektor",
+      "industry": "AI Infrastructure",
+      "one_liner": "Vector database that runs inside the customer's own VPC.",
+      "company_reputation": {
+        "articles_reviewed": 34,
+        "by_category": {
+          "funding": 1,
+          "recognition": 1
+        },
+        "findings": [
+          {
+            "summary": "Vektor raised a \u20ac3.4M pre-seed led by Cherry Ventures.",
+            "category": "funding",
+            "polarity": "positive",
+            "relevance": 9,
+            "source": "sifted.eu",
+            "url": "https://sifted.eu/articles/vektor-seed"
+          },
+          {
+            "summary": "Featured in a roundup of European AI-infrastructure startups to watch.",
+            "category": "recognition",
+            "polarity": "positive",
+            "relevance": 7,
+            "source": "tech.eu",
+            "url": "https://tech.eu/"
+          }
+        ]
+      },
+      "founders": [
+        {
+          "name": "Ada Whitfield",
+          "handles": {
+            "twitter": "adawhitfield",
+            "linkedin": "adawhitfield"
+          },
+          "github": null,
+          "socials": null,
+          "reputation": {
+            "articles_reviewed": 61,
+            "by_category": {
+              "award": 1,
+              "current_role": 1,
+              "education": 2,
+              "press": 1,
+              "prior_company": 1,
+              "recognition": 1,
+              "research": 1
+            },
+            "findings": [
+              {
+                "summary": "MSc Computer Science, ETH Z\u00fcrich (2014\u20132016); thesis on approximate nearest-neighbour search.",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 10,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/adawhitfield"
+              },
+              {
+                "summary": "BSc Mathematics, University of Edinburgh \u2014 first-class honours.",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/adawhitfield"
+              },
+              {
+                "summary": "Staff engineer on the search infrastructure team at Elastic (2016\u20132020).",
+                "category": "prior_company",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/adawhitfield"
+              },
+              {
+                "summary": "Co-founder and CEO of Vektor, a vector database that runs inside the customer's own VPC.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 10,
+                "source": "sifted.eu",
+                "url": "https://sifted.eu/articles/vektor-seed"
+              },
+              {
+                "summary": "Silver medallist, International Mathematical Olympiad (2010), representing the UK.",
+                "category": "award",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "imo-official.org",
+                "url": "https://www.imo-official.org/participant_r.aspx"
+              },
+              {
+                "summary": "Co-author of a VLDB paper on billion-scale vector indexing under memory constraints.",
+                "category": "research",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "vldb.org",
+                "url": "https://www.vldb.org/pvldb/"
+              },
+              {
+                "summary": "Named to Forbes 30 Under 30 Europe \u2014 Technology (2021).",
+                "category": "recognition",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "forbes.com",
+                "url": "https://www.forbes.com/30-under-30-europe/"
+              },
+              {
+                "summary": "Profiled by Sifted on why enterprises want self-hosted vector search.",
+                "category": "press",
+                "polarity": "neutral",
+                "relevance": 7,
+                "source": "sifted.eu",
+                "url": "https://sifted.eu/articles/vektor-profile"
+              }
+            ]
+          },
+          "profile": {
+            "background": [
+              {
+                "summary": "MSc Computer Science, ETH Z\u00fcrich (2014\u20132016); thesis on approximate nearest-neighbour search.",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 10,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/adawhitfield"
+              },
+              {
+                "summary": "BSc Mathematics, University of Edinburgh \u2014 first-class honours.",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/adawhitfield"
+              },
+              {
+                "summary": "Staff engineer on the search infrastructure team at Elastic (2016\u20132020).",
+                "category": "prior_company",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/adawhitfield"
+              },
+              {
+                "summary": "Co-founder and CEO of Vektor, a vector database that runs inside the customer's own VPC.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 10,
+                "source": "sifted.eu",
+                "url": "https://sifted.eu/articles/vektor-seed"
+              }
+            ],
+            "achievements": [
+              {
+                "summary": "Silver medallist, International Mathematical Olympiad (2010), representing the UK.",
+                "category": "award",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "imo-official.org",
+                "url": "https://www.imo-official.org/participant_r.aspx"
+              },
+              {
+                "summary": "Co-author of a VLDB paper on billion-scale vector indexing under memory constraints.",
+                "category": "research",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "vldb.org",
+                "url": "https://www.vldb.org/pvldb/"
+              },
+              {
+                "summary": "Named to Forbes 30 Under 30 Europe \u2014 Technology (2021).",
+                "category": "recognition",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "forbes.com",
+                "url": "https://www.forbes.com/30-under-30-europe/"
+              }
+            ],
+            "adverse": [],
+            "press": [
+              {
+                "summary": "Profiled by Sifted on why enterprises want self-hosted vector search.",
+                "category": "press",
+                "polarity": "neutral",
+                "relevance": 7,
+                "source": "sifted.eu",
+                "url": "https://sifted.eu/articles/vektor-profile"
+              }
+            ]
+          },
+          "errors": []
+        },
+        {
+          "name": "Tomas Reiner",
+          "handles": {
+            "linkedin": "tomasreiner"
+          },
+          "github": null,
+          "socials": null,
+          "reputation": {
+            "articles_reviewed": 38,
+            "by_category": {
+              "award": 1,
+              "current_role": 1,
+              "education": 1,
+              "prior_company": 1,
+              "research": 1
+            },
+            "findings": [
+              {
+                "summary": "PhD in Distributed Systems, TU M\u00fcnchen (2013\u20132017).",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 10,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/tomasreiner"
+              },
+              {
+                "summary": "Principal engineer on the SAP HANA in-memory storage team (2017\u20132021).",
+                "category": "prior_company",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/tomasreiner"
+              },
+              {
+                "summary": "Co-founder and CTO of Vektor.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "sifted.eu",
+                "url": "https://sifted.eu/articles/vektor-seed"
+              },
+              {
+                "summary": "ICPC World Finalist (2012) with the TU M\u00fcnchen team.",
+                "category": "award",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "icpc.global",
+                "url": "https://icpc.global/"
+              },
+              {
+                "summary": "Named inventor on two patents covering columnar compression for in-memory stores.",
+                "category": "research",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "patents.google.com",
+                "url": "https://patents.google.com/"
+              }
+            ]
+          },
+          "profile": {
+            "background": [
+              {
+                "summary": "PhD in Distributed Systems, TU M\u00fcnchen (2013\u20132017).",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 10,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/tomasreiner"
+              },
+              {
+                "summary": "Principal engineer on the SAP HANA in-memory storage team (2017\u20132021).",
+                "category": "prior_company",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/tomasreiner"
+              },
+              {
+                "summary": "Co-founder and CTO of Vektor.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "sifted.eu",
+                "url": "https://sifted.eu/articles/vektor-seed"
+              }
+            ],
+            "achievements": [
+              {
+                "summary": "ICPC World Finalist (2012) with the TU M\u00fcnchen team.",
+                "category": "award",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "icpc.global",
+                "url": "https://icpc.global/"
+              },
+              {
+                "summary": "Named inventor on two patents covering columnar compression for in-memory stores.",
+                "category": "research",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "patents.google.com",
+                "url": "https://patents.google.com/"
+              }
+            ],
+            "adverse": [],
+            "press": []
+          },
+          "errors": []
+        }
+      ],
+      "errors": []
     }
   },
   {
@@ -590,6 +974,233 @@
       },
       "passes_screen": true,
       "rejection_reasons": []
+    },
+    "enrichment": {
+      "company_name": "Kontoform",
+      "industry": "Fintech",
+      "one_liner": "Reconciliation engine for German Mittelstand finance teams.",
+      "company_reputation": {
+        "articles_reviewed": 22,
+        "by_category": {
+          "funding": 1
+        },
+        "findings": [
+          {
+            "summary": "Kontoform closed a \u20ac2.1M seed round led by Earlybird.",
+            "category": "funding",
+            "polarity": "positive",
+            "relevance": 9,
+            "source": "handelsblatt.com",
+            "url": "https://www.handelsblatt.com/"
+          }
+        ]
+      },
+      "founders": [
+        {
+          "name": "Lena Hofmann",
+          "handles": {
+            "linkedin": "lenahofmann"
+          },
+          "github": null,
+          "socials": null,
+          "reputation": {
+            "articles_reviewed": 29,
+            "by_category": {
+              "current_role": 1,
+              "education": 1,
+              "prior_company": 1,
+              "recognition": 1
+            },
+            "findings": [
+              {
+                "summary": "MSc Finance, WHU \u2013 Otto Beisheim School of Management.",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/lenahofmann"
+              },
+              {
+                "summary": "Product lead for business banking at N26 (2018\u20132022).",
+                "category": "prior_company",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/lenahofmann"
+              },
+              {
+                "summary": "Co-founder and CEO of Kontoform.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "handelsblatt.com",
+                "url": "https://www.handelsblatt.com/"
+              },
+              {
+                "summary": "Listed in Handelsblatt's 40-under-40 in finance (2023).",
+                "category": "recognition",
+                "polarity": "positive",
+                "relevance": 7,
+                "source": "handelsblatt.com",
+                "url": "https://www.handelsblatt.com/"
+              }
+            ]
+          },
+          "profile": {
+            "background": [
+              {
+                "summary": "MSc Finance, WHU \u2013 Otto Beisheim School of Management.",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/lenahofmann"
+              },
+              {
+                "summary": "Product lead for business banking at N26 (2018\u20132022).",
+                "category": "prior_company",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/lenahofmann"
+              },
+              {
+                "summary": "Co-founder and CEO of Kontoform.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "handelsblatt.com",
+                "url": "https://www.handelsblatt.com/"
+              }
+            ],
+            "achievements": [
+              {
+                "summary": "Listed in Handelsblatt's 40-under-40 in finance (2023).",
+                "category": "recognition",
+                "polarity": "positive",
+                "relevance": 7,
+                "source": "handelsblatt.com",
+                "url": "https://www.handelsblatt.com/"
+              }
+            ],
+            "adverse": [],
+            "press": []
+          },
+          "errors": []
+        },
+        {
+          "name": "Piotr Zawadzki",
+          "handles": {
+            "github": "pzawadzki",
+            "linkedin": "piotrzawadzki"
+          },
+          "github": null,
+          "socials": null,
+          "reputation": {
+            "articles_reviewed": 33,
+            "by_category": {
+              "award": 1,
+              "current_role": 1,
+              "education": 1,
+              "prior_company": 1,
+              "rumor": 1
+            },
+            "findings": [
+              {
+                "summary": "MSc Computer Science, University of Warsaw.",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/piotrzawadzki"
+              },
+              {
+                "summary": "Google Code Jam finalist (2015).",
+                "category": "award",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "codingcompetitions.withgoogle.com",
+                "url": "https://codingcompetitions.withgoogle.com/codejam"
+              },
+              {
+                "summary": "Backend engineer on the payments ledger team at Revolut (2019\u20132022).",
+                "category": "prior_company",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/piotrzawadzki"
+              },
+              {
+                "summary": "Co-founder and CTO of Kontoform.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "kontoform.de",
+                "url": "https://kontoform.de/about"
+              },
+              {
+                "summary": "A Reddit thread questions whether the reconciliation engine handles multi-currency edge cases; unverified and disputed by other commenters.",
+                "category": "rumor",
+                "polarity": "negative",
+                "relevance": 4,
+                "source": "reddit.com",
+                "url": "https://www.reddit.com/r/fintech/"
+              }
+            ]
+          },
+          "profile": {
+            "background": [
+              {
+                "summary": "MSc Computer Science, University of Warsaw.",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/piotrzawadzki"
+              },
+              {
+                "summary": "Backend engineer on the payments ledger team at Revolut (2019\u20132022).",
+                "category": "prior_company",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/piotrzawadzki"
+              },
+              {
+                "summary": "Co-founder and CTO of Kontoform.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "kontoform.de",
+                "url": "https://kontoform.de/about"
+              }
+            ],
+            "achievements": [
+              {
+                "summary": "Google Code Jam finalist (2015).",
+                "category": "award",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "codingcompetitions.withgoogle.com",
+                "url": "https://codingcompetitions.withgoogle.com/codejam"
+              }
+            ],
+            "adverse": [
+              {
+                "summary": "A Reddit thread questions whether the reconciliation engine handles multi-currency edge cases; unverified and disputed by other commenters.",
+                "category": "rumor",
+                "polarity": "negative",
+                "relevance": 4,
+                "source": "reddit.com",
+                "url": "https://www.reddit.com/r/fintech/"
+              }
+            ],
+            "press": []
+          },
+          "errors": []
+        }
+      ],
+      "errors": []
     }
   },
   {

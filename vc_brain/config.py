@@ -62,7 +62,11 @@ class Config:
     tavily_api_key: str = ""
     reputation_provider: str = "tavily"  # tavily | mock
     reputation_results_per_query: int = 10  # results per angle (Tavily caps at 20)
-    reputation_max_queries: int = 15  # query angles per subject (full sweep)
+    reputation_max_queries: int = 15  # query angles per company (full sweep)
+    # People get a deeper sweep than companies: at pre-seed the founder is the
+    # investment, and their background (education, prior roles, prizes) is the
+    # signal worth paying for. Costs proportionally more Tavily credits.
+    reputation_person_max_queries: int = 25  # query angles per person
     # Full-page extraction (Tavily /extract): recovers claims that a thin
     # search snippet cannot ground. Selection is capped because each page
     # costs credits and latency.
@@ -115,6 +119,7 @@ class Config:
             reputation_provider=os.getenv("REPUTATION_PROVIDER", "tavily"),
             reputation_results_per_query=int(os.getenv("REPUTATION_RESULTS_PER_QUERY", "6")),
             reputation_max_queries=int(os.getenv("REPUTATION_MAX_QUERIES", "14")),
+            reputation_person_max_queries=int(os.getenv("REPUTATION_PERSON_MAX_QUERIES", "25")),
             reputation_extract=os.getenv("REPUTATION_EXTRACT", "true").lower()
             not in ("0", "false", "no"),
             reputation_extract_limit=int(os.getenv("REPUTATION_EXTRACT_LIMIT", "12")),
