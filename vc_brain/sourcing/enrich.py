@@ -257,27 +257,72 @@ def _trim_findings(rep: dict | None, n: int) -> dict | None:
 _PROFILE_BUCKETS: dict[str, tuple[str, ...]] = {
     "background": ("education", "prior_company", "current_role"),
     "achievements": ("award", "recognition", "research"),
-    "adverse": ("fraud", "legal", "controversy", "failure", "rumor"),
+    "adverse": ("fraud", "legal", "controversy", "failure"),
 }
 
+# `rumor` is deliberately NOT an adverse category. The extraction prompt labels
+# anything sourced from Reddit/LinkedIn/X as `rumor` regardless of what it says,
+# so a founder announcing their own funding round came back as `rumor` and got
+# red-boxed as an adverse finding. Adverse membership is decided by the
+# inherently-adverse categories above plus explicit negative polarity, so an
+# unflattering rumour still lands there while a benign one does not.
+_NEGATIVE = "negative"
 
-def founder_profile(rep: dict | None) -> dict[str, list[dict]]:
+
+def _interleave(findings: list[dict], limit: int) -> list[dict]:
+    """Take `limit` findings, round-robin across categories.
+
+    A wide sweep returns the same fact many times over -- one founder came back
+    with 23 near-identical "is co-founder and CEO" findings. Taken in order
+    those would fill the whole quota and bury the single education finding,
+    which is the one an investor actually wants. Round-robin guarantees every
+    category present gets a slot before any category gets a second one.
+    """
+    by_category: dict[str, list[dict]] = {}
+    for finding in findings:
+        by_category.setdefault((finding.get("category") or "").strip().lower(), []).append(finding)
+
+    out: list[dict] = []
+    while len(out) < limit:
+        took = False
+        for bucket in list(by_category):
+            if not by_category[bucket]:
+                continue
+            out.append(by_category[bucket].pop(0))
+            took = True
+            if len(out) >= limit:
+                break
+        if not took:  # every category exhausted
+            break
+    return out
+
+
+def founder_profile(rep: dict | None, limit: int = 8) -> dict[str, list[dict]]:
     """Bucket a founder's findings by category so the frontend stays dumb.
 
     Anything not explicitly mapped (press, funding, other, or a category added
     later) falls through to `press`, so a new category can never be silently
-    dropped from the UI.
+    dropped from the UI. Each bucket is capped independently -- a flood of
+    press coverage must never squeeze out the education findings.
     """
     profile: dict[str, list[dict]] = {"background": [], "achievements": [], "adverse": [], "press": []}
     for finding in (rep or {}).get("findings") or []:
         category = (finding.get("category") or "").strip().lower()
-        for bucket, categories in _PROFILE_BUCKETS.items():
-            if category in categories:
+        polarity = (finding.get("polarity") or "").strip().lower()
+
+        # Anything the model actually judged negative belongs in adverse, whatever
+        # its category -- and nothing else does.
+        if category in _PROFILE_BUCKETS["adverse"] or polarity == _NEGATIVE:
+            profile["adverse"].append(finding)
+            continue
+
+        for bucket in ("background", "achievements"):
+            if category in _PROFILE_BUCKETS[bucket]:
                 profile[bucket].append(finding)
                 break
         else:
             profile["press"].append(finding)
-    return profile
+    return {bucket: _interleave(items, limit) for bucket, items in profile.items()}
 
 
 def display_shape(d: dict[str, Any]) -> dict[str, Any]:
@@ -322,10 +367,12 @@ def display_shape(d: dict[str, Any]) -> dict[str, Any]:
                 },
                 "sources": so.get("sources", []),
             } if so else None,
-            # Founders get a far deeper cut than the company: they are the
-            # investment at this stage, and the sweep now asks ~25 angles.
-            "reputation": (founder_rep := _trim_findings(f.get("reputation"), 20)),
-            "profile": founder_profile(founder_rep),
+            # Bucket from the FULL sweep, not a pre-truncated slice. Findings
+            # are sorted alphabetically by category, so truncating first let one
+            # early category (current_role) eat the whole quota and drop
+            # education/recognition entirely.
+            "reputation": _trim_findings(f.get("reputation"), 20),
+            "profile": founder_profile(_trim_findings(f.get("reputation"), 500), limit=8),
             "errors": f.get("errors", []),
         })
     return {

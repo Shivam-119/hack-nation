@@ -231,3 +231,52 @@ def test_founder_profile_handles_missing_reputation():
         profile = E.founder_profile(empty)
         assert set(profile) == {"background", "achievements", "adverse", "press"}
         assert all(v == [] for v in profile.values())
+
+
+def test_a_flooded_category_cannot_starve_education():
+    """Regression: a real Front run returned 23 near-identical `current_role`
+    findings and 5 `education` ones. Findings sort alphabetically by category,
+    so truncating before bucketing dropped every education finding -- exactly
+    the thing an investor wants most."""
+    findings = [_finding("current_role", f"Is co-founder and CEO (retelling {i})") for i in range(23)]
+    findings += [_finding("education", f"Studied at University {i}") for i in range(5)]
+    findings += [_finding("prior_company", "Was staff engineer at Elastic")]
+    findings.sort(key=lambda f: f["category"])  # how sort_findings orders them
+
+    profile = E.founder_profile({"findings": findings}, limit=8)
+    categories = {f["category"] for f in profile["background"]}
+
+    assert "education" in categories, "education starved by current_role flood"
+    assert "prior_company" in categories
+    assert len(profile["background"]) == 8
+
+
+def test_interleave_is_round_robin_and_respects_limit():
+    findings = ([_finding("award", f"a{i}") for i in range(5)]
+                + [_finding("research", f"r{i}") for i in range(2)])
+    out = E._interleave(findings, 4)
+    assert len(out) == 4
+    # Both categories represented rather than 4x award.
+    assert {f["category"] for f in out} == {"award", "research"}
+    # Asking for more than exists returns everything, without looping forever.
+    assert len(E._interleave(findings, 99)) == 7
+
+
+def test_benign_social_chatter_is_not_flagged_as_adverse():
+    """Regression: the extractor labels anything from Reddit/LinkedIn/X as
+    `rumor` regardless of content, so a founder announcing her own funding
+    round was red-boxed as an adverse finding. Only genuinely negative items
+    belong there."""
+    benign = dict(_finding("rumor", "Announced Front's Series C in a LinkedIn post"), polarity="neutral")
+    damaging = dict(_finding("rumor", "Ex-employees allege a hostile culture"), polarity="negative")
+
+    profile = E.founder_profile({"findings": [benign, damaging]})
+
+    assert [f["summary"] for f in profile["adverse"]] == ["Ex-employees allege a hostile culture"]
+    assert [f["summary"] for f in profile["press"]] == ["Announced Front's Series C in a LinkedIn post"]
+
+
+def test_negative_polarity_reaches_adverse_whatever_the_category():
+    odd = dict(_finding("press", "A hit piece questioning his credentials"), polarity="negative")
+    profile = E.founder_profile({"findings": [odd]})
+    assert profile["adverse"] and not profile["press"]

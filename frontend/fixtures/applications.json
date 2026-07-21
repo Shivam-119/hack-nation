@@ -669,14 +669,6 @@
                 "url": "https://www.linkedin.com/in/adawhitfield"
               },
               {
-                "summary": "BSc Mathematics, University of Edinburgh \u2014 first-class honours.",
-                "category": "education",
-                "polarity": "positive",
-                "relevance": 8,
-                "source": "linkedin.com",
-                "url": "https://www.linkedin.com/in/adawhitfield"
-              },
-              {
                 "summary": "Staff engineer on the search infrastructure team at Elastic (2016\u20132020).",
                 "category": "prior_company",
                 "polarity": "positive",
@@ -691,6 +683,14 @@
                 "relevance": 10,
                 "source": "sifted.eu",
                 "url": "https://sifted.eu/articles/vektor-seed"
+              },
+              {
+                "summary": "BSc Mathematics, University of Edinburgh \u2014 first-class honours.",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/adawhitfield"
               }
             ],
             "achievements": [
@@ -1324,6 +1324,188 @@
       },
       "passes_screen": true,
       "rejection_reasons": []
+    },
+    "enrichment": {
+      "company_name": "Forgekit",
+      "industry": "Developer SaaS",
+      "one_liner": "Preview environments for monorepos, one per pull request.",
+      "company_reputation": {
+        "articles_reviewed": 27,
+        "by_category": {
+          "funding": 1,
+          "launch": 1
+        },
+        "findings": [
+          {
+            "summary": "Forgekit launched on Product Hunt and finished 4th product of the day.",
+            "category": "launch",
+            "polarity": "positive",
+            "relevance": 8,
+            "source": "producthunt.com",
+            "url": "https://www.producthunt.com/"
+          },
+          {
+            "summary": "Raised a $1.8M seed led by Point Nine.",
+            "category": "funding",
+            "polarity": "positive",
+            "relevance": 9,
+            "source": "tech.eu",
+            "url": "https://tech.eu/"
+          }
+        ]
+      },
+      "founders": [
+        {
+          "name": "Rhys Calder",
+          "handles": {
+            "github": "rhyscalder",
+            "twitter": "rhyscalder",
+            "linkedin": "rhyscalder"
+          },
+          "github": {
+            "username": "rhyscalder",
+            "score": 81,
+            "grade": "A-",
+            "is_builder": true,
+            "dimensions": {
+              "technical_ability": 86,
+              "execution_ability": 80,
+              "founder_product_ability": 74,
+              "technical_background": 83,
+              "reputation": 72,
+              "growth_signals": 68
+            },
+            "signals": [
+              "4.2k stars on a self-maintained CI tool",
+              "Consistent 4-year commit history",
+              "Reviews external PRs within 48h",
+              "Ships tagged releases monthly"
+            ],
+            "red_flags": []
+          },
+          "socials": null,
+          "reputation": {
+            "articles_reviewed": 44,
+            "by_category": {
+              "current_role": 1,
+              "education": 1,
+              "press": 1,
+              "prior_company": 1,
+              "recognition": 1,
+              "research": 1
+            },
+            "findings": [
+              {
+                "summary": "BSc Computer Science, University of Bristol (2012\u20132015).",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/rhyscalder"
+              },
+              {
+                "summary": "Infrastructure engineer at Monzo (2017\u20132021); rebuilt the CI/CD pipeline for a 300-service estate.",
+                "category": "prior_company",
+                "polarity": "positive",
+                "relevance": 10,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/rhyscalder"
+              },
+              {
+                "summary": "Solo founder and CEO of Forgekit.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "forgekit.dev",
+                "url": "https://forgekit.dev/about"
+              },
+              {
+                "summary": "Maintainer of an open-source ephemeral-environment CLI with ~4.2k GitHub stars.",
+                "category": "research",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "github.com",
+                "url": "https://github.com/rhyscalder"
+              },
+              {
+                "summary": "Spoke at KubeCon EU 2022 on preview environments for monorepos.",
+                "category": "recognition",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "cncf.io",
+                "url": "https://www.cncf.io/"
+              },
+              {
+                "summary": "Interviewed on The Changelog about developer-environment tooling.",
+                "category": "press",
+                "polarity": "neutral",
+                "relevance": 7,
+                "source": "changelog.com",
+                "url": "https://changelog.com/"
+              }
+            ]
+          },
+          "profile": {
+            "background": [
+              {
+                "summary": "BSc Computer Science, University of Bristol (2012\u20132015).",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/rhyscalder"
+              },
+              {
+                "summary": "Infrastructure engineer at Monzo (2017\u20132021); rebuilt the CI/CD pipeline for a 300-service estate.",
+                "category": "prior_company",
+                "polarity": "positive",
+                "relevance": 10,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/rhyscalder"
+              },
+              {
+                "summary": "Solo founder and CEO of Forgekit.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "forgekit.dev",
+                "url": "https://forgekit.dev/about"
+              }
+            ],
+            "achievements": [
+              {
+                "summary": "Maintainer of an open-source ephemeral-environment CLI with ~4.2k GitHub stars.",
+                "category": "research",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "github.com",
+                "url": "https://github.com/rhyscalder"
+              },
+              {
+                "summary": "Spoke at KubeCon EU 2022 on preview environments for monorepos.",
+                "category": "recognition",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "cncf.io",
+                "url": "https://www.cncf.io/"
+              }
+            ],
+            "adverse": [],
+            "press": [
+              {
+                "summary": "Interviewed on The Changelog about developer-environment tooling.",
+                "category": "press",
+                "polarity": "neutral",
+                "relevance": 7,
+                "source": "changelog.com",
+                "url": "https://changelog.com/"
+              }
+            ]
+          },
+          "errors": []
+        }
+      ],
+      "errors": []
     }
   },
   {
@@ -1449,6 +1631,155 @@
       },
       "passes_screen": true,
       "rejection_reasons": []
+    },
+    "enrichment": {
+      "company_name": "Perikles",
+      "industry": "AI",
+      "one_liner": "Contract review for German SME law firms.",
+      "company_reputation": {
+        "articles_reviewed": 19,
+        "by_category": {
+          "funding": 1
+        },
+        "findings": [
+          {
+            "summary": "Perikles raised a \u20ac1.5M seed led by Cavalry Ventures.",
+            "category": "funding",
+            "polarity": "positive",
+            "relevance": 9,
+            "source": "gruenderszene.de",
+            "url": "https://www.gruenderszene.de/"
+          }
+        ]
+      },
+      "founders": [
+        {
+          "name": "Johanna Brand",
+          "handles": {
+            "linkedin": "johannabrand"
+          },
+          "github": null,
+          "socials": null,
+          "reputation": {
+            "articles_reviewed": 31,
+            "by_category": {
+              "award": 1,
+              "current_role": 1,
+              "education": 2,
+              "prior_company": 1,
+              "research": 1
+            },
+            "findings": [
+              {
+                "summary": "Erstes Staatsexamen in Law, LMU Munich (2011\u20132016).",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 10,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/johannabrand"
+              },
+              {
+                "summary": "MSc Computer Science, TU M\u00fcnchen (2018\u20132020) \u2014 a rare dual legal/technical background.",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 10,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/johannabrand"
+              },
+              {
+                "summary": "Associate in corporate law at Freshfields Bruckhaus Deringer (2016\u20132020).",
+                "category": "prior_company",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/johannabrand"
+              },
+              {
+                "summary": "Founder and CEO of Perikles.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "perikles.de",
+                "url": "https://perikles.de/ueber-uns"
+              },
+              {
+                "summary": "Winner of the German National Moot Court competition (2015).",
+                "category": "award",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "dnmc.de",
+                "url": "https://www.dnmc.de/"
+              },
+              {
+                "summary": "Co-authored a paper on clause extraction from German-language contracts.",
+                "category": "research",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "aclanthology.org",
+                "url": "https://aclanthology.org/"
+              }
+            ]
+          },
+          "profile": {
+            "background": [
+              {
+                "summary": "Erstes Staatsexamen in Law, LMU Munich (2011\u20132016).",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 10,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/johannabrand"
+              },
+              {
+                "summary": "Associate in corporate law at Freshfields Bruckhaus Deringer (2016\u20132020).",
+                "category": "prior_company",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/johannabrand"
+              },
+              {
+                "summary": "Founder and CEO of Perikles.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "perikles.de",
+                "url": "https://perikles.de/ueber-uns"
+              },
+              {
+                "summary": "MSc Computer Science, TU M\u00fcnchen (2018\u20132020) \u2014 a rare dual legal/technical background.",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 10,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/johannabrand"
+              }
+            ],
+            "achievements": [
+              {
+                "summary": "Winner of the German National Moot Court competition (2015).",
+                "category": "award",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "dnmc.de",
+                "url": "https://www.dnmc.de/"
+              },
+              {
+                "summary": "Co-authored a paper on clause extraction from German-language contracts.",
+                "category": "research",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "aclanthology.org",
+                "url": "https://aclanthology.org/"
+              }
+            ],
+            "adverse": [],
+            "press": []
+          },
+          "errors": []
+        }
+      ],
+      "errors": []
     }
   },
   {
@@ -1572,6 +1903,173 @@
       },
       "passes_screen": true,
       "rejection_reasons": []
+    },
+    "enrichment": {
+      "company_name": "Halden",
+      "industry": "Health",
+      "one_liner": "Scheduling for community mental-health clinics.",
+      "company_reputation": {
+        "articles_reviewed": 16,
+        "by_category": {
+          "recognition": 1
+        },
+        "findings": [
+          {
+            "summary": "Named in a roundup of European digital-health startups to watch.",
+            "category": "recognition",
+            "polarity": "positive",
+            "relevance": 7,
+            "source": "sifted.eu",
+            "url": "https://sifted.eu/"
+          }
+        ]
+      },
+      "founders": [
+        {
+          "name": "Ingrid S\u00f8lvberg",
+          "handles": {
+            "linkedin": "ingridsolvberg"
+          },
+          "github": null,
+          "socials": null,
+          "reputation": {
+            "articles_reviewed": 35,
+            "by_category": {
+              "award": 1,
+              "current_role": 1,
+              "education": 2,
+              "prior_company": 1,
+              "research": 1,
+              "rumor": 1
+            },
+            "findings": [
+              {
+                "summary": "MD, University of Oslo (2008\u20132014).",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 10,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/ingridsolvberg"
+              },
+              {
+                "summary": "MSc Health Informatics, Karolinska Institutet (2016\u20132018).",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/ingridsolvberg"
+              },
+              {
+                "summary": "Clinical lead at a community mental-health trust in Bergen (2015\u20132021).",
+                "category": "prior_company",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/ingridsolvberg"
+              },
+              {
+                "summary": "Co-founder and CEO of Halden.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "halden.health",
+                "url": "https://halden.health/about"
+              },
+              {
+                "summary": "Nordic Health Innovation Award (2020) for clinic scheduling research.",
+                "category": "award",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "nordicinnovation.org",
+                "url": "https://www.nordicinnovation.org/"
+              },
+              {
+                "summary": "Published on no-show reduction in community mental-health clinics.",
+                "category": "research",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "pubmed.ncbi.nlm.nih.gov",
+                "url": "https://pubmed.ncbi.nlm.nih.gov/"
+              },
+              {
+                "summary": "A clinician forum thread questions whether the scheduling model fits statutory care pathways; unverified.",
+                "category": "rumor",
+                "polarity": "negative",
+                "relevance": 4,
+                "source": "reddit.com",
+                "url": "https://www.reddit.com/r/medicine/"
+              }
+            ]
+          },
+          "profile": {
+            "background": [
+              {
+                "summary": "MD, University of Oslo (2008\u20132014).",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 10,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/ingridsolvberg"
+              },
+              {
+                "summary": "Clinical lead at a community mental-health trust in Bergen (2015\u20132021).",
+                "category": "prior_company",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/ingridsolvberg"
+              },
+              {
+                "summary": "Co-founder and CEO of Halden.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "halden.health",
+                "url": "https://halden.health/about"
+              },
+              {
+                "summary": "MSc Health Informatics, Karolinska Institutet (2016\u20132018).",
+                "category": "education",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/ingridsolvberg"
+              }
+            ],
+            "achievements": [
+              {
+                "summary": "Nordic Health Innovation Award (2020) for clinic scheduling research.",
+                "category": "award",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "nordicinnovation.org",
+                "url": "https://www.nordicinnovation.org/"
+              },
+              {
+                "summary": "Published on no-show reduction in community mental-health clinics.",
+                "category": "research",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "pubmed.ncbi.nlm.nih.gov",
+                "url": "https://pubmed.ncbi.nlm.nih.gov/"
+              }
+            ],
+            "adverse": [
+              {
+                "summary": "A clinician forum thread questions whether the scheduling model fits statutory care pathways; unverified.",
+                "category": "rumor",
+                "polarity": "negative",
+                "relevance": 4,
+                "source": "reddit.com",
+                "url": "https://www.reddit.com/r/medicine/"
+              }
+            ],
+            "press": []
+          },
+          "errors": []
+        }
+      ],
+      "errors": []
     }
   }
 ]
