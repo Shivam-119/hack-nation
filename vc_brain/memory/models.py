@@ -144,6 +144,9 @@ class Application(BaseModel):
     evaluation_started_at: datetime | None = None
     evaluation_completed_at: datetime | None = None
     evaluation_artifacts: dict[str, Any] = Field(default_factory=dict)
+    # Which pipeline stage is running, so a multi-minute evaluation can show its
+    # progress instead of a silent "in progress". Owned by evaluation.stages.
+    evaluation_progress: dict[str, Any] = Field(default_factory=dict)
     # Inbound form fields are kept with the application so the inbox can render
     # the original context without reverse-engineering it from data points.
     one_liner: str = ""

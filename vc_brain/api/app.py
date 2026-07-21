@@ -20,6 +20,8 @@ from vc_brain.intelligence.thesis_engine import FundThesis, ThesisEngine
 from vc_brain.memory.ingestion import IngestionPipeline
 from vc_brain.memory.models import DataPoint, Founder, SourceType
 from vc_brain.memory.store import MemoryStore
+from vc_brain.api import keepalive
+from vc_brain.evaluation import stages
 from vc_brain.evaluation.service import run_evaluation
 
 # ---------------------------------------------------------------------------
@@ -169,7 +171,16 @@ def _application_payload(application: Any) -> dict[str, Any]:
         "evaluation_failure_reason": application.evaluation_failure_reason,
         "evaluation_started_at": application.evaluation_started_at.isoformat() if application.evaluation_started_at else None,
         "evaluation_completed_at": application.evaluation_completed_at.isoformat() if application.evaluation_completed_at else None,
+        "evaluation_progress": stages.progress_payload(application),
     }
+
+
+@app.get("/api/health")
+async def health() -> dict[str, Any]:
+    """Cheap liveness probe. Also the keep-alive ping target, so it must stay
+    free of database work -- it can be hit every few minutes for the length of
+    an evaluation."""
+    return {"ok": True}
 
 
 @app.get("/api/thesis")
@@ -247,6 +258,7 @@ async def submit_application(
     application.evaluation_state = "queued"
     store.add_application(application)
     background_tasks.add_task(run_evaluation, store, application.id, thesis)
+    keepalive.ensure_running(store)
 
     return {
         "application_id": application.id,
@@ -287,7 +299,12 @@ async def get_application_evaluation(app_id: str) -> dict[str, Any]:
     if not application:
         raise HTTPException(status_code=404, detail="Application not found")
     evaluation = _evaluation_payload(application.decision)
-    return {"state": application.evaluation_state, "failure_reason": application.evaluation_failure_reason, "result": evaluation}
+    return {
+        "state": application.evaluation_state,
+        "failure_reason": application.evaluation_failure_reason,
+        "progress": stages.progress_payload(application),
+        "result": evaluation,
+    }
 
 
 @app.post("/api/applications/{app_id}/evaluation")
@@ -303,6 +320,7 @@ async def queue_application_evaluation(app_id: str, background_tasks: Background
     application.evaluation_completed_at = None
     store.add_application(application)
     background_tasks.add_task(run_evaluation, store, application.id, thesis)
+    keepalive.ensure_running(store)
     return {"application_id": application.id, "state": application.evaluation_state}
 
 

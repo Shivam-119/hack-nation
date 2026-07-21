@@ -9,6 +9,7 @@ from reasoning_layer.memory_client import MemoryClient, MemoryReadError
 from reasoning_layer.pipeline import run_pipeline
 from reasoning_layer.thesis_config import Range, ThesisConfig
 from vc_brain.config import config
+from vc_brain.evaluation import stages
 from vc_brain.intelligence.thesis_engine import FundThesis
 from vc_brain.memory.store import MemoryStore
 
@@ -73,6 +74,11 @@ class StoreEvaluationMemory(MemoryClient):
         application = self._application()
         application.evaluation_artifacts[axis] = result
         self.store.add_application(application)
+        # The reasoning pipeline scores idea_vs_market last, so its arrival is
+        # our free signal that the axes are done and drafting has begun -- no
+        # instrumentation inside reasoning_layer required.
+        if axis == "idea_vs_market":
+            stages.mark_stage(self.store, application_id, "decision")
 
     def write_decision(self, application_id: str, decision: dict) -> None:
         application = self._application()
@@ -82,6 +88,10 @@ class StoreEvaluationMemory(MemoryClient):
         application.evaluation_completed_at = datetime.utcnow()
         application.status = application.status.__class__("decision")
         self.store.add_application(application)
+        # Reached on the normal path and on the thesis-fit early exit (which
+        # writes a decision without scoring any axis), so the checklist is never
+        # left frozen mid-pipeline on a run that is genuinely finished.
+        stages.mark_complete(self.store, application_id)
 
 
 def reasoning_thesis(thesis: FundThesis) -> ThesisConfig:
@@ -161,23 +171,31 @@ def run_evaluation(store: MemoryStore, application_id: str, thesis: FundThesis |
         from pdf_parser.research_agent import run_research
         from pdf_parser.schema import MarketExtraction
 
+        stages.mark_stage(store, application_id, "deck")
         deck_text = extract_deck_text(application.deck_path)
         if not deck_text.strip():
             raise RuntimeError("The deck did not contain extractable text.")
         application.deck_text = deck_text
         store.add_application(application)
+
+        stages.mark_stage(store, application_id, "extract")
         deck = extract_market(deck_text, config.openai_api_key).model_dump(mode="json")
+
+        stages.mark_stage(store, application_id, "market")
         market = run_research(MarketExtraction(**deck), config.openai_api_key, config.tavily_api_key).model_dump(mode="json")
 
         # Founder + company intelligence: the sourcing scanners (reputation on
         # the company + press, socials, GitHub). Runs on the company name we
         # already extracted and the founders' handles. Fail-soft and in its own
         # block, so a slow or dead scanner never stops the evaluation.
+        stages.mark_stage(store, application_id, "enrichment")
         _run_enrichment(store, application_id, application, deck.get("company_name") or "")
 
+        stages.mark_stage(store, application_id, "axes")
         memory = StoreEvaluationMemory(store, application_id, deck, market)
         run_pipeline(application_id, reasoning_thesis(thesis), config.openai_api_key, memory)
     except Exception as exc:
+        stages.mark_failed(store, application_id)
         application = store.get_application(application_id)
         if application:
             application.evaluation_state = "failed"

@@ -71,6 +71,14 @@ class Config:
     reputation_extract_depth: str = "basic"  # basic | advanced
     reputation_extract_chars: int = 4000  # per-article cap fed to the LLM
 
+    # -- Keep-alive ---------------------------------------------------------
+    # Free hosts sleep after ~15 min with no *inbound* traffic, and a background
+    # evaluation is not inbound traffic -- so a 10-minute run dies if nobody is
+    # watching. While an evaluation is in flight the app pings its own public
+    # URL to stay awake. Empty URL disables it entirely (local dev, tests).
+    keepalive_url: str = ""
+    keepalive_interval_seconds: int = 600
+
     @classmethod
     def from_env(cls) -> Config:
         return cls(
@@ -112,6 +120,10 @@ class Config:
             reputation_extract_limit=int(os.getenv("REPUTATION_EXTRACT_LIMIT", "12")),
             reputation_extract_depth=os.getenv("REPUTATION_EXTRACT_DEPTH", "basic"),
             reputation_extract_chars=int(os.getenv("REPUTATION_EXTRACT_CHARS", "4000")),
+            # Render injects RENDER_EXTERNAL_URL; KEEPALIVE_URL overrides it for
+            # other hosts or local testing.
+            keepalive_url=os.getenv("KEEPALIVE_URL", os.getenv("RENDER_EXTERNAL_URL", "")).rstrip("/"),
+            keepalive_interval_seconds=int(os.getenv("KEEPALIVE_INTERVAL_SECONDS", "600")),
         )
 
 
