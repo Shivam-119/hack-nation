@@ -171,7 +171,7 @@ def seed(store: MemoryStore, apps: list[dict]) -> tuple[int, int, int]:
             applicability=app.get("applicability"),
             screening_result=screening,
             evaluation_artifacts=artifacts,
-            evaluation_state="evaluated" if has_result else "queued",
+            evaluation_state="evaluated" if has_result else "not_requested",
             evaluation_completed_at=app["submitted_at"] if has_result else None,
         ))
 
