@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import BackgroundTasks, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -20,11 +20,20 @@ from vc_brain.intelligence.thesis_engine import FundThesis, ThesisEngine
 from vc_brain.memory.ingestion import IngestionPipeline
 from vc_brain.memory.models import DataPoint, Founder, SourceType
 from vc_brain.memory.store import MemoryStore
+from vc_brain.evaluation.service import run_evaluation
 
 # ---------------------------------------------------------------------------
 # Global state
 # ---------------------------------------------------------------------------
 store = MemoryStore()
+# Seed the demo inbox if the store is empty. Idempotent (keyed on fixture ids),
+# so it is a no-op once the data is present.
+try:
+    from vc_brain.memory.seed import ensure_seeded
+
+    ensure_seeded(store)
+except Exception:  # pragma: no cover -- seeding must never block startup
+    pass
 pipeline = IngestionPipeline(store)
 thesis: FundThesis | None = None
 thesis_engine: ThesisEngine | None = None
@@ -44,7 +53,6 @@ app.add_middleware(
 FRONTEND = Path(__file__).resolve().parents[2] / "frontend"
 DIST = FRONTEND / "dist"
 UPLOADS = Path(__file__).resolve().parents[2] / "uploads"
-DEMO_APPLICATIONS_PATH = FRONTEND / "fixtures" / "applications.json"
 if (DIST / "assets").is_dir():
     app.mount("/assets", StaticFiles(directory=DIST / "assets"), name="assets")
 
@@ -154,8 +162,13 @@ def _application_payload(application: Any) -> dict[str, Any]:
         "founders": [founder.model_dump(mode="json") for founder in founders if founder],
         "applicability": application.applicability or _applicability("", "", "", []), "screening": screening,
         "evaluation": evaluation,
+        "enrichment": application.evaluation_artifacts.get("enrichment"),
+        "enrichment_error": application.evaluation_artifacts.get("enrichment_error"),
         "highlights": [item for item in highlights if item][:4],
-        "evaluation_state": "evaluated" if evaluation else "evaluating",
+        "evaluation_state": application.evaluation_state,
+        "evaluation_failure_reason": application.evaluation_failure_reason,
+        "evaluation_started_at": application.evaluation_started_at.isoformat() if application.evaluation_started_at else None,
+        "evaluation_completed_at": application.evaluation_completed_at.isoformat() if application.evaluation_completed_at else None,
     }
 
 
@@ -180,10 +193,11 @@ async def update_thesis(update: ThesisUpdate) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 @app.post("/api/applications")
 async def submit_application(
+    background_tasks: BackgroundTasks,
     company_name: str = Form(...), deck: UploadFile = File(...), website: str = Form(""),
     one_liner: str = Form(""), sector: str = Form(""), stage: str = Form(""), geography: str = Form(""),
     why_now: str = Form(""), accelerator: str = Form(""), prior_companies: str = Form(""),
-    product_url: str = Form(""), raising: str = Form(""), founders: str = Form("[]"),
+    product_url: str = Form(""), founders: str = Form("[]"),
 ) -> dict[str, Any]:
     """Ingest a real founder submission into the existing entity pipeline."""
     filename = Path(deck.filename or "deck.pdf").name
@@ -207,10 +221,19 @@ async def submit_application(
     application.deck_text = pipeline._extract_deck_text(str(destination)) if destination.suffix.lower() == ".pdf" else ""
     application.deck_filename, application.deck_content_type = filename, deck.content_type or "application/octet-stream"
     application.deck_size_bytes = destination.stat().st_size
-    application.website, application.product_url, application.raising = website, product_url, raising
+    application.website, application.product_url, application.raising = website, product_url, "$100K"
     application.one_liner, application.why_now = one_liner, why_now
     application.accelerator, application.prior_companies = accelerator, prior_companies
     company = store.get_company(application.company_id)
+    # ingest_application creates the primary founder from name + email only.
+    # Carry their handles over too, or socials/GitHub have nothing to run on.
+    if application.founder_ids and primary:
+        lead = store.get_founder(application.founder_ids[0])
+        if lead:
+            lead.github_url = primary.get("github", "") or lead.github_url
+            lead.twitter_url = primary.get("twitter", "") or lead.twitter_url
+            lead.linkedin_url = primary.get("linkedin", "") or lead.linkedin_url
+            store.upsert_founder(lead)
     for founder_data in submitted_founders[1:]:
         founder = store.upsert_founder(Founder(name=founder_data.get("name") or "Unknown", email=founder_data.get("email", ""), github_url=founder_data.get("github", ""), twitter_url=founder_data.get("twitter", ""), linkedin_url=founder_data.get("linkedin", "")))
         application.founder_ids.append(founder.id)
@@ -220,14 +243,14 @@ async def submit_application(
         company.website = website or company.website
         store.upsert_company(company)
 
-    # Submission records the source material. The independent reasoning layer
-    # later writes the authoritative evaluation through the endpoint below.
     application.applicability = _applicability(sector, stage, geography, [str(item) for item in submitted_founders])
+    application.evaluation_state = "queued"
     store.add_application(application)
+    background_tasks.add_task(run_evaluation, store, application.id, thesis)
 
     return {
         "application_id": application.id,
-        "status": application.status.value,
+        "status": application.status.value, "evaluation_state": application.evaluation_state,
         "applicability": application.applicability,
         "screening": None,
     }
@@ -239,13 +262,6 @@ async def list_applications(status: str | None = None) -> list[dict[str, Any]]:
         _application_payload(application)
         for application in sorted(store.list_applications(status), key=lambda item: item.submitted_at, reverse=True)
     ]
-    # Keep the demo useful on a fresh local database: one partial record should
-    # not hide the complete application/evaluation examples used by the Inbox.
-    if len(applications) < 3 and DEMO_APPLICATIONS_PATH.is_file():
-        try:
-            return json.loads(DEMO_APPLICATIONS_PATH.read_text()) + applications
-        except json.JSONDecodeError:
-            pass
     return applications
 
 
@@ -269,25 +285,25 @@ async def get_application_deck(app_id: str):
 async def get_application_evaluation(app_id: str) -> dict[str, Any]:
     application = store.get_application(app_id)
     if not application:
-        return {"error": "Application not found"}
+        raise HTTPException(status_code=404, detail="Application not found")
     evaluation = _evaluation_payload(application.decision)
-    return evaluation or {"error": "Evaluation has not completed"}
+    return {"state": application.evaluation_state, "failure_reason": application.evaluation_failure_reason, "result": evaluation}
 
 
 @app.post("/api/applications/{app_id}/evaluation")
-async def save_application_evaluation(app_id: str, evaluation: dict[str, Any]) -> dict[str, Any]:
-    """Persist a completed reasoning_layer FinalDecision on the existing application."""
+async def queue_application_evaluation(app_id: str, background_tasks: BackgroundTasks) -> dict[str, Any]:
+    """Queue a new evaluation, including retrying a previously failed one."""
     application = store.get_application(app_id)
     if not application:
-        return {"error": "Application not found"}
-    required = {"founder_axis", "market_axis", "idea_vs_market_axis", "thesis_fit", "recommendation"}
-    missing = sorted(required - evaluation.keys())
-    if missing:
-        raise HTTPException(status_code=422, detail=f"Evaluation is missing: {', '.join(missing)}")
-    application.decision = evaluation
-    application.status = application.status.__class__("decision")
+        raise HTTPException(status_code=404, detail="Application not found")
+    if application.evaluation_state in {"queued", "running"}:
+        raise HTTPException(status_code=409, detail="Evaluation is already in progress")
+    application.evaluation_state = "queued"
+    application.evaluation_failure_reason = ""
+    application.evaluation_completed_at = None
     store.add_application(application)
-    return _evaluation_payload(evaluation) or {"error": "Invalid evaluation"}
+    background_tasks.add_task(run_evaluation, store, application.id, thesis)
+    return {"application_id": application.id, "state": application.evaluation_state}
 
 
 @app.post("/api/applications/{app_id}/screen")

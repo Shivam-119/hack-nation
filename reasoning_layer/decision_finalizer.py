@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from schemas import AdversarialOutput, DecisionDraft, FinalDecision, ThesisFitResult
+from .schemas import AdversarialOutput, DecisionDraft, FinalDecision, ThesisFitResult
 
 
 def finalize_decision(

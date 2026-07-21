@@ -8,12 +8,13 @@ from typing import Any
 from openai import OpenAI
 from pydantic import ValidationError
 
-from schema import MarketExtraction, MarketResearch
-from tavily_client import search as tavily_search
+from .schema import MarketExtraction, MarketResearch
+from .tavily_client import search as tavily_search
 
-MODEL = "gpt-4.1"
-MAX_TOKENS = 4096
-TEMPERATURE = 0.2
+# GPT-5 counts hidden reasoning tokens against the completion cap, so keep it
+# generous -- a tight cap risks being spent on reasoning and returning empty JSON.
+MODEL = "gpt-5"
+MAX_TOKENS = 8192
 MAX_SEARCH_TURNS = 10
 
 _PROMPT_PATH = Path(__file__).parent / "prompts" / "research_system_prompt.txt"
@@ -100,7 +101,7 @@ def _parse_and_validate(content: str, agent1_output: MarketExtraction, search_lo
 
 
 def _input_reference_from(agent1_output: MarketExtraction):
-    from schema import InputReference
+    from .schema import InputReference
 
     return InputReference(
         company_name=agent1_output.company_name,
@@ -124,8 +125,7 @@ def run_research(agent1_output: MarketExtraction, openai_api_key: str, tavily_ap
         turn += 1
         response = client.chat.completions.create(
             model=MODEL,
-            max_tokens=MAX_TOKENS,
-            temperature=TEMPERATURE,
+            max_completion_tokens=MAX_TOKENS,
             messages=messages,
             tools=[WEB_SEARCH_TOOL],
             tool_choice="auto",
@@ -152,8 +152,7 @@ def run_research(agent1_output: MarketExtraction, openai_api_key: str, tavily_ap
         )
         response = client.chat.completions.create(
             model=MODEL,
-            max_tokens=MAX_TOKENS,
-            temperature=TEMPERATURE,
+            max_completion_tokens=MAX_TOKENS,
             messages=messages,
             tool_choice="none",
         )
@@ -175,8 +174,7 @@ def run_research(agent1_output: MarketExtraction, openai_api_key: str, tavily_ap
         )
         response = client.chat.completions.create(
             model=MODEL,
-            max_tokens=MAX_TOKENS,
-            temperature=TEMPERATURE,
+            max_completion_tokens=MAX_TOKENS,
             messages=messages,
             tool_choice="none",
         )

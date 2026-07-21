@@ -9,8 +9,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 from pydantic import ValidationError
 
-from research_agent import ResearchFailedError, run_research
-from schema import MarketExtraction
+from .research_agent import ResearchFailedError, run_research
+from .schema import MarketExtraction
 
 THIS_DIR = Path(__file__).parent
 

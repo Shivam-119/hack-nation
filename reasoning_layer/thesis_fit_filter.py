@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from schemas import ThesisFitResult
-from thesis_config import ThesisConfig
+from .schemas import ThesisFitResult
+from .thesis_config import ThesisConfig
 
 _WILDCARD_GEOGRAPHIES = {"global", "remote", "worldwide", "any"}
 
@@ -27,7 +27,12 @@ def check_thesis_fit(thesis: ThesisConfig, deck_extraction: dict) -> ThesisFitRe
         passed = False
 
     geo_fields = deck_extraction.get("geography_focus") or []
-    if _any_overlap(thesis.geography, geo_fields) or _has_wildcard_geo(thesis.geography):
+    if not geo_fields:
+        # Most decks have no geography slide, so extraction returns nothing.
+        # Absence of a stated geography is not evidence of a mismatch — don't
+        # reject on missing information.
+        reasons.append("Geography not stated in the deck — not treated as disqualifying.")
+    elif _any_overlap(thesis.geography, geo_fields) or _has_wildcard_geo(thesis.geography):
         reasons.append(f"Geography match: deck geography {geo_fields} overlaps thesis geography {thesis.geography}.")
     else:
         reasons.append(

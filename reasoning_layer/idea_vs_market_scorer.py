@@ -8,12 +8,12 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from llm_client import LLMCallFailedError, call_structured_json
-from memory_client import MemoryReadError, MockMemoryClient
-from schemas import IdeaVsMarketScore
+from .llm_client import LLMCallFailedError, call_structured_json
+from .memory_client import MemoryReadError, MockMemoryClient
+from .schemas import IdeaVsMarketScore
 
 THIS_DIR = Path(__file__).parent
-MODEL = "gpt-4.1"
+MODEL = "gpt-5"
 _PROMPT_PATH = THIS_DIR / "prompts" / "idea_vs_market_system_prompt.txt"
 
 
@@ -74,8 +74,8 @@ def _main() -> int:
     founder_score = memory.get_founder_score(founder_research.get("founder_id", ""))
 
     try:
-        from founder_scorer import score_founder
-        from market_scorer import score_market
+        from .founder_scorer import score_founder
+        from .market_scorer import score_market
 
         founder_axis = score_founder(founder_research, founder_score, api_key=api_key)
         market_axis = score_market(deck_extraction, market_research, api_key=api_key)

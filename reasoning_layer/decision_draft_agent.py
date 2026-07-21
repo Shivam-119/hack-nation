@@ -3,12 +3,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from llm_client import call_structured_json
-from schemas import DecisionDraft
-from thesis_config import ThesisConfig
+from .llm_client import call_structured_json
+from .schemas import DecisionDraft
+from .thesis_config import ThesisConfig
 
 THIS_DIR = Path(__file__).parent
-MODEL = "gpt-4.1"
+MODEL = "gpt-5"
 _PROMPT_PATH = THIS_DIR / "prompts" / "decision_draft_system_prompt.txt"
 
 

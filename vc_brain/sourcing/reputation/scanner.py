@@ -23,9 +23,9 @@ from vc_brain.memory.models import Company, DataPoint, Founder, SourceType
 from vc_brain.sourcing.reputation.aggregate import (
     index_by_category,
     index_by_polarity,
-    merge_findings,
+    merge_by_clusters,
 )
-from vc_brain.sourcing.reputation.analyzer import extract_findings
+from vc_brain.sourcing.reputation.analyzer import cluster_findings, extract_findings
 from vc_brain.sourcing.reputation.enrichment import (
     apply_extractions,
     select_for_extraction,
@@ -85,7 +85,11 @@ class ReputationScanner:
         queries = build_queries(name, hint, config.reputation_max_queries, entity)
         articles, per_intent = await self._sweep(queries)
         extracted = await self._enrich(articles)
-        findings = merge_findings(await extract_findings(name, articles, hint, entity))
+        raw = await extract_findings(name, articles, hint, entity)
+        # The model decides which findings are the same story; the merge is
+        # mechanical. On failure clustering returns [], so every finding stands.
+        clusters = await cluster_findings(name, raw, entity)
+        findings = merge_by_clusters(raw, clusters)
 
         return ReputationReport(
             name=name,

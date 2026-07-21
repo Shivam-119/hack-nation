@@ -64,6 +64,12 @@ async def _anthropic(prompt: str, system: str) -> str:
         return resp.json()["content"][0]["text"]
 
 
+# GPT-5 counts hidden reasoning tokens against the completion cap, so leave
+# generous headroom -- a tight cap can be spent entirely on reasoning and
+# return empty/truncated JSON.
+_MAX_COMPLETION_TOKENS = 8192
+
+
 async def _openai(prompt: str, system: str) -> str:
     async with httpx.AsyncClient() as client:
         resp = await client.post(
@@ -78,7 +84,7 @@ async def _openai(prompt: str, system: str) -> str:
                     {"role": "system", "content": system or "You are a helpful assistant."},
                     {"role": "user", "content": prompt},
                 ],
-                "max_tokens": 4096,
+                "max_completion_tokens": _MAX_COMPLETION_TOKENS,
             },
             timeout=120,
         )
@@ -102,7 +108,7 @@ async def _openai_json(prompt: str, system: str) -> dict[str, Any]:
                     {"role": "system", "content": (system or "You are a helpful assistant.") + "\nRespond in valid JSON."},
                     {"role": "user", "content": prompt},
                 ],
-                "max_tokens": 4096,
+                "max_completion_tokens": _MAX_COMPLETION_TOKENS,
             },
             timeout=120,
         )

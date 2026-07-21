@@ -9,24 +9,22 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from adversarial_agent import generate_adversarial_view
-from decision_draft_agent import draft_decision
-from decision_finalizer import finalize_decision
-from founder_scorer import score_founder
-from idea_vs_market_scorer import score_idea_vs_market
-from llm_client import LLMCallFailedError
-from market_scorer import score_market
-from memory_client import MemoryReadError, MockMemoryClient
-from thesis_config import load_thesis_config
-from thesis_fit_filter import check_thesis_fit
+from .adversarial_agent import generate_adversarial_view
+from .decision_draft_agent import draft_decision
+from .decision_finalizer import finalize_decision
+from .founder_scorer import score_founder
+from .idea_vs_market_scorer import score_idea_vs_market
+from .llm_client import LLMCallFailedError
+from .market_scorer import score_market
+from .memory_client import MemoryClient, MemoryReadError, MockMemoryClient
+from .thesis_config import ThesisConfig, load_thesis_config
+from .thesis_fit_filter import check_thesis_fit
 
 THIS_DIR = Path(__file__).parent
 DEFAULT_THESIS_PATH = THIS_DIR / "thesis_config.json"
 
 
-def run_pipeline(application_id: str, thesis_path: Path, api_key: str) -> dict:
-    memory = MockMemoryClient()
-    thesis = load_thesis_config(thesis_path)
+def run_pipeline(application_id: str, thesis: ThesisConfig, api_key: str, memory: MemoryClient) -> dict:
 
     deck_extraction = memory.get_deck_extraction(application_id)
 
@@ -111,7 +109,7 @@ def _main() -> int:
         return 1
 
     try:
-        result = run_pipeline(args.application_id, Path(args.thesis), api_key=api_key)
+        result = run_pipeline(args.application_id, load_thesis_config(args.thesis), api_key=api_key, memory=MockMemoryClient())
     except (MemoryReadError, LLMCallFailedError) as e:
         print(f"Error: {e}", file=sys.stderr)
         return 1

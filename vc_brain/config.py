@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 try:
     # Load a local .env so keys work without exporting them by hand.
@@ -18,7 +18,7 @@ except ImportError:  # pragma: no cover - dotenv is optional
 @dataclass
 class Config:
     openai_api_key: str = ""
-    openai_model: str = "gpt-4o"
+    openai_model: str = "gpt-5"
     anthropic_api_key: str = ""
     github_token: str = ""
     crunchbase_api_key: str = ""
@@ -75,7 +75,7 @@ class Config:
     def from_env(cls) -> Config:
         return cls(
             openai_api_key=os.getenv("OPENAI_API_KEY", ""),
-            openai_model=os.getenv("OPENAI_MODEL", "gpt-4o"),
+            openai_model=os.getenv("OPENAI_MODEL", "gpt-5"),
             anthropic_api_key=os.getenv("ANTHROPIC_API_KEY", ""),
             github_token=os.getenv("GITHUB_TOKEN", ""),
             crunchbase_api_key=os.getenv("CRUNCHBASE_API_KEY", ""),

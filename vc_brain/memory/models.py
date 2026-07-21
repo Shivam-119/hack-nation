@@ -137,6 +137,13 @@ class Application(BaseModel):
     screening_result: dict[str, Any] | None = None
     diligence_result: dict[str, Any] | None = None
     decision: dict[str, Any] | None = None
+    # Evaluation jobs are asynchronous. Keep their state with the application so
+    # a restart does not turn a failure into a misleading "in progress" result.
+    evaluation_state: str = "not_requested"  # not_requested | queued | running | evaluated | failed
+    evaluation_failure_reason: str = ""
+    evaluation_started_at: datetime | None = None
+    evaluation_completed_at: datetime | None = None
+    evaluation_artifacts: dict[str, Any] = Field(default_factory=dict)
     # Inbound form fields are kept with the application so the inbox can render
     # the original context without reverse-engineering it from data points.
     one_liner: str = ""

@@ -147,7 +147,11 @@ def seed(store: MemoryStore, apps: list[dict]) -> tuple[int, int, int]:
         companies_seen.add(company.id)
 
         screening = _enrich_screening(app.get("screening"))
-        has_screen = bool(screening)
+        # A fixture may carry a precomputed enrichment (the sourcing scanners'
+        # output). Stash it where the live pipeline puts it, so seeded and
+        # freshly-evaluated applications render through the same path.
+        artifacts = {"enrichment": app["enrichment"]} if app.get("enrichment") else {}
+        has_result = bool(screening) or bool(artifacts)
         deck = app.get("deck") or {}
         store.add_application(Application(
             id=app["id"],
@@ -166,8 +170,9 @@ def seed(store: MemoryStore, apps: list[dict]) -> tuple[int, int, int]:
             deck_filename=deck.get("filename", ""),
             applicability=app.get("applicability"),
             screening_result=screening,
-            evaluation_state="evaluated" if has_screen else "queued",
-            evaluation_completed_at=app["submitted_at"] if has_screen else None,
+            evaluation_artifacts=artifacts,
+            evaluation_state="evaluated" if has_result else "not_requested",
+            evaluation_completed_at=app["submitted_at"] if has_result else None,
         ))
 
     return len(apps), len(founders_seen), len(companies_seen)
