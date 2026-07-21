@@ -6,7 +6,8 @@ services:
     name: vc-brain
     runtime: docker
     plan: free
-    healthCheckPath: /api/thesis
+    # Purpose-built and DB-free, unlike /api/thesis.
+    healthCheckPath: /api/health
     envVars:
       # Secrets — set these in the Render dashboard (sync:false = not stored in git).
       - key: OPENAI_API_KEY
@@ -15,12 +16,18 @@ services:
         sync: false
       - key: TAVILY_API_KEY
         sync: false
-      # Providers default to mock ($0). Flip to a live backend once keys are set.
+      # Socials stay on mock ($0) -- Apify is pay-per-result and the founder
+      # profile does not depend on it.
       - key: SOCIALS_TWITTER_PROVIDER
         value: mock
       - key: SOCIALS_LINKEDIN_PROVIDER
         value: mock
       - key: SOCIALS_IDENTITY_PROVIDER
         value: mock
+      # Live web research: the founder profile (education, prior roles, prizes)
+      # is only as good as this. Costs Tavily credits -- ~25 search angles per
+      # founder plus ~14 for the company. Falls back to the bundled fixtures on
+      # its own if TAVILY_API_KEY is unset, so a missing key degrades rather
+      # than breaks.
       - key: REPUTATION_PROVIDER
-        value: mock
+        value: tavily
