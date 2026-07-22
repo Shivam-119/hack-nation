@@ -1,5 +1,2196 @@
 [
   {
+    "id": "1888ee3b4ea9",
+    "company_id": "818a4e9c2493",
+    "company_name": "Front",
+    "one_liner": "Shared inbox and customer communication hub for teams",
+    "website": "https://front.com",
+    "product_url": "",
+    "sector": "SaaS",
+    "stage": "seed",
+    "geography": "San Francisco, US",
+    "raising": "$100K",
+    "why_now": "Teams drowning in shared email aliases need real collaboration on customer conversations",
+    "accelerator": "Y Combinator",
+    "prior_companies": "",
+    "status": "decision",
+    "source": "inbound",
+    "submitted_at": "2026-07-22T09:40:00",
+    "deck": {
+      "filename": "front_seed_deck.pdf",
+      "pages": 0
+    },
+    "founders": [
+      {
+        "name": "Mathilde Collin",
+        "email": "mathilde@frontapp.com",
+        "github": "",
+        "twitter": "collinmathilde",
+        "linkedin": "mathildecollin"
+      },
+      {
+        "name": "Laurent Perrin",
+        "email": "laurent@frontapp.com",
+        "github": "",
+        "twitter": "laurentperrin",
+        "linkedin": "laurent-perrin"
+      }
+    ],
+    "applicability": {
+      "fit_score": 85,
+      "sanity": {
+        "passed": true,
+        "note": "No immediate viability contradiction found."
+      },
+      "breakdown": [
+        {
+          "label": "Sector",
+          "weight": 40,
+          "awarded": 40,
+          "note": "Matches fund sector"
+        },
+        {
+          "label": "Stage",
+          "weight": 25,
+          "awarded": 25,
+          "note": "Matches fund stage"
+        },
+        {
+          "label": "Geography",
+          "weight": 20,
+          "awarded": 20,
+          "note": "Matches fund geography"
+        },
+        {
+          "label": "Desires",
+          "weight": 15,
+          "awarded": 0,
+          "note": "Requires screening of the deck and founder profiles"
+        }
+      ]
+    },
+    "screening": {
+      "founder_axis": {
+        "score": 87,
+        "sentiment": "bullish",
+        "trend": "stable",
+        "confidence": 0.83,
+        "strengths": [
+          {
+            "text": "Co-founded Front in 2013.",
+            "source": "https://dfjgrowth.com/founders/mathilde-collin-front",
+            "url": ""
+          },
+          {
+            "text": "Announced transition, introducing Dan O\u2019Connell as Front\u2019s new CEO with effective dates in April/May 2024.",
+            "source": "https://community.front.com/partner-news-updates-60/introducing-front-s-new-ceo-1038",
+            "url": ""
+          },
+          {
+            "text": "Business Insider reports she is stepping down as CEO and that Dan O\u2019Connell would become the new CEO.",
+            "source": "https://www.businessinsider.com/front-cofounder-mathilde-collin-resigns-new-ceo-dan-oconnell-2024-3",
+            "url": ""
+          },
+          {
+            "text": "Listed as Co-founder and Executive Chair of Front on LinkedIn.",
+            "source": "https://www.linkedin.com/in/mathilde-collin-bb59492a/en",
+            "url": ""
+          },
+          {
+            "text": "Y Combinator blog identifies her as founder of Front from the YC S14 batch.",
+            "source": "https://www.ycombinator.com/blog/female-founder-stories-mathilde-collin-founder-of-front-yc-s14",
+            "url": ""
+          },
+          {
+            "text": "Sequoia profile describes her leading Front, a communications platform rethinking collaborative work through email.",
+            "source": "https://sequoiacap.com/founder/mathilde-collin",
+            "url": ""
+          },
+          {
+            "text": "Public footprint shows active thought leadership and mentoring (e.g., sharing KORA Apps benchmark; identifies as a YC partner).",
+            "source": "public_footprint.socials_analysis",
+            "url": ""
+          }
+        ],
+        "weaknesses": [],
+        "opportunities": [],
+        "threats": [],
+        "evidence": [
+          "Co-founded Front in 2013.",
+          "Announced transition, introducing Dan O\u2019Connell as Front\u2019s new CEO with effective dates in April/May 2024.",
+          "Business Insider reports she is stepping down as CEO and that Dan O\u2019Connell would become the new CEO.",
+          "Listed as Co-founder and Executive Chair of Front on LinkedIn.",
+          "Y Combinator blog identifies her as founder of Front from the YC S14 batch.",
+          "Sequoia profile describes her leading Front, a communications platform rethinking collaborative work through email.",
+          "Public footprint shows active thought leadership and mentoring (e.g., sharing KORA Apps benchmark; identifies as a YC partner)."
+        ],
+        "rationale": "Extensive, multi-source\u2013verified track record as cofounder of Front since 2013 and long-time CEO before a planned transition to Executive Chair in 2024. YC-backed founder (S14) with visible public thought leadership and mentoring activity. Evidence indicates strong credibility and execution (succession planning), though the dataset lacks quantified company outcomes; thus trend is marked stable and confidence slightly tempered but still high. Not a cold start.",
+        "swot": {
+          "strengths": [
+            {
+              "text": "Co-founded Front in 2013.",
+              "src": {
+                "label": "https://dfjgrowth.com/founders/mathilde-collin-front",
+                "url": ""
+              }
+            },
+            {
+              "text": "Announced transition, introducing Dan O\u2019Connell as Front\u2019s new CEO with effective dates in April/May 2024.",
+              "src": {
+                "label": "https://community.front.com/partner-news-updates-60/introducing-front-s-new-ceo-1038",
+                "url": ""
+              }
+            },
+            {
+              "text": "Business Insider reports she is stepping down as CEO and that Dan O\u2019Connell would become the new CEO.",
+              "src": {
+                "label": "https://www.businessinsider.com/front-cofounder-mathilde-collin-resigns-new-ceo-dan-oconnell-2024-3",
+                "url": ""
+              }
+            },
+            {
+              "text": "Listed as Co-founder and Executive Chair of Front on LinkedIn.",
+              "src": {
+                "label": "https://www.linkedin.com/in/mathilde-collin-bb59492a/en",
+                "url": ""
+              }
+            },
+            {
+              "text": "Y Combinator blog identifies her as founder of Front from the YC S14 batch.",
+              "src": {
+                "label": "https://www.ycombinator.com/blog/female-founder-stories-mathilde-collin-founder-of-front-yc-s14",
+                "url": ""
+              }
+            },
+            {
+              "text": "Sequoia profile describes her leading Front, a communications platform rethinking collaborative work through email.",
+              "src": {
+                "label": "https://sequoiacap.com/founder/mathilde-collin",
+                "url": ""
+              }
+            },
+            {
+              "text": "Public footprint shows active thought leadership and mentoring (e.g., sharing KORA Apps benchmark; identifies as a YC partner).",
+              "src": {
+                "label": "public_footprint.socials_analysis",
+                "url": ""
+              }
+            }
+          ],
+          "weaknesses": [],
+          "opportunities": [],
+          "threats": []
+        }
+      },
+      "market_axis": {
+        "score": 59,
+        "sentiment": "neutral",
+        "trend": "improving",
+        "confidence": 0.56,
+        "strengths": [
+          {
+            "text": "Shared inbox software market estimated at USD 1.25B in 2024, forecast USD 3.16B by 2033 (CAGR 11.7%).",
+            "source": "https://growthmarketreports.com/report/shared-inbox-software-market",
+            "url": ""
+          },
+          {
+            "text": "Alternative sizing: USD 1.8B in 2025, reaching USD 4.9B by 2034 (CAGR 11.7%).",
+            "source": "https://dataintelo.com/report/global-shared-inbox-software-market",
+            "url": ""
+          },
+          {
+            "text": "Another estimate: USD 1.89B in 2025, forecast USD 5.5B by 2035 (CAGR 11.2%).",
+            "source": "https://www.wiseguyreports.com/reports/shared-inbox-software-market",
+            "url": ""
+          },
+          {
+            "text": "Competitor Help Scout: customer communications platform; funding Series B USD 15M (Jan 2021).",
+            "source": "https://www.preqin.com/data/profile/asset/help-scout-inc-/164131",
+            "url": ""
+          },
+          {
+            "text": "Competitor Hiver: Gmail-based shared inbox/helpdesk; raised USD 22M Series B (2022).",
+            "source": "https://www.thesaasnews.com/news/hiver-raises-22-million-in-series-b",
+            "url": ""
+          },
+          {
+            "text": "Adjacent large-suite competition from Zendesk and Intercom in customer service/support.",
+            "source": "https://tracxn.com/d/companies/help-scout/__uZlPWLFVAAE4QgHH9-zR7TYw5F8dqyxV4O7360GX_38",
+            "url": ""
+          },
+          {
+            "text": "Remote/distributed work cited as a demand driver for shared inbox tools.",
+            "source": "https://virtuemarketresearch.com/report/shared-inbox-software-market",
+            "url": ""
+          },
+          {
+            "text": "75% of shared inbox software users value deep integrations with existing tools.",
+            "source": "https://virtuemarketresearch.com/report/shared-inbox-software-market",
+            "url": ""
+          },
+          {
+            "text": "Cloud deployment accounts for the majority revenue share in this category.",
+            "source": "https://dataintelo.com/report/global-shared-inbox-software-market",
+            "url": ""
+          },
+          {
+            "text": "Vendors emphasize AI-led automation to resolve a substantial share of requests and assist agents.",
+            "source": "https://front.com",
+            "url": ""
+          }
+        ],
+        "weaknesses": [],
+        "opportunities": [],
+        "threats": [],
+        "evidence": [
+          "Shared inbox software market estimated at USD 1.25B in 2024, forecast USD 3.16B by 2033 (CAGR 11.7%).",
+          "Alternative sizing: USD 1.8B in 2025, reaching USD 4.9B by 2034 (CAGR 11.7%).",
+          "Another estimate: USD 1.89B in 2025, forecast USD 5.5B by 2035 (CAGR 11.2%).",
+          "Competitor Help Scout: customer communications platform; funding Series B USD 15M (Jan 2021).",
+          "Competitor Hiver: Gmail-based shared inbox/helpdesk; raised USD 22M Series B (2022).",
+          "Adjacent large-suite competition from Zendesk and Intercom in customer service/support.",
+          "Remote/distributed work cited as a demand driver for shared inbox tools.",
+          "75% of shared inbox software users value deep integrations with existing tools.",
+          "Cloud deployment accounts for the majority revenue share in this category.",
+          "Vendors emphasize AI-led automation to resolve a substantial share of requests and assist agents."
+        ],
+        "rationale": "The shared inbox software market is mid-sized with consistent double-digit growth but faces heavy competition and category overlap with broader help desk suites. Multiple sources place the market at roughly USD 1.25\u20131.89B around 2024\u20132025 with ~11\u201312% CAGR to USD ~3\u20135.5B by 2033\u20132035, indicating steady but not hypergrowth. Competitive intensity is high from focused players (Help Scout, Hiver, Missive, Gmelius) and adjacent giants (Zendesk, Intercom). Industry tailwinds\u2014remote work, AI automation, cloud dominance, and deep integrations\u2014support an improving outlook. However, sizing discrepancies across sources and an unexamined regulatory landscape reduce certainty. Net: attractive but constrained TAM and strong competition yield a neutral rating with an improving trend.",
+        "swot": {
+          "strengths": [
+            {
+              "text": "Shared inbox software market estimated at USD 1.25B in 2024, forecast USD 3.16B by 2033 (CAGR 11.7%).",
+              "src": {
+                "label": "https://growthmarketreports.com/report/shared-inbox-software-market",
+                "url": ""
+              }
+            },
+            {
+              "text": "Alternative sizing: USD 1.8B in 2025, reaching USD 4.9B by 2034 (CAGR 11.7%).",
+              "src": {
+                "label": "https://dataintelo.com/report/global-shared-inbox-software-market",
+                "url": ""
+              }
+            },
+            {
+              "text": "Another estimate: USD 1.89B in 2025, forecast USD 5.5B by 2035 (CAGR 11.2%).",
+              "src": {
+                "label": "https://www.wiseguyreports.com/reports/shared-inbox-software-market",
+                "url": ""
+              }
+            },
+            {
+              "text": "Competitor Help Scout: customer communications platform; funding Series B USD 15M (Jan 2021).",
+              "src": {
+                "label": "https://www.preqin.com/data/profile/asset/help-scout-inc-/164131",
+                "url": ""
+              }
+            },
+            {
+              "text": "Competitor Hiver: Gmail-based shared inbox/helpdesk; raised USD 22M Series B (2022).",
+              "src": {
+                "label": "https://www.thesaasnews.com/news/hiver-raises-22-million-in-series-b",
+                "url": ""
+              }
+            },
+            {
+              "text": "Adjacent large-suite competition from Zendesk and Intercom in customer service/support.",
+              "src": {
+                "label": "https://tracxn.com/d/companies/help-scout/__uZlPWLFVAAE4QgHH9-zR7TYw5F8dqyxV4O7360GX_38",
+                "url": ""
+              }
+            },
+            {
+              "text": "Remote/distributed work cited as a demand driver for shared inbox tools.",
+              "src": {
+                "label": "https://virtuemarketresearch.com/report/shared-inbox-software-market",
+                "url": ""
+              }
+            },
+            {
+              "text": "75% of shared inbox software users value deep integrations with existing tools.",
+              "src": {
+                "label": "https://virtuemarketresearch.com/report/shared-inbox-software-market",
+                "url": ""
+              }
+            },
+            {
+              "text": "Cloud deployment accounts for the majority revenue share in this category.",
+              "src": {
+                "label": "https://dataintelo.com/report/global-shared-inbox-software-market",
+                "url": ""
+              }
+            },
+            {
+              "text": "Vendors emphasize AI-led automation to resolve a substantial share of requests and assist agents.",
+              "src": {
+                "label": "https://front.com",
+                "url": ""
+              }
+            }
+          ],
+          "weaknesses": [],
+          "opportunities": [],
+          "threats": []
+        }
+      },
+      "idea_vs_market_axis": {
+        "score": 58,
+        "sentiment": "neutral",
+        "trend": "improving",
+        "confidence": 0.62,
+        "strengths": [],
+        "weaknesses": [],
+        "opportunities": [],
+        "threats": [],
+        "evidence": [],
+        "rationale": "Market axis indicates a mid-sized, steadily growing category (USD ~1.25\u20131.89B in 2024\u20132025 with ~11\u201312% CAGR to ~USD 3\u20135.5B by 2033\u20132035) but with heavy competition from focused players (Help Scout, Hiver, Missive, Gmelius) and adjacent giants (Zendesk, Intercom). Tailwinds\u2014remote/distributed work, AI-led automation, cloud dominance, and strong demand for integrations (75% of users value deep integrations)\u2014support an improving outlook, yet sizing discrepancies and unexamined regulatory factors temper certainty. The deck\u2019s positioning (\u201cshared email client for teams\u201d with automation/analytics/integrations) reads as generic and undifferentiated in a crowded space with category overlap, suggesting the idea is not compelling enough on its own. Founder axis, however, cites a high-caliber operator: co-founded Front in 2013, led as CEO through a planned transition in 2024, YC S14 alum with visible execution and thought leadership\u2014indicative of strong domain expertise in customer communications/shared inbox SaaS. While outcomes aren\u2019t quantified, this credible track record increases confidence the team can iterate or expand beyond a me-too shared inbox into workflow/automation angles the Market axis notes as promising. Conclusion: team_strong_enough_to_pivot\u2014market demand exists but the current idea lacks a sharp wedge; the founder\u2019s demonstrated execution and domain depth make a pivot or meaningful differentiation plausible.",
+        "swot": {
+          "strengths": [],
+          "weaknesses": [],
+          "opportunities": [],
+          "threats": []
+        }
+      },
+      "thesis_fit": {
+        "passed": true,
+        "reasons": [
+          "Sector match: deck fields ['Collaboration and Productivity Software', 'Shared inbox software', 'Team email client', 'Collaborative communication tools', 'Multi-channel inbox', 'Email automation and analytics', 'Extensible platform/API'] overlap thesis sectors ['AI', 'fintech', 'SaaS', 'health', 'consumer'].",
+          "Geography not stated in the deck \u2014 not treated as disqualifying."
+        ]
+      },
+      "recommendation": "more_diligence_needed",
+      "rationale": "Founder axis is bullish with high confidence, signaling an execution-forward operator who meaningfully lowers team risk. Market axis is neutral (improving) with a mid-sized TAM and heavy competition, which makes underwriting an ownership-targeted position harder without a sharp wedge. Idea-vs-Market axis is neutral with a verdict of team_strong_enough_to_pivot, indicating the current concept reads generic in a crowded category but the team could iterate into a more defensible motion. With a medium risk_appetite, we won\u2019t invest purely on founder quality; we need evidence of differentiation or traction to justify committing an ownership-sized check. Our ownership_target_pct is 8%, which typically requires a meaningful seed check; provisional recommendation is $1.25M to target ~8% at roughly a $15.6M post-money. We can flex within the $250k\u2013$2M range to maintain 8% if valuation differs, but will only proceed once the outlined proof points de-risk the neutral Market and Idea-vs-Market axes.",
+      "adversarial_view": "The core issue isn\u2019t a diligence gap but a structural market ceiling that founder quality can\u2019t overcome: every cited source pegs shared inbox at only ~$1.25\u20131.89B today growing ~11\u201312% CAGR to ~$3\u20135.5B by 2033\u20132035\u2014steady but not hypergrowth\u2014while competitive intensity is already high from focused players (Help Scout, Hiver, Missive, Gmelius) and adjacent giants (Zendesk, Intercom) that bundle overlapping functionality. The current concept (\u201cshared email client for teams\u201d with automation/integrations) mirrors what incumbents already emphasize, so any wedge is likely transient. With only medium confidence on Market and Idea-vs-Market and a constrained TAM, an 8% ownership seed bet is unlikely to yield venture-scale outcomes even if the team executes well. Additional proof points (logos, NDR, packaging) won\u2019t change the TAM or incumbent dynamics; the rational move is to pass now rather than defer a decision.",
+      "gaps_and_caveats": [
+        "Demonstrate a clear wedge vs incumbents (e.g., 2x improvement in first-response or resolution times, or 30\u201350% cost reduction) attributable to product/AI automation, not services.",
+        "Early traction proof: 10\u201320 design partners or 50+ paying teams with quantified outcomes; initial NDR >100% and compelling logo wins from Zendesk/Intercom/Help Scout.",
+        "Validated ICP and GTM motion with efficiency: target segment, channels, sales cycle length, early LTV/CAC signals, and virality/expansion loops.",
+        "Pricing and packaging differentiation with evidence of willingness-to-pay and path to expand ACV (workflows/automation platform beyond shared inbox) to grow TAM.",
+        "Moat clarity: proprietary data advantage, depth of integrations, and product velocity that make feature catch-up by large suites difficult.",
+        "Security/compliance posture for enterprise and EU (e.g., SOC 2, GDPR, data residency) if moving upmarket.",
+        "Competitive landscape analysis showing how the product avoids being subsumed by broader help desk suites and where it can win sustainably.",
+        "Round structure that enables ~8% ownership with standard pro rata; confirm valuation and allocation that allow our check size to meet target.",
+        "Team resourcing and focus: confirm full-time commitment and key product/engineering leadership to execute rapid iterations and potential pivots."
+      ]
+    },
+    "enrichment": {
+      "company_name": "Front",
+      "industry": "",
+      "one_liner": "",
+      "company_reputation": {
+        "articles_reviewed": 84,
+        "by_category": {
+          "product": 8,
+          "funding": 6,
+          "other": 5,
+          "team": 5,
+          "press": 1,
+          "recognition": 1
+        },
+        "findings": [
+          {
+            "summary": "Announced a $65 million Series D at a $1.7 billion valuation, led by Salesforce Ventures and Battery Ventures, with participation from PagerDuty CEO Jennifer Tejada.",
+            "category": "funding",
+            "polarity": "positive",
+            "relevance": 10,
+            "source": "front.com",
+            "url": "https://front.com/blog/front-raises-series-d-financing"
+          },
+          {
+            "summary": "A Medium post states that Front announced a $10M Series A round and shared its fundraising deck and process.",
+            "category": "funding",
+            "polarity": "positive",
+            "relevance": 10,
+            "source": "collinmathilde.medium.com",
+            "url": "https://collinmathilde.medium.com/front-series-a-deck-f2e2775a419b"
+          },
+          {
+            "summary": "Front raised $59 million in a later-stage round at a valuation it says is four times its prior level; the round was largely funded by prominent software founders, with participation from existing investors including Sequoia (above pro rata), Initialized Capital, and Anthos Capital.",
+            "category": "funding",
+            "polarity": "positive",
+            "relevance": 10,
+            "source": "forbes.com",
+            "url": "https://www.forbes.com/sites/alexkonrad/2020/01/22/front-raises-rare-round-led-by-other-founders"
+          },
+          {
+            "summary": "Front has raised a total of $204M, with investors including DFJ Growth and RAA Capital.",
+            "category": "funding",
+            "polarity": "positive",
+            "relevance": 8,
+            "source": "tracxn.com",
+            "url": "https://tracxn.com/d/companies/front/__HeRLSq3hy0lDetLGKIccBXJhIQ7it32AkMIf0OUW2t8"
+          },
+          {
+            "summary": "Front has 25 institutional investors and 18 angel investors.",
+            "category": "funding",
+            "polarity": "neutral",
+            "relevance": 6,
+            "source": "tracxn.com",
+            "url": "https://tracxn.com/d/companies/front/__HeRLSq3hy0lDetLGKIccBXJhIQ7it32AkMIf0OUW2t8"
+          },
+          {
+            "summary": "As of May 2026, Front is reported to have raised $65M in funding.",
+            "category": "funding",
+            "polarity": "positive",
+            "relevance": 5,
+            "source": "leadiq.com",
+            "url": "https://leadiq.com/c/front/5a1d98bc2300005200875e60"
+          },
+          {
+            "summary": "Front says over 9,000 businesses rely on its platform, citing customers including ClickUp, Branch Insurance, Echo Global Logistics, and Reed & Mackay.",
+            "category": "other",
+            "polarity": "neutral",
+            "relevance": 10,
+            "source": "front.com",
+            "url": "https://front.com/press"
+          },
+          {
+            "summary": "Front was founded in 2013 and is based in San Francisco, United States.",
+            "category": "other",
+            "polarity": "neutral",
+            "relevance": 6,
+            "source": "tracxn.com",
+            "url": "https://tracxn.com/d/companies/front/__HeRLSq3hy0lDetLGKIccBXJhIQ7it32AkMIf0OUW2t8"
+          }
+        ]
+      },
+      "founders": [
+        {
+          "name": "Mathilde Collin",
+          "handles": {
+            "twitter": "collinmathilde",
+            "linkedin": "mathildecollin"
+          },
+          "github": null,
+          "socials": {
+            "profiles": {
+              "twitter": {
+                "handle": "collinmathilde",
+                "followers": 24399
+              },
+              "linkedin": {
+                "handle": "francois-schreuer",
+                "followers": 0
+              }
+            },
+            "post_count": 20,
+            "comment_count": 16,
+            "sample_posts": [
+              {
+                "network": "twitter",
+                "text": "@triketora @AnthropicAI congrats :)",
+                "likes": 1
+              },
+              {
+                "network": "twitter",
+                "text": "much needed + very well written",
+                "likes": 4
+              },
+              {
+                "network": "twitter",
+                "text": "A YC tradition I loved, which didn\u2019t exist during my batch: after the last talk, founders are invited to stand up and share a \u201cgratitude\u201d: naming another founder in the batch they\u2019re grateful for, and why. \ud83d\ude47\u200d\u2640\ufe0f https://t.co/XbVsxgel8d",
+                "likes": 62
+              },
+              {
+                "network": "twitter",
+                "text": "@rahulrejeev thank YOU!",
+                "likes": 4
+              },
+              {
+                "network": "twitter",
+                "text": "It's a wrap! YC P26 was special because of all these amazing founders. https://t.co/IiQIx49Whh",
+                "likes": 87
+              }
+            ],
+            "analysis": {
+              "topics": [
+                "YC and founder community",
+                "AI app safety for children",
+                "Benchmarking and evaluation of AI models/apps",
+                "Startup advice (pitching/traction)",
+                "Mentorship and office hours",
+                "Congrats/acknowledgments to peers"
+              ],
+              "expertise_areas": [
+                "Early-stage company building and founder support (YC partner experience)",
+                "AI safety evaluation for consumer apps used by children",
+                "Startup fundraising and metrics communication"
+              ],
+              "sentiment": "mixed",
+              "tone": "supportive and data-driven",
+              "credibility_signals": [
+                "Identifies as a YC partner and reflects on practice changes enabled by AI internal tools",
+                "Announces and shares results from KORA Apps, a public/open-source benchmark across 1,144 real conversations on children\u2019s AI app usage",
+                "Publishes comparative model-safety observations (e.g., stating which model underperforms for child safety and providing example scenarios)",
+                "Active involvement with YC P26 and public recognition of founders",
+                "Provides pragmatic operator advice on traction slides",
+                "Mentors teams via office hours"
+              ],
+              "red_flags": [
+                "Limited specifics on current operating company traction, customers, or hiring in these posts",
+                "Some posts are brief/vague without context (e.g., short endorsements)"
+              ]
+            },
+            "sources": [
+              "https://x.com/collinmathilde",
+              "twitter:ApifyTwitterProvider",
+              "https://www.linkedin.com/in/francois-schreuer?miniProfileUrn=urn%3Ali%3Afsd_profile%3AACoAAAnmjQ4BHk4FrkBuvpMLPfBxZRfdYI2M32Y",
+              "linkedin:LinkedInApifyProvider"
+            ]
+          },
+          "reputation": {
+            "articles_reviewed": 75,
+            "by_category": {
+              "press": 34,
+              "current_role": 23,
+              "other": 19,
+              "funding": 17,
+              "recognition": 9,
+              "education": 4,
+              "rumor": 4,
+              "prior_company": 2,
+              "research": 1
+            },
+            "findings": [
+              {
+                "summary": "Collin announced she is transitioning from CEO to Executive Chair at Front and introduced Dan O\u2019Connell as Front\u2019s new CEO.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 10,
+                "source": "community.front.com",
+                "url": "https://community.front.com/partner-news-updates-60/introducing-front-s-new-ceo-1038"
+              },
+              {
+                "summary": "Forbes profiles Mathilde Collin as the cofounder of Front App, created to provide a collaborative inbox for businesses.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 10,
+                "source": "forbes.com",
+                "url": "https://www.forbes.com/profile/mathilde-collin"
+              },
+              {
+                "summary": "Identifies Mathilde Collin as cofounder of Front alongside Laurent Perrin.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 10,
+                "source": "gdiy.fr",
+                "url": "https://www.gdiy.fr/podcast/mathilde-collin"
+              },
+              {
+                "summary": "Is co-founder and CEO of Front, a customer communications software company.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 10,
+                "source": "fastcompany.com",
+                "url": "https://www.fastcompany.com/user/mathilde-collin"
+              },
+              {
+                "summary": "Business Insider reports that Mathilde Collin will step down as Front\u2019s CEO after a search for a new board director led her to Dan O\u2019Connell.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "businessinsider.com",
+                "url": "https://www.businessinsider.com/front-cofounder-mathilde-collin-resigns-new-ceo-dan-oconnell-2024-3"
+              },
+              {
+                "summary": "Crunchbase lists Mathilde Collin as the Co-founder and Executive Chair of Front, based in San Francisco, California.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "crunchbase.com",
+                "url": "https://www.crunchbase.com/person/mathilde-collin"
+              },
+              {
+                "summary": "Described as the co-founder and CEO of Front, a communications hub for building strong customer relationships.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "founder-tactics.pilot.com",
+                "url": "https://founder-tactics.pilot.com/speakers/mathilde-collin"
+              },
+              {
+                "summary": "Identified as Co-founder and Chair at Front, with remarks about transitioning into her next chapter.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "frenchtechsf.org",
+                "url": "https://frenchtechsf.org/news/meeting-with-mathilde-collin-co-founder-chair-at-front"
+              },
+              {
+                "summary": "Lists role as Co-founder and Executive Chair at Front on LinkedIn.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/mathilde-collin-bb59492a/en"
+              },
+              {
+                "summary": "Names Mathilde Collin as the cofounder and CEO of Front.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "ycombinator.com",
+                "url": "https://www.ycombinator.com/blog/mathilde-collin-on-feature-prioritization-and-employee-retention-at-front"
+              },
+              {
+                "summary": "She stated that Dan O\u2019Connell would join Front on April 15 and officially become CEO on May 1, 2024.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "community.front.com",
+                "url": "https://community.front.com/partner-news-updates-60/introducing-front-s-new-ceo-1038"
+              },
+              {
+                "summary": "The profile states Collin is stepping down as CEO to become executive chair while Dan O\u2019Connell becomes Front\u2019s next CEO.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "thewomenweadmire.com",
+                "url": "https://thewomenweadmire.com/2025/03/from-startup-to-success-how-mathilde-collin-built-fronts-empire"
+              },
+              {
+                "summary": "A Sequoia profile describes Mathilde Collin as leading Front, a communications platform rethinking collaborative work through email.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "sequoiacap.com",
+                "url": "https://sequoiacap.com/founder/mathilde-collin"
+              },
+              {
+                "summary": "Collin and Laurent Perrin started Front in 2013.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "dfjgrowth.com",
+                "url": "https://dfjgrowth.com/founders/mathilde-collin-front"
+              },
+              {
+                "summary": "Described as a French business executive who leads Front, the California-based company she founded in 2013.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "fr.wikipedia.org",
+                "url": "https://fr.wikipedia.org/wiki/Mathilde_Collin"
+              },
+              {
+                "summary": "In a Dec 6, 2023 Notion First Block video, she is presented as the Co-Founder and CEO of Front.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "youtube.com",
+                "url": "https://www.youtube.com/watch?v=ThAl8v01Cac"
+              },
+              {
+                "summary": "Listed as Co-founder & CEO of Front from Oct 2013 to Oct 2024, and as Co-founder & Executive Chair from Apr 2024.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "anybody.com",
+                "url": "https://www.anybody.com/startup/front-app/founder/mathilde-collin"
+              },
+              {
+                "summary": "She is the French CEO and co-founder of Front.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "businessinsider.com",
+                "url": "https://www.businessinsider.com/front-ceo-mathilde-collin-meetingbird-acquisition-2018-10"
+              },
+              {
+                "summary": "Y Combinator\u2019s interview presents Collin as the founder of Front from the YC Summer 2014 batch.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "ycombinator.com",
+                "url": "https://www.ycombinator.com/blog/female-founder-stories-mathilde-collin-founder-of-front-yc-s14"
+              },
+              {
+                "summary": "A Facebook post describes Collin as the co-founder and executive chair of Front.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 7,
+                "source": "facebook.com",
+                "url": "https://www.facebook.com/photo.php?fbid=10234810788115574&set=a.10200574954721136&id=1377030002"
+              }
+            ]
+          },
+          "profile": {
+            "background": [
+              {
+                "summary": "Collin announced she is transitioning from CEO to Executive Chair at Front and introduced Dan O\u2019Connell as Front\u2019s new CEO.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 10,
+                "source": "community.front.com",
+                "url": "https://community.front.com/partner-news-updates-60/introducing-front-s-new-ceo-1038"
+              },
+              {
+                "summary": "After earning a master's degree from France\u2019s HEC School of Management, Collin co-founded Front.",
+                "category": "education",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "dfjgrowth.com",
+                "url": "https://dfjgrowth.com/founders/mathilde-collin-front"
+              },
+              {
+                "summary": "After graduating in 2012, Collin joined the contract-management SaaS company Concord in a project management role before leaving within a year to start building Front.",
+                "category": "prior_company",
+                "polarity": "neutral",
+                "relevance": 7,
+                "source": "leviathanencyclopedia.com",
+                "url": "https://www.leviathanencyclopedia.com/article/mathilde-collin"
+              },
+              {
+                "summary": "Forbes profiles Mathilde Collin as the cofounder of Front App, created to provide a collaborative inbox for businesses.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 10,
+                "source": "forbes.com",
+                "url": "https://www.forbes.com/profile/mathilde-collin"
+              },
+              {
+                "summary": "Earned a Master\u2019s degree at HEC School of Management.",
+                "category": "education",
+                "polarity": "neutral",
+                "relevance": 7,
+                "source": "fastcompany.com",
+                "url": "https://www.fastcompany.com/user/mathilde-collin"
+              },
+              {
+                "summary": "Previously worked as a Project Manager at Concord from September 2012 to September 2013.",
+                "category": "prior_company",
+                "polarity": "neutral",
+                "relevance": 5,
+                "source": "anybody.com",
+                "url": "https://www.anybody.com/startup/front-app/founder/mathilde-collin"
+              },
+              {
+                "summary": "Identifies Mathilde Collin as cofounder of Front alongside Laurent Perrin.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 10,
+                "source": "gdiy.fr",
+                "url": "https://www.gdiy.fr/podcast/mathilde-collin"
+              },
+              {
+                "summary": "Holds a Master\u2019s degree in Entrepreneurship from HEC School of Management (2012).",
+                "category": "education",
+                "polarity": "neutral",
+                "relevance": 6,
+                "source": "founder-tactics.pilot.com",
+                "url": "https://founder-tactics.pilot.com/speakers/mathilde-collin"
+              }
+            ],
+            "achievements": [
+              {
+                "summary": "Forbes lists Mathilde Collin in its 30 Under 30 - Enterprise Technology (2017).",
+                "category": "recognition",
+                "polarity": "positive",
+                "relevance": 10,
+                "source": "forbes.com",
+                "url": "https://www.forbes.com/profile/mathilde-collin"
+              },
+              {
+                "summary": "The post states Collin's team built a Safety Taxonomy with over 30 child safety and development experts, categorizing 24 risks children and teens may face when interacting with AI.",
+                "category": "research",
+                "polarity": "neutral",
+                "relevance": 6,
+                "source": "andrewbuher.substack.com",
+                "url": "https://andrewbuher.substack.com/p/opportunity-knocks-138-a-conversation"
+              },
+              {
+                "summary": "Collin is described as one of only ten women who have founded and served as CEO of SaaS companies valued at over $1 billion.",
+                "category": "recognition",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "techfundingnews.com",
+                "url": "https://techfundingnews.com/front-raises-65m-at-1-7b-valuation-becomes-11th-woman-founded-saas-unicorn"
+              },
+              {
+                "summary": "Forbes identifies her as a Front founder and a Forbes 30 Under 30 alumna.",
+                "category": "recognition",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "forbes.com",
+                "url": "https://www.forbes.com/video/6024729501001/mathilde-collin-wants-to-innovate-your-inbox-with-front"
+              },
+              {
+                "summary": "Front became the 11th woman-founded SaaS unicorn following the $65 million round.",
+                "category": "recognition",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "techfundingnews.com",
+                "url": "https://techfundingnews.com/front-raises-65m-at-1-7b-valuation-becomes-11th-woman-founded-saas-unicorn"
+              },
+              {
+                "summary": "The article notes Collin built a $1.7 billion email startup by the time she was 32.",
+                "category": "recognition",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "businessinsider.com",
+                "url": "https://www.businessinsider.com/front-cofounder-mathilde-collin-resigns-new-ceo-dan-oconnell-2024-3"
+              },
+              {
+                "summary": "Known for a values-driven leadership style and for championing top-down radical transparency.",
+                "category": "recognition",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "fastcompany.com",
+                "url": "https://www.fastcompany.com/user/mathilde-collin"
+              },
+              {
+                "summary": "She had a 100% approval rating on Glassdoor at the time of the article.",
+                "category": "recognition",
+                "polarity": "positive",
+                "relevance": 7,
+                "source": "businessinsider.com",
+                "url": "https://www.businessinsider.com/front-ceo-mathilde-collin-meetingbird-acquisition-2018-10"
+              }
+            ],
+            "adverse": [],
+            "press": [
+              {
+                "summary": "In a LinkedIn post, she said she is stepping back as CEO to become executive chair, with Dan O\u2019Connell of Dialpad taking over as CEO.",
+                "category": "rumor",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/posts/mathilde-collin-bb59492a_mathilde-collin-built-a-17-billion-email-activity-7178880512655052800-8u_B"
+              },
+              {
+                "summary": "Forbes reports that Front, which Collin cofounded, raised $15 million from investors including Social Capital, SoftTech VC, Slack CEO Stewart Butterfield, and Path cofounder David Morin.",
+                "category": "funding",
+                "polarity": "positive",
+                "relevance": 10,
+                "source": "forbes.com",
+                "url": "https://www.forbes.com/profile/mathilde-collin"
+              },
+              {
+                "summary": "Says Front has grown to more than 200 employees.",
+                "category": "other",
+                "polarity": "neutral",
+                "relevance": 10,
+                "source": "gdiy.fr",
+                "url": "https://www.gdiy.fr/podcast/mathilde-collin"
+              },
+              {
+                "summary": "Appeared on Notion\u2019s First Block (Dec 6, 2023) as Front\u2019s Co-Founder & CEO, discussing Front\u2019s founding story, transparency, early hiring, self-care, employee engagement, and her day-to-day.",
+                "category": "press",
+                "polarity": "neutral",
+                "relevance": 10,
+                "source": "youtube.com",
+                "url": "https://www.youtube.com/watch?v=a9gdynJL9YQ"
+              },
+              {
+                "summary": "On Feb 4, 2020, she shared Front\u2019s Series C pitch deck publicly.",
+                "category": "rumor",
+                "polarity": "neutral",
+                "relevance": 7,
+                "source": "x.com",
+                "url": "https://x.com/collinmathilde?lang=en"
+              },
+              {
+                "summary": "Reports that Front has raised over \u20ac100 million.",
+                "category": "funding",
+                "polarity": "positive",
+                "relevance": 10,
+                "source": "gdiy.fr",
+                "url": "https://www.gdiy.fr/podcast/mathilde-collin"
+              },
+              {
+                "summary": "States she joined the Y Combinator incubator.",
+                "category": "other",
+                "polarity": "neutral",
+                "relevance": 10,
+                "source": "gdiy.fr",
+                "url": "https://www.gdiy.fr/podcast/mathilde-collin"
+              },
+              {
+                "summary": "Describes her as an ambassador for work\u2013life balance, emphasizing a company culture of radical transparency, recognition, and trust.",
+                "category": "press",
+                "polarity": "neutral",
+                "relevance": 10,
+                "source": "gdiy.fr",
+                "url": "https://www.gdiy.fr/podcast/mathilde-collin"
+              }
+            ]
+          },
+          "errors": [
+            "No GitHub handle supplied \u2014 builder evaluation skipped."
+          ]
+        },
+        {
+          "name": "Laurent Perrin",
+          "handles": {
+            "twitter": "laurentperrin",
+            "linkedin": "laurent-perrin"
+          },
+          "github": null,
+          "socials": {
+            "profiles": {
+              "twitter": {
+                "handle": "laurentperrin",
+                "followers": 0
+              },
+              "linkedin": {
+                "handle": "laurent-perrin",
+                "followers": 0
+              }
+            },
+            "post_count": 10,
+            "comment_count": 6,
+            "sample_posts": [
+              {
+                "network": "linkedin",
+                "text": "\u2705\ufe0f La statue d\u2019Alfred Dreyfus inaugur\u00e9e le 12\u00a0juillet \u00e0 Paris, 120 ans apr\u00e8s sa r\u00e9habilitation.\n\n\u2714\ufe0fDimanche dernier, 12 juillet, date anniversaire de sa r\u00e9habilitation par la Cour de cassation en 1906, une statue du capitaine Dreyfus a \u00e9t\u00e9 inaugur\u00e9e devant l\u2019ancien Palais de Justice, sur l\u2019\u00eele de la Cit\u00e9. \n\n\u2714\ufe0fUne place au nom de Lucie Dreyfus, son \u00e9pouse et soutien inconditionnel, a \u00e9galement \u00e9t\u00e9 inaugur\u00e9e ce dimanche \u00e0 Paris.\n\n\u2714\ufe0fQuarante ans apr\u00e8s sa cr\u00e9ation, la statue d\u2019Alfred Dreyfus (1859-1935) trouve enfin la place qui lui revient.\u00a0\nHaute de 4 m\u00e8tres, la sculpture, qui tr\u00f4ne d\u00e9sormais fi\u00e8rement devant le Palais de Justice (Paris Centre), se distingue par un travail brut du bronze, dont la mati\u00e8re semble avoir \u00e9t\u00e9 fa\u00e7onn\u00e9e \u00e0 la main et au couteau.\n \nEntre les mains du militaire, un sabre bris\u00e9, dress\u00e9 vers le ciel. \n\nCe d\u00e9tail constitue le c\u0153ur de l\u2019\u0153uvre\u00a0: il \u00e9voque la d\u00e9gradation publique inflig\u00e9e \u00e0 Alfred Dreyfus en janvier 1895, apr\u00e8s une condamnation fond\u00e9e sur une erreur judiciaire. \n\nSur son socle figure une phrase extraite d\u2019une lettre adress\u00e9e \u00e0 son \u00e9pouse durant sa d\u00e9tention\u00a0:\u00a0\u00ab\u00a0Si tu veux que je vive, fais-moi rendre mon honneur.\u00a0\u00bb\n\n\u2714\ufe0fR\u00e9alis\u00e9e entre 1985 et 1988 par le sculpteur Tim, la statue\u00a0Hommage au capitaine Dreyfus\u00a0avait \u00e9t\u00e9 command\u00e9e par l\u2019\u00c9tat dans le cadre d\u2019un vaste programme destin\u00e9 \u00e0 rendre hommage \u00e0 de grandes figures intellectuelles et historiques. \n\nAvant de rejoindre son nouvel \u00e9crin, sur l\u2019\u00eele de la Cit\u00e9, elle a connu plusieurs implantations.\n \nAlors qu\u2019elle devait initialement \u00eatre install\u00e9e dans la cour de l\u2019\u00c9cole militaire (7e) \u2013 l\u00e0 o\u00f9 le capitaine Dreyfus avait \u00e9t\u00e9 publiquement d\u00e9grad\u00e9\u00a0\u2013, elle a finalement \u00e9lu domicile dans le jardin des Tuileries (Paris Centre), puis place Pierre-Lafue (6e). \n\nCr\u00e9dit photo : Henri Garat / Ville de Paris \n\nAriel Weil Laurence Patrice",
+                "likes": 30
+              },
+              {
+                "network": "linkedin",
+                "text": "\u2705\ufe0f La saison est ouverte !\n\nBaignade au pied de la Tour Eiffel. Eau \u00e0 25 \u00b0. Un r\u00e9gal !\n\nMaxime Sauvage Anouch Toranian Florian Sitbon Antoine Ollivier Pierre Rabadan Ville de Paris \n\n#baignadegrenelle #parisseine #parisplage #paris15",
+                "likes": 32
+              },
+              {
+                "network": "linkedin",
+                "text": "\u274e\ufe0f Work in progress !\n\nAriel Weil Florian Sitbon Herv\u00e9 Marro \n\n#pontneuf #paris #jr",
+                "likes": 34
+              },
+              {
+                "network": "linkedin",
+                "text": "\u2705\ufe0f R\u00e9seau de chaleur parisien : signature du nouveau contrat de concession.\n\nLa Ville de Paris, la Banque des Territoires et le Groupement Dalkia/Eiffage/ RATP Solutions Ville annoncent la signature des actes constitutifs et contractuels de la Soci\u00e9t\u00e9 d\u2019\u00e9conomie mixte \u00e0 op\u00e9ration unique (SEMOP), titulaire du nouveau contrat de concession. \n\n\u27a1\ufe0f Une \u00e9tape d\u00e9cisive pour transformer le premier r\u00e9seau de chaleur de France en un mod\u00e8le de d\u00e9carbonation et d'\u00e9nergie abordable, accessible au plus grand nombre.\n\nLa SEMOP nouvellement constitu\u00e9e assurera la continuit\u00e9 du service public, \u00e0 compter du 1er\u00a0janvier 2027, pour une dur\u00e9e de 25 ans.\n\n\u27a1\ufe0f Cr\u00e9\u00e9e sp\u00e9cifiquement pour l\u2019ex\u00e9cution du contrat, cette SEMOP assurera l\u2019exploitation, la modernisation et la d\u00e9carbonation du r\u00e9seau de chaleur parisien, infrastructure urbaine majeure \u00e0 l\u2019\u00e9chelle m\u00e9tropolitaine, qui alimente aujourd\u2019hui pr\u00e8s d\u2019un million de personnes \u00e0 Paris et dans 16 communes limitrophes.\n\n\u274e\ufe0f Cette nouvelle concession r\u00e9pond \u00e0 trois objectifs fix\u00e9s par la Ville de Paris\u00a0:\n\n\u27a1\ufe0f Acc\u00e9l\u00e9rer la\u00a0mutation \u00e9cologique du r\u00e9seau\u00a0et renforcer la\u00a0souverainet\u00e9 \u00e9nerg\u00e9tique\u00a0du territoire \u00e0 l\u2019\u00e9chelle m\u00e9tropolitaine ;\n\n\u27a1\ufe0f Garantir aux abonn\u00e9s et usagers un tarif de chauffage\u00a0abordable et ma\u00eetris\u00e9 dans la dur\u00e9e,\u00a0avec une baisse d\u00e8s 2027, pour pr\u00e8s de 70 % des usagers du r\u00e9seau;\n\n\u27a1\ufe0f Renforcer la\u00a0gouvernance publique\u00a0du r\u00e9seau.\n\nUne double ambition \u00e9cologique et solidaire\u00a0: verdir le mix \u00e9nerg\u00e9tique pour sortir des \u00e9nergies fossiles, renforcer la souverainet\u00e9 du territoire pour ma\u00eetriser le prix de la chaleur. \n\n\u2705\ufe0f L\u2019objectif est d\u2019atteindre, \u00e0 l\u2019horizon 2050, 100 % d\u2019\u00e9nergies renouvelables et de r\u00e9cup\u00e9ration, conform\u00e9ment au Plan Climat de la Ville de Paris.\n\nPar ailleurs, dans un contexte g\u00e9opolitique incertain qui accro\u00eet la volatilit\u00e9 du prix des \u00e9nergies fossiles, limiter drastiquement le recours au gaz en diversifiant\u00a0le mix \u00e9nerg\u00e9tique\u00a0assurera une ma\u00eetrise de la facture de chauffage et d\u2019eau chaude dans la dur\u00e9e.\n\n\u27a1\ufe0f Au global, ce r\u00e9seau de chaleur \u00e9tendu et modernis\u00e9 permettra de diminuer de 50 % les \u00e9missions de CO2\u00a0d\u2019ici 2034, avec 12 millions de tonnes de CO2\u00a0\u00e9vit\u00e9es par rapport \u00e0 l\u2019utilisation d\u2019\u00e9nergies fossiles sur toute la dur\u00e9e de la concession. La part du gaz dans le mix \u00e9nerg\u00e9tique sera r\u00e9duite de 50% d\u2019ici 2034.\n\nCr\u00e9dit photo : Jos\u00e9phine Brueder / Ville de Paris \n\nMarie Daud\u00e9 Marie-Laure Gadrat Sylvie J\u00e9hanno Beno\u00eet de Ruffray Xavier Piechaczyk Alice Timsit Alice Parenti Emma L.",
+                "likes": 10
+              },
+              {
+                "network": "linkedin",
+                "text": "\u2705\ufe0f L\u2019am\u00e9nagement de la place Denfert-Rochereau est en cours.\n\n\u27a1\ufe0f Carrefour majeur du 14e\u00a0arrondissement, la place Denfert-Rochereau est l\u2019une des plus larges places de la ville, s\u2019\u00e9tendant sur 4\u00a0hectares. \n\n\u27a1\ufe0f Des pistes cyclables sont en cours de cr\u00e9ation ainsi que des espaces pi\u00e9tons\u00a0: le centre de la place leur sera r\u00e9serv\u00e9. Plus de 100\u00a0arbres sont plant\u00e9s et 30\u00a0000 v\u00e9g\u00e9taux. \n\n\u2757\ufe0f Fin des travaux en 2027.\n\n\u27a1\ufe0f Peu \u00e0 peu, le nouveau visage de la place Denfert-Rochereau (14e) se dessine aux yeux des Parisiens. \n\n\u27a1\ufe0f En effet,\u00a0une nouvelle phase du chantier d\u00e9bute ce 4 mai, avec la fermeture \u00e0 la circulation du centre de la place.\n\n\u27a1\ufe0f Lieu de vie, la place Denfert-Rochereau regroupe des squares, une gare, le Mus\u00e9e de la Lib\u00e9ration de Paris - mus\u00e9e g\u00e9n\u00e9ral Leclerc - mus\u00e9e Jean Moulin, Les Catacombes de Paris et de nombreux commerces, caf\u00e9s, restaurants et habitations. Sa reconfiguration s\u2019int\u00e8gre dans la politique de v\u00e9g\u00e9talisation de la Ville de Paris.\n\n\u27a1\ufe0f La nouvelle place va permettre aux usagers de\u00a0profiter du patrimoine architectural et v\u00e9g\u00e9tal\u00a0remarquable de cet espace. \n\n\u27a1\ufe0f Elle offrira \u00e9galement de la fra\u00eecheur au centre de la ville. Le confort des pi\u00e9tons, le cheminement s\u00e9curis\u00e9 des cyclistes et l\u2019apaisement du quartier sont au c\u0153ur de ce nouvel am\u00e9nagement.\n\n\u2757\ufe0fLes travaux ont d\u00e9marr\u00e9 en juin 2025 et\u00a0s\u2019\u00e9tendront jusqu\u2019au d\u00e9but de l\u2019ann\u00e9e 2027. \n\nLe chantier se d\u00e9roule\u00a0en plusieurs phases.\n\n\u274e\ufe0f Les chiffres cl\u00e9s :\n\n\u25a0 La plantation de\u00a0107 arbres\u00a0;\n\u25a0 La plantation de\u00a030\u00a0000 v\u00e9g\u00e9taux\u00a0;\n\u25a0 La cr\u00e9ation de\u00a03\u00a0100 m\u00e8tres carr\u00e9s\u00a0d\u2019espaces verts\u00a0;\n\u25a0 La cr\u00e9ation de\u00a010\u00a0000 m\u00e8tres carr\u00e9s\u00a0de surfaces imperm\u00e9abilis\u00e9es\u00a0;\n\u25a0 La cr\u00e9ation de\u00a04\u00a0390 m\u00e8tres carr\u00e9s\u00a0d\u2019espaces pi\u00e9tonnis\u00e9s\u00a0;\n\u25a0 La cr\u00e9ation de\u00a0107\u00a0m lin\u00e9aires\u00a0de couloirs de bus et la mise en accessibilit\u00e9 de tous les arr\u00eats\u00a0;\n\u25a0 La cr\u00e9ation de\u00a0800\u00a0m lin\u00e9aires\u00a0de pistes cyclables.\n\nCr\u00e9dit photo : CL Design\n\n#denfertrochereau #paris14 #villedeparis #urbanisme \n\nIsabelle Knafou Agn\u00e8s BERTRAND Aminata NIAKATE Dan Lert Fran\u00e7ois Vauglin Thomas Chevandier",
+                "likes": 44
+              }
+            ],
+            "analysis": {
+              "topics": [
+                "Paris municipal projects and policy",
+                "Urban planning, pedestrianization, and cycling infrastructure",
+                "Energy transition and district heating decarbonization",
+                "Cultural heritage and museums (Catacombes, monuments)",
+                "Social policy (homelessness, child protection)",
+                "Public events and sports (Marathon, Seine swimming)",
+                "Public art and city activations",
+                "Local politics and elections"
+              ],
+              "expertise_areas": [
+                "Municipal energy infrastructure and district heating concessions (SEMOP), decarbonization targets and governance",
+                "Urban redevelopment and public-space design (pedestrian zones, cycling lanes, greening)",
+                "Cultural institution operations and visitor experience design (accessibility, audio guides, exhibitions)",
+                "Social policy program design and implementation (homelessness interventions, child protection frameworks)",
+                "Large-scale civic events and public activations (marathon logistics, public swimming sites)"
+              ],
+              "sentiment": "positive",
+              "tone": "civic and informational with concrete stats",
+              "credibility_signals": [
+                "Shares detailed figures, timelines, and targets for city projects (e.g., Denfert-Rochereau metrics, district heating concession terms and decarbonization goals)",
+                "References formal City of Paris decisions and Council votes (e.g., child protection plan adopted, homelessness action plan)",
+                "Evidence of real-world delivery and operations: reopenings and active works (Catacombes reopening, urban square works, Seine swimming season)",
+                "Names institutional partners and frameworks (Dalkia/Eiffage/RATP Solutions Ville, Banque des Territoires, 25-year SEMOP concession), indicating familiarity with complex public-private structures",
+                "Posts draw measurable public interest on some topics (e.g., a political post with 100+ likes)"
+              ],
+              "red_flags": [
+                "Content centers on civic initiatives and politics; no evidence of a startup, product, customers, or hiring",
+                "Political advocacy tone in election-related post could be polarizing"
+              ]
+            },
+            "sources": [
+              "https://twitter.com/laurentperrin",
+              "twitter:ApifyTwitterProvider",
+              "https://www.linkedin.com/in/laurent-perrin?miniProfileUrn=urn%3Ali%3Afsd_profile%3AACoAACVmO1kBxUMTrhjF-If4HB8bNUXNMhYlYdA",
+              "linkedin:LinkedInApifyProvider"
+            ]
+          },
+          "reputation": {
+            "articles_reviewed": 93,
+            "by_category": {
+              "press": 9,
+              "other": 4,
+              "funding": 3,
+              "current_role": 2,
+              "prior_company": 2,
+              "education": 1,
+              "rumor": 1
+            },
+            "findings": [
+              {
+                "summary": "Laurent Perrin is the co-founder and CTO of Front.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 10,
+                "source": "axolo.co",
+                "url": "https://axolo.co/blog/p/engineering-manager-front-laurent-perrin"
+              },
+              {
+                "summary": "Identified as cofounder of Front alongside Mathilde Collin.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "forbes.com",
+                "url": "https://www.forbes.com/sites/alexkonrad/2019/04/10/startup-front-shakes-up-pricing-to-take-its-email-collaboration-mainstream"
+              },
+              {
+                "summary": "LinkedIn lists Ecole polytechnique (2001\u20132004) in his education.",
+                "category": "education",
+                "polarity": "neutral",
+                "relevance": 7,
+                "source": "fr.linkedin.com",
+                "url": "https://fr.linkedin.com/in/laurent-perrin-9199505"
+              },
+              {
+                "summary": "Frenchweb reports Front raised $3.1 million in the United States and presented at Y Combinator Demo Day.",
+                "category": "funding",
+                "polarity": "positive",
+                "relevance": 6,
+                "source": "frenchweb.fr",
+                "url": "https://www.frenchweb.fr/laurent-perrin"
+              },
+              {
+                "summary": "Frenchweb reports that Front, which he co\u2011founded, raised $59 million for its collaborative messaging platform.",
+                "category": "funding",
+                "polarity": "positive",
+                "relevance": 6,
+                "source": "frenchweb.fr",
+                "url": "https://www.frenchweb.fr/laurent-perrin"
+              },
+              {
+                "summary": "Frenchweb says Front raised $10 million, including from the founder of Slack.",
+                "category": "funding",
+                "polarity": "positive",
+                "relevance": 6,
+                "source": "frenchweb.fr",
+                "url": "https://www.frenchweb.fr/laurent-perrin"
+              },
+              {
+                "summary": "Perrin detailed that Front uses about 150 asynchronous microservices which send fire-and-forget tasks to prevent failures from propagating between services.",
+                "category": "other",
+                "polarity": "neutral",
+                "relevance": 10,
+                "source": "axolo.co",
+                "url": "https://axolo.co/blog/p/engineering-manager-front-laurent-perrin"
+              },
+              {
+                "summary": "Crunchbase states he is based in Paris, \u00cele-de-France.",
+                "category": "other",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "crunchbase.com",
+                "url": "https://www.crunchbase.com/person/laurent-perrin-2"
+              },
+              {
+                "summary": "Authored a LinkedIn post titled 'The 5 Principles That Guide Our Development at Front' about four years ago.",
+                "category": "other",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/posts/laurent-perrin-9199505_email-startup-front-raises-rare-59-million-activity-6625792071615692800-BLf3"
+              },
+              {
+                "summary": "In a LinkedIn announcement that Paul Teyssier joined Front as Chief Product & Experience Officer, Teyssier thanks Laurent Perrin; Perrin is shown as Front\u2019s CTO and co-founder and comments, \"Welcome aboard Paul!\"",
+                "category": "other",
+                "polarity": "neutral",
+                "relevance": 4,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/posts/paulteyssier_meet-paul-teyssier-fronts-new-chief-product-activity-7336095637345603584-bAUS"
+              },
+              {
+                "summary": "Hexa Media\u2019s Start Mode features an interview with Laurent Perrin, CTO and cofounder of Front, where he discusses Front\u2019s early growth approach, including three\u2011month cycles, close user feedback, and a high quality bar.",
+                "category": "press",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "media.hexa.com",
+                "url": "https://media.hexa.com/p/still-coding-after-fronts-billion"
+              },
+              {
+                "summary": "Appears on the 'Scale to America' podcast (12/18/2025) to discuss building Front into a global customer communication platform, from Y Combinator to becoming a US unicorn, including technical choices, scaling, and fundraising with Social Capital, Sequoia, and Battery Ventures.",
+                "category": "press",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "podcast.ausha.co",
+                "url": "https://podcast.ausha.co/scale-to-america-a-podcast-by-newfund/laurent-perrin-cto-co-fondateur-front"
+              },
+              {
+                "summary": "Appears on BetterTech (YouTube) on Apr 18, 2023 as Front's CTO and co-founder to discuss the company's idea, fundraising rounds, integrations, managing customer communications, customer base, and future plans.",
+                "category": "press",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "youtube.com",
+                "url": "https://www.youtube.com/watch?v=8WoZL3k2-O8"
+              },
+              {
+                "summary": "Featured as a guest on the SaaS Connection podcast, described as Front\u2019s CTO and co\u2011founder.",
+                "category": "press",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "open.spotify.com",
+                "url": "https://open.spotify.com/episode/5QeB9RYDOlKHmjSvBwnfO7?si=QoXjBNq_SD-FFk7OVv7KlA"
+              },
+              {
+                "summary": "Front, co-founded by Perrin, announced pricing changes including cheaper accounts and a 'light user' option as part of a broader push by the cofounders.",
+                "category": "press",
+                "polarity": "neutral",
+                "relevance": 7,
+                "source": "forbes.com",
+                "url": "https://www.forbes.com/sites/alexkonrad/2019/04/10/startup-front-shakes-up-pricing-to-take-its-email-collaboration-mainstream"
+              },
+              {
+                "summary": "As cofounder, Perrin is pursuing a strategy to build a collaboration workflow on top of email, starting with shared inboxes and adding in-email collaboration features.",
+                "category": "press",
+                "polarity": "neutral",
+                "relevance": 6,
+                "source": "forbes.com",
+                "url": "https://www.forbes.com/sites/alexkonrad/2019/04/10/startup-front-shakes-up-pricing-to-take-its-email-collaboration-mainstream"
+              },
+              {
+                "summary": "Featured in a Spotify podcast episode titled 'Still coding after Front's billion-dollar rise' as CTO and cofounder of Front.",
+                "category": "press",
+                "polarity": "neutral",
+                "relevance": 6,
+                "source": "open.spotify.com",
+                "url": "https://open.spotify.com/episode/6JBxUKlfapv56mx0uMC8tr"
+              },
+              {
+                "summary": "Inc. reports that Laurent Perrin, co-founder of Front, was diagnosed with testicular cancer.",
+                "category": "press",
+                "polarity": "neutral",
+                "relevance": 6,
+                "source": "inc.com",
+                "url": "https://www.inc.com/cameron-albert-deitch/founders-happier-healthier-productive-disconnect-email-work.html"
+              },
+              {
+                "summary": "Featured on the 'Learning by doing: Management' podcast, where the cofounder of Front shares strong views on workplace communication.",
+                "category": "press",
+                "polarity": "neutral",
+                "relevance": 5,
+                "source": "podcasts.apple.com",
+                "url": "https://podcasts.apple.com/cg/podcast/194-laurent-perrin-ce-que-vos-emails-et-r%C3%A9unions-disent/id1617600209?i=1000749543290"
+              },
+              {
+                "summary": "Crunchbase says he previously worked at eFounders as a Hacker in Residence.",
+                "category": "prior_company",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "crunchbase.com",
+                "url": "https://www.crunchbase.com/person/laurent-perrin-2"
+              }
+            ]
+          },
+          "profile": {
+            "background": [
+              {
+                "summary": "Laurent Perrin is the co-founder and CTO of Front.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 10,
+                "source": "axolo.co",
+                "url": "https://axolo.co/blog/p/engineering-manager-front-laurent-perrin"
+              },
+              {
+                "summary": "LinkedIn lists Ecole polytechnique (2001\u20132004) in his education.",
+                "category": "education",
+                "polarity": "neutral",
+                "relevance": 7,
+                "source": "fr.linkedin.com",
+                "url": "https://fr.linkedin.com/in/laurent-perrin-9199505"
+              },
+              {
+                "summary": "Crunchbase says he previously worked at eFounders as a Hacker in Residence.",
+                "category": "prior_company",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "crunchbase.com",
+                "url": "https://www.crunchbase.com/person/laurent-perrin-2"
+              },
+              {
+                "summary": "Identified as cofounder of Front alongside Mathilde Collin.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "forbes.com",
+                "url": "https://www.forbes.com/sites/alexkonrad/2019/04/10/startup-front-shakes-up-pricing-to-take-its-email-collaboration-mainstream"
+              },
+              {
+                "summary": "Spent four years as CTO of the French online radio station Radioline.",
+                "category": "prior_company",
+                "polarity": "neutral",
+                "relevance": 7,
+                "source": "sacra.com",
+                "url": "https://sacra.com/research/front-fundraising-competitors-leadership-dec-20"
+              }
+            ],
+            "achievements": [],
+            "adverse": [],
+            "press": [
+              {
+                "summary": "In a LinkedIn post, he says Newfund invited him to speak about Front\u2019s U.S. journey from early days in France with Hexa to Y Combinator and initial fundraising.",
+                "category": "rumor",
+                "polarity": "neutral",
+                "relevance": 6,
+                "source": "fr.linkedin.com",
+                "url": "https://fr.linkedin.com/posts/laurent-perrin-9199505_laurent-perrin-cto-et-co-fondateur-de-front-activity-7407427310053834752-jpYp"
+              },
+              {
+                "summary": "Frenchweb reports Front raised $3.1 million in the United States and presented at Y Combinator Demo Day.",
+                "category": "funding",
+                "polarity": "positive",
+                "relevance": 6,
+                "source": "frenchweb.fr",
+                "url": "https://www.frenchweb.fr/laurent-perrin"
+              },
+              {
+                "summary": "Perrin detailed that Front uses about 150 asynchronous microservices which send fire-and-forget tasks to prevent failures from propagating between services.",
+                "category": "other",
+                "polarity": "neutral",
+                "relevance": 10,
+                "source": "axolo.co",
+                "url": "https://axolo.co/blog/p/engineering-manager-front-laurent-perrin"
+              },
+              {
+                "summary": "Hexa Media\u2019s Start Mode features an interview with Laurent Perrin, CTO and cofounder of Front, where he discusses Front\u2019s early growth approach, including three\u2011month cycles, close user feedback, and a high quality bar.",
+                "category": "press",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "media.hexa.com",
+                "url": "https://media.hexa.com/p/still-coding-after-fronts-billion"
+              },
+              {
+                "summary": "Frenchweb reports that Front, which he co\u2011founded, raised $59 million for its collaborative messaging platform.",
+                "category": "funding",
+                "polarity": "positive",
+                "relevance": 6,
+                "source": "frenchweb.fr",
+                "url": "https://www.frenchweb.fr/laurent-perrin"
+              },
+              {
+                "summary": "Crunchbase states he is based in Paris, \u00cele-de-France.",
+                "category": "other",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "crunchbase.com",
+                "url": "https://www.crunchbase.com/person/laurent-perrin-2"
+              },
+              {
+                "summary": "Appears on the 'Scale to America' podcast (12/18/2025) to discuss building Front into a global customer communication platform, from Y Combinator to becoming a US unicorn, including technical choices, scaling, and fundraising with Social Capital, Sequoia, and Battery Ventures.",
+                "category": "press",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "podcast.ausha.co",
+                "url": "https://podcast.ausha.co/scale-to-america-a-podcast-by-newfund/laurent-perrin-cto-co-fondateur-front"
+              },
+              {
+                "summary": "Frenchweb says Front raised $10 million, including from the founder of Slack.",
+                "category": "funding",
+                "polarity": "positive",
+                "relevance": 6,
+                "source": "frenchweb.fr",
+                "url": "https://www.frenchweb.fr/laurent-perrin"
+              }
+            ]
+          },
+          "errors": [
+            "No GitHub handle supplied \u2014 builder evaluation skipped."
+          ]
+        }
+      ],
+      "errors": []
+    }
+  },
+  {
+    "id": "bd37926476e9",
+    "company_id": "fb6a731dd750",
+    "company_name": "Mint",
+    "one_liner": "Free personal finance manager that aggregates your bank accounts",
+    "website": "https://mint.com",
+    "product_url": "",
+    "sector": "fintech",
+    "stage": "seed",
+    "geography": "Mountain View, US",
+    "raising": "$100K",
+    "why_now": "Consumers have no single view of their money across banks and cards",
+    "accelerator": "",
+    "prior_companies": "",
+    "status": "decision",
+    "source": "inbound",
+    "submitted_at": "2026-07-22T09:12:00",
+    "deck": {
+      "filename": "mint_seed_deck.pdf",
+      "pages": 0
+    },
+    "founders": [
+      {
+        "name": "Aaron Patzer",
+        "email": "aaron@mint.com",
+        "github": "",
+        "twitter": "aaronpatzer",
+        "linkedin": "aaronpatzer"
+      }
+    ],
+    "applicability": {
+      "fit_score": 85,
+      "sanity": {
+        "passed": true,
+        "note": "No immediate viability contradiction found."
+      },
+      "breakdown": [
+        {
+          "label": "Sector",
+          "weight": 40,
+          "awarded": 40,
+          "note": "Matches fund sector"
+        },
+        {
+          "label": "Stage",
+          "weight": 25,
+          "awarded": 25,
+          "note": "Matches fund stage"
+        },
+        {
+          "label": "Geography",
+          "weight": 20,
+          "awarded": 20,
+          "note": "Matches fund geography"
+        },
+        {
+          "label": "Desires",
+          "weight": 15,
+          "awarded": 0,
+          "note": "Requires screening of the deck and founder profiles"
+        }
+      ]
+    },
+    "screening": {
+      "founder_axis": {
+        "score": 91,
+        "sentiment": "bullish",
+        "trend": "stable",
+        "confidence": 0.84,
+        "strengths": [
+          {
+            "text": "Identified as the founder of Mint.com.",
+            "source": "fastcompany.com",
+            "url": ""
+          },
+          {
+            "text": "Won the $50,000 first prize at TechCrunch40 when Mint.com launched.",
+            "source": "alchetron.com",
+            "url": ""
+          },
+          {
+            "text": "Became Intuit\u2019s VP/GM of personal finance overseeing Quicken and Mint after Mint\u2019s acquisition.",
+            "source": "venturebeat.com",
+            "url": ""
+          },
+          {
+            "text": "Holds a BS in Computer Science, Computer Engineering, and Electrical Engineering (Duke) and an MSEE (Princeton).",
+            "source": "en.wikipedia.org",
+            "url": ""
+          },
+          {
+            "text": "Founded Vital in 2017 and serves as CEO building AI-powered software for emergency departments.",
+            "source": "grokipedia.com",
+            "url": ""
+          },
+          {
+            "text": "Listed as an angel investor with 16 investments.",
+            "source": "pitchbook.com",
+            "url": ""
+          },
+          {
+            "text": "Openly discusses past failed ventures (e.g., Swift) and lessons learned.",
+            "source": "inc.com",
+            "url": ""
+          },
+          {
+            "text": "Current application describes a free personal finance manager aggregating bank accounts (clear domain alignment).",
+            "source": "application",
+            "url": ""
+          },
+          {
+            "text": "Public footprint shows minimal recent social content and engagement (1 post, no engagement).",
+            "source": "public_footprint.socials_analysis",
+            "url": ""
+          }
+        ],
+        "weaknesses": [],
+        "opportunities": [],
+        "threats": [],
+        "evidence": [
+          "Identified as the founder of Mint.com.",
+          "Won the $50,000 first prize at TechCrunch40 when Mint.com launched.",
+          "Became Intuit\u2019s VP/GM of personal finance overseeing Quicken and Mint after Mint\u2019s acquisition.",
+          "Holds a BS in Computer Science, Computer Engineering, and Electrical Engineering (Duke) and an MSEE (Princeton).",
+          "Founded Vital in 2017 and serves as CEO building AI-powered software for emergency departments.",
+          "Listed as an angel investor with 16 investments.",
+          "Openly discusses past failed ventures (e.g., Swift) and lessons learned.",
+          "Current application describes a free personal finance manager aggregating bank accounts (clear domain alignment).",
+          "Public footprint shows minimal recent social content and engagement (1 post, no engagement)."
+        ],
+        "rationale": "Seasoned, technically strong repeat founder with a demonstrated exit and leadership experience post-acquisition. Founded Mint.com, won TechCrunch40 on launch, and subsequently led personal finance at Intuit, indicating proven execution and scale-readiness. Strong technical foundation (BS in CS/CE/EE; MSEE) and ongoing founder-CEO role at Vital show continued builder trajectory. Additional signals include active angel investing and public reflection on past failures, suggesting learning orientation. Minor weak signal is minimal recent social content. Trend marked stable due to lack of time-series performance data in the inputs.",
+        "swot": {
+          "strengths": [
+            {
+              "text": "Identified as the founder of Mint.com.",
+              "src": {
+                "label": "fastcompany.com",
+                "url": ""
+              }
+            },
+            {
+              "text": "Won the $50,000 first prize at TechCrunch40 when Mint.com launched.",
+              "src": {
+                "label": "alchetron.com",
+                "url": ""
+              }
+            },
+            {
+              "text": "Became Intuit\u2019s VP/GM of personal finance overseeing Quicken and Mint after Mint\u2019s acquisition.",
+              "src": {
+                "label": "venturebeat.com",
+                "url": ""
+              }
+            },
+            {
+              "text": "Holds a BS in Computer Science, Computer Engineering, and Electrical Engineering (Duke) and an MSEE (Princeton).",
+              "src": {
+                "label": "en.wikipedia.org",
+                "url": ""
+              }
+            },
+            {
+              "text": "Founded Vital in 2017 and serves as CEO building AI-powered software for emergency departments.",
+              "src": {
+                "label": "grokipedia.com",
+                "url": ""
+              }
+            },
+            {
+              "text": "Listed as an angel investor with 16 investments.",
+              "src": {
+                "label": "pitchbook.com",
+                "url": ""
+              }
+            },
+            {
+              "text": "Openly discusses past failed ventures (e.g., Swift) and lessons learned.",
+              "src": {
+                "label": "inc.com",
+                "url": ""
+              }
+            },
+            {
+              "text": "Current application describes a free personal finance manager aggregating bank accounts (clear domain alignment).",
+              "src": {
+                "label": "application",
+                "url": ""
+              }
+            },
+            {
+              "text": "Public footprint shows minimal recent social content and engagement (1 post, no engagement).",
+              "src": {
+                "label": "public_footprint.socials_analysis",
+                "url": ""
+              }
+            }
+          ],
+          "weaknesses": [],
+          "opportunities": [],
+          "threats": []
+        }
+      },
+      "market_axis": {
+        "score": 37,
+        "sentiment": "bear",
+        "trend": "stable",
+        "confidence": 0.55,
+        "strengths": [
+          {
+            "text": "Global personal finance software market projected to reach $1.59B by 2030 at 5.1% CAGR (2023\u20132030).",
+            "source": "https://www.grandviewresearch.com/industry-analysis/personal-finance-software-market-report",
+            "url": ""
+          },
+          {
+            "text": "Market estimated at $1.35B in 2025, projected $2.57B by 2034 (7.6% CAGR); North America 32.6% share (2025).",
+            "source": "https://www.fortunebusinessinsights.com/personal-finance-software-market-112683",
+            "url": ""
+          },
+          {
+            "text": "Intuit announced Mint\u2019s shutdown and routed users to Credit Karma, reflecting consolidation and model shifts in PFM.",
+            "source": "https://www.theverge.com/2023/11/2/23943254/mint-intuit-shutting-down-credit-karma",
+            "url": ""
+          },
+          {
+            "text": "Rocket Companies acquired Truebill (now Rocket Money) for ~$1.275B to integrate PFM into a broader financial ecosystem.",
+            "source": "https://ir.rocketcompanies.com/news-and-events/press-releases/press-release-details/2021/Rocket-Companies-to-Acquire-Truebill-Adding-Rapidly-Expanding-Financial-Empowerment-FinTech-to-the-Rocket-Platform/default.aspx",
+            "url": ""
+          },
+          {
+            "text": "CFPB finalized Personal Financial Data Rights (Section 1033) rule, requiring consumer-permissioned data access/portability and setting third-party obligations.",
+            "source": "https://files.consumerfinance.gov/f/documents/cfpb_personal-financial-data-rights-final-rule_2024-10.pdf",
+            "url": ""
+          },
+          {
+            "text": "PFM moving to API-based, consented data sharing (e.g., Plaid Link) to improve transparency and reduce risk.",
+            "source": "https://plaid.com/blog/plaids-commitment-to-consumer-privacy",
+            "url": ""
+          },
+          {
+            "text": "Shift toward cloud/mobile subscription budgeting apps, exemplified by Quicken\u2019s Simplifi expansion.",
+            "source": "https://www.prnewswire.com/news-releases/simplifi-by-quicken-named-best-budgeting-app-by-the-new-york-times-wirecutter-second-year-in-a-row-301426799.html",
+            "url": ""
+          },
+          {
+            "text": "Ongoing investor interest in new PFM entrants, e.g., Monarch Money raised $75M Series B (May 2025).",
+            "source": "https://sacra.com/c/monarch-money",
+            "url": ""
+          }
+        ],
+        "weaknesses": [],
+        "opportunities": [],
+        "threats": [],
+        "evidence": [
+          "Global personal finance software market projected to reach $1.59B by 2030 at 5.1% CAGR (2023\u20132030).",
+          "Market estimated at $1.35B in 2025, projected $2.57B by 2034 (7.6% CAGR); North America 32.6% share (2025).",
+          "Intuit announced Mint\u2019s shutdown and routed users to Credit Karma, reflecting consolidation and model shifts in PFM.",
+          "Rocket Companies acquired Truebill (now Rocket Money) for ~$1.275B to integrate PFM into a broader financial ecosystem.",
+          "CFPB finalized Personal Financial Data Rights (Section 1033) rule, requiring consumer-permissioned data access/portability and setting third-party obligations.",
+          "PFM moving to API-based, consented data sharing (e.g., Plaid Link) to improve transparency and reduce risk.",
+          "Shift toward cloud/mobile subscription budgeting apps, exemplified by Quicken\u2019s Simplifi expansion.",
+          "Ongoing investor interest in new PFM entrants, e.g., Monarch Money raised $75M Series B (May 2025)."
+        ],
+        "rationale": "Global personal finance software remains a relatively small market with modest growth, while competition is consolidated and shifting toward platform-embedded PFM. Multiple sources peg the global market near $1.1\u20131.35B today with mid\u2013single-digit CAGR (5\u20137.6%), and North America at roughly one-third of global share, limiting pure-play upside. Consolidation signals monetization challenges for stand-alone PFM (e.g., Mint\u2019s shutdown and migration to Credit Karma; Truebill\u2019s integration into Rocket). Regulatory changes (CFPB Section 1033) should improve data access/portability and interoperability, but add compliance obligations and do not expand TAM materially in the near term. Trends toward API-based, consented data sharing and subscription budgeting apps support product quality but reinforce that PFM is increasingly a feature in broader ecosystems. Given the small TAM, intense incumbency, and mixed but non-declining trend signals\u2014and with US-only TAM data absent in the research\u2014the market outlook is bearish with a stable trajectory.",
+        "swot": {
+          "strengths": [
+            {
+              "text": "Global personal finance software market projected to reach $1.59B by 2030 at 5.1% CAGR (2023\u20132030).",
+              "src": {
+                "label": "https://www.grandviewresearch.com/industry-analysis/personal-finance-software-market-report",
+                "url": ""
+              }
+            },
+            {
+              "text": "Market estimated at $1.35B in 2025, projected $2.57B by 2034 (7.6% CAGR); North America 32.6% share (2025).",
+              "src": {
+                "label": "https://www.fortunebusinessinsights.com/personal-finance-software-market-112683",
+                "url": ""
+              }
+            },
+            {
+              "text": "Intuit announced Mint\u2019s shutdown and routed users to Credit Karma, reflecting consolidation and model shifts in PFM.",
+              "src": {
+                "label": "https://www.theverge.com/2023/11/2/23943254/mint-intuit-shutting-down-credit-karma",
+                "url": ""
+              }
+            },
+            {
+              "text": "Rocket Companies acquired Truebill (now Rocket Money) for ~$1.275B to integrate PFM into a broader financial ecosystem.",
+              "src": {
+                "label": "https://ir.rocketcompanies.com/news-and-events/press-releases/press-release-details/2021/Rocket-Companies-to-Acquire-Truebill-Adding-Rapidly-Expanding-Financial-Empowerment-FinTech-to-the-Rocket-Platform/default.aspx",
+                "url": ""
+              }
+            },
+            {
+              "text": "CFPB finalized Personal Financial Data Rights (Section 1033) rule, requiring consumer-permissioned data access/portability and setting third-party obligations.",
+              "src": {
+                "label": "https://files.consumerfinance.gov/f/documents/cfpb_personal-financial-data-rights-final-rule_2024-10.pdf",
+                "url": ""
+              }
+            },
+            {
+              "text": "PFM moving to API-based, consented data sharing (e.g., Plaid Link) to improve transparency and reduce risk.",
+              "src": {
+                "label": "https://plaid.com/blog/plaids-commitment-to-consumer-privacy",
+                "url": ""
+              }
+            },
+            {
+              "text": "Shift toward cloud/mobile subscription budgeting apps, exemplified by Quicken\u2019s Simplifi expansion.",
+              "src": {
+                "label": "https://www.prnewswire.com/news-releases/simplifi-by-quicken-named-best-budgeting-app-by-the-new-york-times-wirecutter-second-year-in-a-row-301426799.html",
+                "url": ""
+              }
+            },
+            {
+              "text": "Ongoing investor interest in new PFM entrants, e.g., Monarch Money raised $75M Series B (May 2025).",
+              "src": {
+                "label": "https://sacra.com/c/monarch-money",
+                "url": ""
+              }
+            }
+          ],
+          "weaknesses": [],
+          "opportunities": [],
+          "threats": []
+        }
+      },
+      "idea_vs_market_axis": {
+        "score": 34,
+        "sentiment": "bear",
+        "trend": "declining",
+        "confidence": 0.62,
+        "strengths": [],
+        "weaknesses": [],
+        "opportunities": [],
+        "threats": [],
+        "evidence": [],
+        "rationale": "As proposed, the deck describes a free stand-alone PFM aggregator monetized via CPA/CPC. Market axis evidence indicates this model is structurally challenged: small global TAM (~$1.1\u20131.35B) with mid\u2013single-digit CAGR and North America ~33% share; consolidation signals (Mint shutdown to Credit Karma; Truebill integrated into Rocket) and a trend of PFM becoming a feature within larger ecosystems; CFPB 1033 improves access but adds obligations and does not expand TAM near term. These specifics make the idea\u2019s as-is fit weak despite improved data plumbing. In contrast, the Founder axis cites a seasoned, domain-aligned repeat founder who built Mint.com (TechCrunch40 win) and later led Intuit\u2019s personal finance products, with strong technical depth and ongoing builder trajectory. That track record suggests the caliber to adjust product/monetization away from a free, CPA/ads PFM wedge. Therefore: the idea does not survive as-is, but the team is strong enough to pivot.",
+        "swot": {
+          "strengths": [],
+          "weaknesses": [],
+          "opportunities": [],
+          "threats": []
+        }
+      },
+      "thesis_fit": {
+        "passed": true,
+        "reasons": [
+          "Sector match: deck fields ['Personal finance software', 'Personal financial management (PFM)', 'Account aggregation', 'Automated transaction categorization (AI-based auto-sorting)', 'Financial product referrals (CPA)', 'Targeted advertising (CPC)', 'Online banking integration'] overlap thesis sectors ['AI', 'fintech', 'SaaS', 'health', 'consumer'].",
+          "Geography match: deck geography ['United States'] overlaps thesis geography ['Germany', 'DACH', 'Europe', 'US', 'Global']."
+        ]
+      },
+      "recommendation": "more_diligence_needed",
+      "rationale": "Founder axis: bullish (high-fit, stable) repeat founder with deep domain and execution proof points increases our willingness to engage. Market axis: bear (small/stable TAM, consolidation, PFM as a feature) caps upside and heightens GTM/monetization risk. Idea-vs-Market axis: bear with a declining trend; the current free PFM CPA/CPC model is misaligned with market structure, though the verdict that the team is strong enough to pivot keeps the door open. Given our medium risk_appetite, we cannot responsibly override two bearish axes and a declining idea trend to recommend an immediate investment; however, founder strength argues against an outright pass. Our ownership_target_pct is a fixed 8%, which would require leading or meaningfully participating; until a concrete pivot/monetization path and round terms are defined, we cannot size a check within the $250k\u2013$2M range and therefore do not recommend a check today.",
+      "adversarial_view": "We should make a decisive pass now because the single dominant risk is structural market uninvestability that further diligence cannot change. The market axis already pegs PFM as a small, slow\u2011growth category (~$1.1\u20131.35B global today with 5\u20137.6% CAGR and ~one\u2011third NA share), with consolidation demonstrating that stand\u2011alone PFM is a feature within larger ecosystems (Mint routed to Credit Karma; Truebill integrated into Rocket). CFPB 1033 improves data access but explicitly adds obligations and does not expand TAM near term, further pressuring margins. The idea\u2011vs\u2011market axis labels the current free CPA/CPC PFM model as structurally challenged; and any plausible shift that remains within PFM still sits under the same TAM ceiling or depends on platform cross\u2011sell economics that the team does not control per the market thesis notes. Given these on\u2011record constraints, founder quality cannot overcome category limits; pursuing more diligence won\u2019t alter the capped upside, so the appropriate call is to pass now.",
+      "gaps_and_caveats": [
+        "Founder focus: clarify time allocation and commitment given concurrent CEO role at Vital; identify senior operator if needed.",
+        "Pivot thesis: present a concrete plan away from a free stand-alone PFM (e.g., embedded/partnered PFM for FIs, B2B SaaS workflow, or a niche wedge) including target buyer, pricing, and success metrics.",
+        "Distribution advantage: evidence of bank/credit union/fintech partnerships, migration pathways post-1033, and any proprietary data or integrations that create defensibility.",
+        "Early signal: cohort retention (D30/D90), DAU/MAU, linked accounts per user, churn vs. Mint refugees, and willingness to pay or non-CPA monetization tests.",
+        "Compliance/security: strategy for CFPB 1033 obligations, consent management, data minimization, SOC2/ISO roadmap, and vendor oversight.",
+        "Unit economics: data access costs, ARPU beyond CPA/ads, gross margin after data/infra, CAC by channel, and path to contribution profitability.",
+        "Competitive positioning: clear differentiation versus Credit Karma, Rocket Money, Monarch, Simplifi/Quicken, and banks\u2019 native PFM; why this wins now.",
+        "Round mechanics: intended round size, valuation expectations, lead terms, and pro rata rights enabling us to achieve ~8% ownership."
+      ]
+    },
+    "enrichment": {
+      "company_name": "Mint",
+      "industry": "",
+      "one_liner": "",
+      "company_reputation": {
+        "articles_reviewed": 82,
+        "by_category": {
+          "press": 11,
+          "product": 9,
+          "other": 2,
+          "rumor": 2,
+          "failure": 1,
+          "funding": 1,
+          "recognition": 1,
+          "team": 1
+        },
+        "findings": [
+          {
+            "summary": "Mint\u2019s budgeting app will shut down on Jan. 1, 2024.",
+            "category": "failure",
+            "polarity": "negative",
+            "relevance": 10,
+            "source": "cnbc.com",
+            "url": "https://www.cnbc.com/2023/11/07/budgeting-app-mint-is-shutting-down-users-are-disappointed.html"
+          },
+          {
+            "summary": "The article reports that Muhawesh said her father's Minnesota business connections helped raise startup capital that is currently covering Mint Press News\u2019s costs.",
+            "category": "funding",
+            "polarity": "positive",
+            "relevance": 3,
+            "source": "cjr.org",
+            "url": "https://www.cjr.org/news_startups_guide/2012/03/mint-press-news.php"
+          },
+          {
+            "summary": "An analysis argues Mint\u2019s closure reflects Intuit\u2019s consolidation of personal finance products to prioritize Credit Karma, which the article says has more features than Mint.",
+            "category": "other",
+            "polarity": "neutral",
+            "relevance": 7,
+            "source": "blog.logrocket.com",
+            "url": "https://blog.logrocket.com/product-management/why-is-the-mint-app-shutting-down"
+          },
+          {
+            "summary": "Prowly hosts a directory-style page offering contact information and journalist listings for Mint Press News, including editorial roles.",
+            "category": "other",
+            "polarity": "neutral",
+            "relevance": 3,
+            "source": "prowly.com",
+            "url": "https://prowly.com/profiles/outlets/mint-press-news"
+          },
+          {
+            "summary": "Mint had an estimated 3.6 million active users when the shutdown was announced.",
+            "category": "press",
+            "polarity": "neutral",
+            "relevance": 9,
+            "source": "linkedin.com",
+            "url": "https://www.linkedin.com/pulse/shutdown-mint-what-means-pentadata-inc-mkxnf"
+          },
+          {
+            "summary": "Mint was founded in 2006 and was acquired by Intuit in 2009.",
+            "category": "press",
+            "polarity": "neutral",
+            "relevance": 8,
+            "source": "linkedin.com",
+            "url": "https://www.linkedin.com/pulse/shutdown-mint-what-means-pentadata-inc-mkxnf"
+          },
+          {
+            "summary": "After Mint shut down in early 2024, many former users moved to paid apps, free tools, or manual spreadsheets.",
+            "category": "press",
+            "polarity": "neutral",
+            "relevance": 8,
+            "source": "usatoday.com",
+            "url": "https://www.usatoday.com/story/money/personalfinance/budget-and-spending/mint-alternatives/90051260007"
+          },
+          {
+            "summary": "Mint was introduced in 2007 and became one of the earliest and most popular personal finance apps.",
+            "category": "press",
+            "polarity": "neutral",
+            "relevance": 8,
+            "source": "nytimes.com",
+            "url": "https://www.nytimes.com/2023/11/03/business/mint-app-closing-intuit.html"
+          }
+        ]
+      },
+      "founders": [
+        {
+          "name": "Aaron Patzer",
+          "handles": {
+            "twitter": "aaronpatzer",
+            "linkedin": "aaronpatzer"
+          },
+          "github": null,
+          "socials": {
+            "profiles": {
+              "twitter": {
+                "handle": "aaronpatzer",
+                "followers": 0
+              },
+              "linkedin": {
+                "handle": "aaronpatzer",
+                "followers": 0
+              }
+            },
+            "post_count": 1,
+            "comment_count": 0,
+            "sample_posts": [
+              {
+                "network": "linkedin",
+                "text": "",
+                "likes": 0
+              }
+            ],
+            "analysis": {
+              "topics": [],
+              "expertise_areas": [],
+              "sentiment": "neutral",
+              "tone": "no observable style (no content)",
+              "credibility_signals": [],
+              "red_flags": [
+                "No substantive content available in the recent post.",
+                "No observable engagement on the only listed post (0 likes, 0 reposts, 0 replies)."
+              ]
+            },
+            "sources": [
+              "https://twitter.com/aaronpatzer",
+              "twitter:ApifyTwitterProvider",
+              "https://www.linkedin.com/in/aaronpatzer",
+              "linkedin:LinkedInApifyProvider"
+            ]
+          },
+          "reputation": {
+            "articles_reviewed": 57,
+            "by_category": {
+              "prior_company": 25,
+              "press": 17,
+              "current_role": 14,
+              "other": 14,
+              "rumor": 11,
+              "recognition": 8,
+              "education": 4,
+              "funding": 2,
+              "research": 2,
+              "award": 1,
+              "failure": 1
+            },
+            "findings": [
+              {
+                "summary": "He won the $50,000 first prize at TechCrunch40 in September 2007 when Mint.com launched.",
+                "category": "award",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "alchetron.com",
+                "url": "https://alchetron.com/Aaron-Patzer"
+              },
+              {
+                "summary": "Co-founded Vital, a healthcare startup focused on improving emergency, urgent care, and inpatient experiences using AI and design thinking.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "youtube.com",
+                "url": "https://www.youtube.com/watch?v=j8xmaDCiShQ"
+              },
+              {
+                "summary": "Founded Vital in 2017 and serves as CEO, building AI-powered software for emergency departments to guide patients and predict wait times, based in Auckland, New Zealand.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "grokipedia.com",
+                "url": "https://grokipedia.com/page/Aaron_Patzer"
+              },
+              {
+                "summary": "Is the Founder and CEO of Vital Software, a company developing software to enhance hospital efficiency.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "startupintros.com",
+                "url": "https://startupintros.com/people/aaron-patzer"
+              },
+              {
+                "summary": "The article identifies Aaron Patzer as the founder of Mint.com.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "fastcompany.com",
+                "url": "https://www.fastcompany.com/1700439/why-mintcom-founder-aaron-patzer-hated-quicken"
+              },
+              {
+                "summary": "The article states Aaron Patzer is the co-founder and CEO of Vital, a modern software platform to increase productivity and improve patient health in hospital emergency rooms.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "multivu.com",
+                "url": "https://www.multivu.com/players/English/8619951-c19check-covid-19-corona-virus-checker/docs/Aaron_1584661607806-833407420.pdf"
+              },
+              {
+                "summary": "Began launching an Atlanta-based startup using AI to improve emergency rooms.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "hypepotamus.com",
+                "url": "https://www.hypepotamus.com/vital"
+              },
+              {
+                "summary": "On his LinkedIn post header, he lists roles including Founder & CEO at Vital.io, association with Mint.com, and identifies as a healthcare angel investor and algorithms expert.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/posts/apatzer_1-in-patient-experience-this-win-is-for-activity-7254549747653324800-so0o"
+              },
+              {
+                "summary": "The page states he relocated to Auckland, New Zealand and started Vital Software Ltd in 2017.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "alchetron.com",
+                "url": "https://alchetron.com/Aaron-Patzer"
+              },
+              {
+                "summary": "VentureBeat reports Patzer became Intuit\u2019s vice president and general manager of personal finance, overseeing both Quicken and Mint, after Mint\u2019s acquisition.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "venturebeat.com",
+                "url": "https://venturebeat.com/ai/mint-intuit-aaron-patzer"
+              },
+              {
+                "summary": "Describes Vital.io as guiding patients during ER or hospital stays and using AI to predict wait times.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 7,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/in/apatzer"
+              },
+              {
+                "summary": "Founded Fountain, a micro-consulting marketplace enabling users to ask experts via mobile video, voice, and text.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 7,
+                "source": "inc.com",
+                "url": "https://www.inc.com/trep-life/aaron-partzer-mint-founder-making-expertise-accessible-with-fountain.html"
+              },
+              {
+                "summary": "It describes his company Vital Software as an AI tool for mobile patient check-in that automatically creates electronic medical records, aiming to cut ER wait times in half.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 7,
+                "source": "youtube.com",
+                "url": "https://www.youtube.com/watch?v=QInnBzxZiPo"
+              },
+              {
+                "summary": "Described as Founder and CEO of Vital.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 6,
+                "source": "open.spotify.com",
+                "url": "https://open.spotify.com/episode/1X8Exy2Q8Oo2GlYjHQVA7s"
+              },
+              {
+                "summary": "Listed as an angel investor who has made 16 investments.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 6,
+                "source": "pitchbook.com",
+                "url": "https://pitchbook.com/profiles/investor/106344-64"
+              },
+              {
+                "summary": "Holds a BS in computer science, computer engineering, and electrical engineering from Duke University (2002) and an MS in Electrical Engineering from Princeton University (2004).",
+                "category": "education",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "grokipedia.com",
+                "url": "https://grokipedia.com/page/Aaron_Patzer"
+              },
+              {
+                "summary": "Holds an MSEE from Princeton University and BS degrees in Computer Science, Computer Engineering, and Electrical Engineering from Duke University.",
+                "category": "education",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/Aaron_Patzer"
+              },
+              {
+                "summary": "Patzer graduated from Duke University in 2002 with a BSEE.",
+                "category": "education",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "alchetron.com",
+                "url": "https://alchetron.com/Aaron-Patzer"
+              },
+              {
+                "summary": "Holds an MSEE from Princeton University and a BS in computer science, computer engineering, and electrical engineering from Duke University.",
+                "category": "education",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "youtube.com",
+                "url": "https://www.youtube.com/watch?v=_sajNwt8ldI"
+              },
+              {
+                "summary": "Said he helmed some failed ventures, including a magnetic-levitation personal vehicle concept called Swift, attributing the failure to overambition and unrealistic finances.",
+                "category": "failure",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "inc.com",
+                "url": "https://www.inc.com/zoe-henry/aaron-patzer-on-failing-twice-and-what-it-really-feels-like-to-sell-your-company.html"
+              }
+            ]
+          },
+          "profile": {
+            "background": [
+              {
+                "summary": "Co-founded Vital, a healthcare startup focused on improving emergency, urgent care, and inpatient experiences using AI and design thinking.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "youtube.com",
+                "url": "https://www.youtube.com/watch?v=j8xmaDCiShQ"
+              },
+              {
+                "summary": "Holds a BS in computer science, computer engineering, and electrical engineering from Duke University (2002) and an MS in Electrical Engineering from Princeton University (2004).",
+                "category": "education",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "grokipedia.com",
+                "url": "https://grokipedia.com/page/Aaron_Patzer"
+              },
+              {
+                "summary": "Gave a talk at Princeton's Keller Center recounting how he founded Mint.com and its $170 million acquisition by Intuit.",
+                "category": "prior_company",
+                "polarity": "neutral",
+                "relevance": 10,
+                "source": "youtube.com",
+                "url": "https://www.youtube.com/watch?v=_sajNwt8ldI"
+              },
+              {
+                "summary": "Founded Vital in 2017 and serves as CEO, building AI-powered software for emergency departments to guide patients and predict wait times, based in Auckland, New Zealand.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "grokipedia.com",
+                "url": "https://grokipedia.com/page/Aaron_Patzer"
+              },
+              {
+                "summary": "Holds an MSEE from Princeton University and BS degrees in Computer Science, Computer Engineering, and Electrical Engineering from Duke University.",
+                "category": "education",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/Aaron_Patzer"
+              },
+              {
+                "summary": "Identified as the founder and technical mind behind Mint.com, described as a leading free online money management service in the U.S.",
+                "category": "prior_company",
+                "polarity": "neutral",
+                "relevance": 10,
+                "source": "youtube.com",
+                "url": "https://www.youtube.com/watch?v=_sajNwt8ldI"
+              },
+              {
+                "summary": "Is the Founder and CEO of Vital Software, a company developing software to enhance hospital efficiency.",
+                "category": "current_role",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "startupintros.com",
+                "url": "https://startupintros.com/people/aaron-patzer"
+              },
+              {
+                "summary": "Patzer graduated from Duke University in 2002 with a BSEE.",
+                "category": "education",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "alchetron.com",
+                "url": "https://alchetron.com/Aaron-Patzer"
+              }
+            ],
+            "achievements": [
+              {
+                "summary": "He won the $50,000 first prize at TechCrunch40 in September 2007 when Mint.com launched.",
+                "category": "award",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "alchetron.com",
+                "url": "https://alchetron.com/Aaron-Patzer"
+              },
+              {
+                "summary": "Led Mint to rapid growth, reaching over 25 million users.",
+                "category": "recognition",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "youtube.com",
+                "url": "https://www.youtube.com/watch?v=j8xmaDCiShQ"
+              },
+              {
+                "summary": "It states he teamed up with Dr. Justin Schrager of Emory University Hospital and spent two years on peer-reviewed academic study and technical R&D to create Vital.",
+                "category": "research",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "multivu.com",
+                "url": "https://www.multivu.com/players/English/8619951-c19check-covid-19-corona-virus-checker/docs/Aaron_1584661607806-833407420.pdf"
+              },
+              {
+                "summary": "Vital reports 60%+ patient adoption rates, said to be 5\u201310x higher than competitors, and integrates with existing EHR systems.",
+                "category": "recognition",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "youtube.com",
+                "url": "https://www.youtube.com/watch?v=j8xmaDCiShQ"
+              },
+              {
+                "summary": "Has 10 patents filed or pending.",
+                "category": "research",
+                "polarity": "neutral",
+                "relevance": 6,
+                "source": "youtube.com",
+                "url": "https://www.youtube.com/watch?v=_sajNwt8ldI"
+              },
+              {
+                "summary": "Vital was ranked #1 in patient experience by KLAS.",
+                "category": "recognition",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "youtube.com",
+                "url": "https://www.youtube.com/watch?v=j8xmaDCiShQ"
+              },
+              {
+                "summary": "Vital\u2019s results cited include 30\u201350% fewer LWOBS/AMA, 10\u201315% higher NPS, stronger HCAHPS scores, reduced ED bounce-back, and 10% lower 30-day readmissions.",
+                "category": "recognition",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "youtube.com",
+                "url": "https://www.youtube.com/watch?v=j8xmaDCiShQ"
+              },
+              {
+                "summary": "He was included in Fortune\u2019s 40 Under 40 in 2009.",
+                "category": "recognition",
+                "polarity": "positive",
+                "relevance": 8,
+                "source": "multivu.com",
+                "url": "https://www.multivu.com/players/English/8619951-c19check-covid-19-corona-virus-checker/docs/Aaron_1584661607806-833407420.pdf"
+              }
+            ],
+            "adverse": [
+              {
+                "summary": "Said he helmed some failed ventures, including a magnetic-levitation personal vehicle concept called Swift, attributing the failure to overambition and unrealistic finances.",
+                "category": "failure",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "inc.com",
+                "url": "https://www.inc.com/zoe-henry/aaron-patzer-on-failing-twice-and-what-it-really-feels-like-to-sell-your-company.html"
+              }
+            ],
+            "press": [
+              {
+                "summary": "Raised $31 million for Mint.com as its sole founder.",
+                "category": "funding",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "startupgrind.com",
+                "url": "https://www.startupgrind.com/events/details/startup-grind-auckland-presents-aaron-patzer-mint"
+              },
+              {
+                "summary": "Grew Mint.com to 40 employees with revenues increasing 500\u2013800% year-over-year.",
+                "category": "other",
+                "polarity": "positive",
+                "relevance": 9,
+                "source": "startupgrind.com",
+                "url": "https://www.startupgrind.com/events/details/startup-grind-auckland-presents-aaron-patzer-mint"
+              },
+              {
+                "summary": "He announced AI Patient Safety Guidelines to be released on Feb 11, developed in collaboration with individuals from MedStar, Stanford, Indiana University, HCA, Texas Children\u2019s, Highmark, AARP, and patient advocacy groups, to ensure AI safely interacts with patients.",
+                "category": "press",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/posts/apatzer_coming-feb-11th-in-collaboration-with-individuals-activity-7426413806278541312-cy0d"
+              },
+              {
+                "summary": "A Facebook post says he chose to build his life in New Zealand after selling Mint, buying a 22-acre oceanfront property north of Auckland in 2013 for about US$2 million and investing another US$500,000 to transform it.",
+                "category": "rumor",
+                "polarity": "neutral",
+                "relevance": 7,
+                "source": "facebook.com",
+                "url": "https://www.facebook.com/NewZealandBrand/posts/sold-the-company-chose-new-zealand-why-aaron-patzer-walked-away-from-the-usual-d/1534883028639124"
+              },
+              {
+                "summary": "The piece says Patzer invested a million dollars to create Vital.",
+                "category": "funding",
+                "polarity": "neutral",
+                "relevance": 8,
+                "source": "multivu.com",
+                "url": "https://www.multivu.com/players/English/8619951-c19check-covid-19-corona-virus-checker/docs/Aaron_1584661607806-833407420.pdf"
+              },
+              {
+                "summary": "He moved to New Zealand in 2013, several years after selling Mint.com.",
+                "category": "other",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "linkedin.com",
+                "url": "https://www.linkedin.com/posts/the-wall-street-journal_aaron-patzer-45-moved-to-new-zealand-in-activity-7448662459323789312-ImwI"
+              },
+              {
+                "summary": "It reports that Patzer had serious frustrations with Quicken (made by Intuit) and openly expressed them, in a period before an acquisition by Intuit.",
+                "category": "press",
+                "polarity": "neutral",
+                "relevance": 9,
+                "source": "fastcompany.com",
+                "url": "https://www.fastcompany.com/1700439/why-mintcom-founder-aaron-patzer-hated-quicken"
+              },
+              {
+                "summary": "The post states he is the founder of Vital, a healthcare technology company co-founded with Dr. Justin Schrager and used by more than 100 hospitals.",
+                "category": "rumor",
+                "polarity": "neutral",
+                "relevance": 7,
+                "source": "facebook.com",
+                "url": "https://www.facebook.com/NewZealandBrand/posts/sold-the-company-chose-new-zealand-why-aaron-patzer-walked-away-from-the-usual-d/1534883028639124"
+              }
+            ]
+          },
+          "errors": [
+            "No GitHub handle supplied \u2014 builder evaluation skipped."
+          ]
+        }
+      ],
+      "errors": []
+    }
+  },
+  {
     "id": "9a2c17e4d6b0",
     "company_id": "51f8b3a9c204",
     "company_name": "Magic Sauce",

@@ -31,20 +31,44 @@ def test_seed_is_idempotent(tmp_path):
     assert len(store.companies) == len(apps)
 
 
-def test_enrich_screening_fills_all_swot_quadrants():
-    apps = json.loads(open(FIXTURE).read())
-    screened = next(a for a in apps if a.get("screening"))
-    out = _enrich_screening(screened["screening"])
-    for axis_key in ("founder_axis", "market_axis", "idea_vs_market_axis"):
+AXES = ("founder_axis", "market_axis", "idea_vs_market_axis")
+QUADRANTS = ("strengths", "weaknesses", "opportunities", "threats")
+
+
+def test_enrich_screening_fills_the_analyst_view_quadrants():
+    """The filler guarantee: opportunities and threats are always populated so
+    the detail view never renders an empty card.
+
+    Strengths and weaknesses come from the source and are NOT filled. Real
+    reasoning-layer output has strengths but no weaknesses, and inventing
+    weaknesses about a real company would be dishonest -- so an empty
+    weaknesses list is a legitimate outcome, not a bug.
+    """
+    out = _enrich_screening({axis: {"strengths": [{"text": "shipped v1"}]} for axis in AXES})
+    for axis_key in AXES:
         axis = out[axis_key]
-        for quadrant in ("strengths", "weaknesses", "opportunities", "threats"):
-            # flat shape (AxisCard / API _axis_payload): items are {text, ...}
-            assert axis[quadrant], f"{axis_key}.{quadrant} is empty"
-            assert all(isinstance(i, dict) and "text" in i for i in axis[quadrant])
-            # nested shape (SourceAxis, the inbox detail view): axis.swot.<q> = {text, src}
-            nested = axis["swot"][quadrant]
-            assert len(nested) == len(axis[quadrant])
-            assert all("text" in i and "src" in i for i in nested)
+        assert axis["opportunities"], f"{axis_key}.opportunities was not filled"
+        assert axis["threats"], f"{axis_key}.threats was not filled"
+        assert axis["strengths"]
+
+
+def test_enrich_screening_normalizes_every_fixture_axis():
+    """Both shapes stay consistent for everything actually in the fixture --
+    including the real-evaluation entries, whose weaknesses are empty."""
+    for app in json.loads(open(FIXTURE).read()):
+        if not app.get("screening"):
+            continue
+        out = _enrich_screening(app["screening"])
+        for axis_key in AXES:
+            axis = out.get(axis_key)
+            assert isinstance(axis, dict), f"{app['company_name']}.{axis_key} missing"
+            for quadrant in QUADRANTS:
+                # flat shape (AxisCard / API _axis_payload): items are {text, ...}
+                assert all(isinstance(i, dict) and "text" in i for i in axis[quadrant])
+                # nested shape (SourceAxis, the inbox detail view): {text, src}
+                nested = axis["swot"][quadrant]
+                assert len(nested) == len(axis[quadrant])
+                assert all("text" in i and "src" in i for i in nested)
 
 
 def test_enrich_screening_handles_none():
